@@ -27,42 +27,12 @@ class Customer extends CI_Model{
         
         
         if ($query->num_rows() > 0) {
-            foreach ($query->result() as $customer) {
-                $customer_id = $customer->customer_id;
-                $first_name = $customer->first_name;
-                $last_name = $customer->last_name;
-                $email = $customer->email;
-                $phone = $customer->phone;
-                $address1 = $customer->address1;
-                $address2 = $customer->address2;
-                $town = $customer->town;
-                $city = $customer->city;
-                $country = $customer->country;
-
-            }           
-            
-            
-            $data['data_array'] = array(
-             'customer_id' => $customer_id,   
-             'first_name' => $first_name,
-             'last_name' => $last_name,
-             'email' => $email,
-             'phone' => $phone,   
-             'address1' => $address1,
-             'address2' => $address2,
-             'town' => $town,
-             'city' => $city,            
-             'country' => $country               
-             );
+            return $query->row(0);
             
         } 
-        
-        else             
-            {           
-               
-            }
-            
-          return $data;  
+                           
+        return false;
+                   
 }
     
 }
