@@ -22,10 +22,10 @@ class home extends CI_Controller
        // $this->load->view("header", $header_data);
         // this will return a side_bar object with the side_bar name, with an associative array of sub side bar icons
         // with side_bars associated with account info
-        $data['side_bar'] = $this->sidebar->get_sidebars_by_permission($account_status);
+        $data['side_bars'] = $this->sidebar->get_sidebars_by_permission($account_status);
         // dynamically create sub_main when first loading the sub_home page
         //$data['sub_main'] = $this->load->view("default");
-        $this->load->view("login");
+        $this->load->view("login", $data);
     }
     //ajax will load this function
     public function load_sub_main($page_view = "default"){
