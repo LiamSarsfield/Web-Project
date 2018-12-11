@@ -16,7 +16,7 @@ class Customer_invoice extends CI_Model{
          }
 }
 
-    function get_supplier_order_by_id($id){
+    function get_customer_invoice_by_id($id){
        
         
 //        $id = $this->input->post('invoice_id');
@@ -33,5 +33,25 @@ class Customer_invoice extends CI_Model{
                            
         return false;
                    
+}
+
+    function add_customer_invoice($data)
+    {
+        if ($this->db->insert("customer_invoice", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_customer_invoice($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('invoice_id', $id); 
+        $this->db->delete('customer_invoice'); 
+              
 }
 }

@@ -16,7 +16,7 @@ class Credit_note extends CI_Model{
          }
 }
 
-    function get_material_by_id($id){
+    function get_credit_note_by_id($id){
        
         
 //        $id = $this->input->post('credit_note_id');
@@ -33,6 +33,26 @@ class Credit_note extends CI_Model{
                            
         return false;
                    
+}
+
+    function add_credit_note($data)
+    {
+        if ($this->db->insert("credit_note", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_credit_note($id) { 
+                
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('credit_note_id', $id); 
+        $this->db->delete('credit_note'); 
+              
 }
     
 }

@@ -34,6 +34,26 @@ class Product_materials extends CI_Model{
         return false;
                    
 }
+
+    function add_product_material($data)
+    {
+        if ($this->db->insert("product_material", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_product_material($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('product_product_id', $id); 
+        $this->db->delete('product_material'); 
+              
+}
     
 }
 

@@ -34,6 +34,27 @@ class Customer extends CI_Model{
         return false;
                    
 }
+
+    function add_customer($data)
+    {
+        if ($this->db->insert("customer", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    
+    function delete_customer($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('customer_id', $id); 
+        $this->db->delete('customer'); 
+              
+}
     
 }
 

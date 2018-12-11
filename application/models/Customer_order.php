@@ -34,4 +34,25 @@ class Customer_order extends CI_Model{
         return false;
                    
 }
+
+    function add_customer_order($data)
+    {
+        if ($this->db->insert("customer_order", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    
+    function delete_customer_order($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('order_id', $id); 
+        $this->db->delete('customer_order'); 
+              
+}
 }

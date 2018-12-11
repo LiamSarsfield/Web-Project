@@ -34,5 +34,25 @@ class Lot_traveller extends CI_Model{
         return false;
                    
 }
+
+    function add_lot_traveller($data)
+    {
+        if ($this->db->insert("lot_traveller", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_lot_traveller($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('lot_traveller_id', $id); 
+        $this->db->delete('lot_traveller'); 
+              
+}
     
 }

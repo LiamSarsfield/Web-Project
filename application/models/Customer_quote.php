@@ -34,4 +34,24 @@ class Customer_quote extends CI_Model{
         return false;
                    
 }
+
+    function add_customer_quote($data)
+    {
+        if ($this->db->insert("customer_quote", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_customer_quote($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('customer_quote_id', $id); 
+        $this->db->delete('customer_quote'); 
+              
+}
 }

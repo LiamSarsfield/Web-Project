@@ -34,5 +34,25 @@ class Staff extends CI_Model{
         return false;
                    
 }
+
+    function add_staff($data)
+    {
+        if ($this->db->insert("staff", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_staff($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('staff_id', $id); 
+        $this->db->delete('staff'); 
+              
+}
 }
 

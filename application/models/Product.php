@@ -34,6 +34,26 @@ class Product extends CI_Model{
         return false;
                    
 }
+
+    function add_product($data)
+    {
+        if ($this->db->insert("product", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_product($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('product_id', $id); 
+        $this->db->delete('product'); 
+              
+}
     
 }
 

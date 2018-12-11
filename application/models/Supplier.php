@@ -34,5 +34,25 @@ class Supplier extends CI_Model{
         return false;
                    
 }
+
+    function add_supplier($data)
+    {
+        if ($this->db->insert("supplier", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_supplier($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('supplier_id', $id); 
+        $this->db->delete('supplier'); 
+              
+}
 }
 

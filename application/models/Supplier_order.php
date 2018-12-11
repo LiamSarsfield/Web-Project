@@ -34,6 +34,26 @@ class Supplier_order extends CI_Model{
         return false;
                    
 }
+
+    function add_supplier_order($data)
+    {
+        if ($this->db->insert("supplier_order", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_supplier_order($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('order_id', $id); 
+        $this->db->delete('supplier_order'); 
+              
+}
     
 }
 

@@ -34,6 +34,26 @@ class MWE_model extends CI_Model{
         return false;
                    
 }
+
+    function add_material($data)
+    {
+        if ($this->db->insert("material", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_material($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('material_id', $id); 
+        $this->db->delete('material'); 
+              
+}
     
 }
 

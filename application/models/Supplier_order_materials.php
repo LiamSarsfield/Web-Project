@@ -34,6 +34,26 @@ class Supplier_order_materials extends CI_Model{
         return false;
                    
 }
+
+    function add_supplier_order_materials($data)
+    {
+        if ($this->db->insert("supplier_order_materials", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_supplier_order_materials($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('order_id', $id); 
+        $this->db->delete('supplier_order_materials'); 
+              
+}
     
 }
 

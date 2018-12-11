@@ -16,10 +16,10 @@ class Customers_ordered_products extends CI_Model{
          }
 }
 
-    function get_customer_quote_by_id($id){
+    function get_customer_ordered_products_by_id($id){
        
         
-//        $id = $this->input->post('customer_quote_id');
+//        $id = $this->input->post('order_id');
         
         $this->db->select("order_id, product_id, customer_quote_id, product_quantity");
         $this->db->where("order_id", $id);
@@ -33,6 +33,26 @@ class Customers_ordered_products extends CI_Model{
                            
         return false;
                    
+}
+
+    function add_customer_ordered_products($data)
+    {
+        if ($this->db->insert("customers_ordered_products", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
+    function delete_customer_ordered_products($id) { 
+                 
+//        $id = $this->input->post('id');
+                       
+        $this->db->where('order_id', $id); 
+        $this->db->delete('customers_ordered_products'); 
+              
 }
 }
 
