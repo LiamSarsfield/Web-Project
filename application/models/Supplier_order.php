@@ -54,6 +54,12 @@ class Supplier_order extends CI_Model{
         $this->db->delete('supplier_order'); 
               
 }
+
+    function update_supplier_order($data){
+       
+       $this->db->where('id', $id);
+       $this->db->update('supplier_order', $data); 
+   } 
     
 }
 

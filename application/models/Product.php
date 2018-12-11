@@ -54,6 +54,12 @@ class Product extends CI_Model{
         $this->db->delete('product'); 
               
 }
+
+    function update_customer_details($data){
+       
+       $this->db->where('id', $id);
+       $this->db->update('product', $data); 
+   } 
     
 }
 

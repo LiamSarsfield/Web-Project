@@ -54,5 +54,11 @@ class Supplier extends CI_Model{
         $this->db->delete('supplier'); 
               
 }
+
+    function update_supplier($data){
+       
+       $this->db->where('id', $id);
+       $this->db->update('customer', $data); 
+   } 
 }
 

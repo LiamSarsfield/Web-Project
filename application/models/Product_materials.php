@@ -54,6 +54,12 @@ class Product_materials extends CI_Model{
         $this->db->delete('product_material'); 
               
 }
+
+    function update_product_material($data){
+       
+       $this->db->where('id', $id);
+       $this->db->update('product_material', $data); 
+   } 
     
 }
 

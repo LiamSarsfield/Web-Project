@@ -54,6 +54,12 @@ class MWE_model extends CI_Model{
         $this->db->delete('material'); 
               
 }
+
+    function update_material($data){
+       
+       $this->db->where('id', $id);
+       $this->db->update('material', $data); 
+   } 
     
 }
 
