@@ -19,7 +19,12 @@
     <i class="fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
-  
+    <?php foreach($side_bars as $side_bar){ ?>
+        <a href="<?php echo site_url() . $side_bar->anchor_tag; ?>"  class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="<?php echo $side_bar->class?>"</i>
+        <p><?php echo $side_bar->name; ?></p>
+        </a>
+  <?php  } ?>
 </div>
 </nav>
 
