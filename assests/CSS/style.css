@@ -237,3 +237,281 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 @media only screen and (max-width: 600px) {#main {margin-left: 0}}
 .dropdown-btn {display: block;border: none;}
 .dropdown-container {display: none;background-color: #262626; padding-left: 8px;}
+
+ul {list-style-type: none;margin: 0;padding: 0;overflow: hidden;background-color: darkgrey;}
+li {float: left;}
+li a {display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;}
+li a:hover {background-color: #111;}
+li {width: 420px;}
+label {float: left;width: 200px;font-weight: bold;}
+#submit {margin-left: 200px;margin-top: 5px;width: 120px;}
+fieldset {background-color: #E6E6FA;border: 1px solid #332e2e;    }
+body {font-family: calibri,sans-serif;font-size: medium;}
+#rightCol #legend p {text-align: justify;}
+#leftCol #about p {text-align: justify;}
+#page #leftCol {width: 33%;height: 500px;float: left;	padding: 1px;}
+#page #rightCol {width: 33%;float: left;padding: 1px;}
+#page #col3 {width: 33%;float: right;padding: 1px;}
+.box{margin-left: 55px;}
+h1{text-align: center;}
+#container {height:100%;}
+.place h1 {text-align: center;}
+
+.place p {	width: 504px;text-align: justify;margin-left: 50px;}
+.place {height: 650px;}
+
+body {
+	font-family: calibri,sans-serif;
+	font-size: large;	
+}
+
+label {                             
+	float: left;
+	width: 250px;
+	font-weight: bold;                
+}
+#submit {                           
+	margin-left: 250px;
+	margin-top: 5px;
+	width: 120px;	
+}
+                                  
+fieldset{
+	background-color: #E6E6FA;
+	margin-top: 10px;
+}
+legend{
+	text-align: center;
+}
+
+#container2{
+	width:800px;
+	margin: auto;	
+}
+
+#container2 #form h1 {
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+#page #sup {
+	width: 33%;
+	float: left;
+	padding: 1px;
+}
+#page #mid {
+	width: 33%;
+	float: left;   
+	padding: 1px;
+	
+}
+#page #ord {
+	width: 33%;
+	float: right;   
+	padding: 1px;
+}
+
+/*Dropdown menu*/
+
+.dropbtn {
+    background-color: lightblue;
+    color: black;
+    padding: 16px;
+    font-size: 32px;
+    border: none;
+    cursor: pointer;
+	width: 400px;
+	height: 180px;
+	
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+	width: 400px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+
+/*tables*/
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+/* Liam Sarsfield Style - K00216610 */
+body {
+	font-family: Lato, sans-serif;
+}
+body main {
+	margin: 0 auto;
+	width: 1000              px;
+	-moz-box-sizing: border-box;
+	padding: 20px;
+	box-sizing: border-box;
+	-webkit-box-shadow: 0px 0px 30px 2px #6c757d;
+	-moz-box-shadow: 0px 0px 30px 5px #6c757d;
+	box-shadow: 0px 0px 30px 2px #6c757d;
+}
+form fieldset{
+	text-align: center;
+}
+form fieldset legend {
+	padding-left: 30px;
+	padding-right: 30px;
+
+	
+}
+
+.flex_container {
+	display: flex;
+    align-items: center;
+}
+.button {
+	background-color: #18bc9c;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	border-radius: 8px;
+	box-sizing: border-box;
+	color: #FFFFFF;
+	line-height: 35px;
+	display: inline-block;
+	text-align: center;
+	padding: 0 10px;
+	cursor: pointer;
+}
+.generic_search {
+	margin: 10px;
+}
+.generic_search fieldset {
+	width: 250px;
+	margin-left: 82%;
+	
+}
+.search_product_id .generic_item_search_input {
+	line-height: 24px;
+}
+
+.generic_search .generic_search_submit {
+	height: 100%;
+	width: 35px;
+	background-color: #18bc9c;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 3px;
+	box-sizing: border-box;
+}
+main .table_generic {   
+    width: 100%;
+	text-align: center;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+tbody tr th {
+	width: 180px;
+}
+tbody tr td {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.generic_item_information {
+	border: 1px solid #dee2e6;
+	box-sizing: border-box;
+	padding: 20px;
+	margin: 20px auto;
+	width: 65%;
+}
+.generic_item_information .generic_item_header {
+	text-align: center;
+	color: #2c3e50;
+}
+.generic_item_label {
+	display: inline-block;
+	width: 200px;
+	font-size: 1.25em;
+}
+.generic_item_information p  {
+	font-size: 1.05em;
+}
+.generic_item_content {
+	display: flex;
+	align-content: space-between;
+	justify-content: space-between;
+}
+
+
+.generic_edit_item_form {
+	border: 1px solid #d8d8d8;
+
+}
+.generic_label   {
+	display: inline-block;
+}
+.generic_item_edit_label {
+	width: 220px;
+}
+.generic_input   {
+	border-bottom: 1px solid #e9ecef;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-left: 1px solid #e9ecef;
+	display: inline-block;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 180px;
+}
+.generic_label_select {
+	width: 200px;
+}
+
+.submit_button {
+	border: 0px;
+}
+.menus_column {
+	float: left;
+
+
+}
+.work_order_label {
+	width: 295px;
+}
+
+

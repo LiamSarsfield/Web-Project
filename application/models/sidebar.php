@@ -86,7 +86,6 @@ class sidebar extends CI_Model
     //returns name of sub_side_bar by its id
     public function get_sub_side_bar_info_by_sub_side_bar_id($sub_side_bar_id)
     {
-        $this->db->select("name");
         $this->db->from('sub_side_bar');
         $this->db->where('sub_side_bar_id', $sub_side_bar_id);
         return $this->db->get()->row();
