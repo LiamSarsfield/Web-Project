@@ -19,7 +19,7 @@ class Customer extends CI_Model{
     function get_customer_by_id($id){
        
         
-//        $id = $this->input->post('supplier_id');
+//        $id = $this->input->post('customer_id');
         
         $this->db->select("customer_id, first_name, last_name, email, phone, address1, address2, town, city, country");
         $this->db->where("customer_id", $id);

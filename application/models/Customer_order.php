@@ -19,7 +19,7 @@ class Customer_order extends CI_Model{
     function get_order_by_id($id){
        
         
-//        $id = $this->input->post('supplier_id');
+//        $id = $this->input->post('order_id');
         
         $this->db->select("order_id, order_date, total_price, customer_id, customer_invoice_id, credit_note_id");
         $this->db->where("order_id", $id);
