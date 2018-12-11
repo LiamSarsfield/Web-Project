@@ -11,15 +11,23 @@
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
   <!-- Avatar image in top left corner -->
-  <a href="<?php echo site_url()?>/Home/index"><img src="http://localhost:8081/mwe/assests/Images/MweLogo.png" style="width:100%"></a>
+  <a href="loggedin.php"><img src="http://localhost:8081/mwe/assests/Images/MweLogo.png" style="width:100%"></a>
   
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"  class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
-  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+        <button class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="#" class="w3-bar-item w3-button w3-hover-black" >
     <i class="
     fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
+</button>
+
+  <div  class="dropdown-container" style="color: violet">
+    <a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">Link 1</a>
+    <a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">Link 2</a>
+    <a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">Link 3</a>
+    </div>
   
   <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-user w3-xxlarge"></i>
@@ -30,16 +38,12 @@
     <i class="fa fa-envelope w3-xxlarge"></i>
     <p>CONTACT</p>
 
-    <a href="<?php echo site_url()?>/Customer/login" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-            <i class="fa fa-pencil w3-xxlarge"></i>
-            <p>Login</p>
+    <a href="index.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="fa fa-rotate-left w3-xxlarge"></i>
+            <p>Logout</p>
   </a>
-
-  <a href="<?php echo site_url()?>/Customer/signUp" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-        <i class="fa fa-user-plus w3-xxlarge"></i>
-        <p>Sign Up</p>
-</a>
 </div>
+
 </nav>
 
 
@@ -116,7 +120,7 @@
   
     <!-- Footer -->
   <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
-        <a href="<?php echo site_url()?>/Home/maintenance"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
+  <a href="<?php echo site_url()?>/Home/maintenance"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
         <a href="<?php echo site_url()?>/Home/maintenance"></a><i class="fa fa-instagram w3-hover-opacity"></i></a>
         <a href="<?php echo site_url()?>/Home/maintenance"><i class="fa fa-snapchat w3-hover-opacity"></i></a>
     <p class="w3-medium">Midwest Electronics </p>
@@ -138,7 +142,21 @@
      }
     }
 
+ 
+      var dropdown = document.getElementsByClassName("dropdown-btn");
+var i;
 
+for (i = 0; i < dropdown.length; i++) {
+  dropdown[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var dropdownContent = this.nextElementSibling;
+    if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none";
+    } else {
+      dropdownContent.style.display = "block";
+    }
+  });
+}
 
 
         
