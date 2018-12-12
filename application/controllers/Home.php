@@ -32,7 +32,19 @@ class home extends CI_Controller
     }
     // register as customer
     public function register()
-    {
+    {hash('sha256', $_POST['ppasscode']);
+        $input_customer = array(
+            "first_name" => $this->input->post("first_name"),
+            "last_name" => $this->input->post("last_name"),
+            "email" => $this->input->post("email"),
+            "password" => hash("sha256", $this->input->post("password")),
+            "phone" => $this->input->post("phone"),
+            "address1" => $this->input->post("address1"),
+            "address2" => $this->input->post("address2"),
+            "town" => $this->input->post("town"),
+            "city" => $this->input->post("city"),
+            "country" => $this->input->post("country"),
+        );
         $this->load->view("generic/signUp");
     }
     // show logged in page
