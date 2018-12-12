@@ -17,71 +17,35 @@
 
         <span style="font-size:30px;cursor:pointer" onclick="openNav()"
               class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
-        <div id="mySidenav" class="sidenav">
-            <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
-                <a href="#" class="w3-bar-item w3-button w3-hover-black">
-                    <i class="
-    fa fa-home w3-xxlarge"></i>
-                    <p>HOME</p>
-                </a>
-            </button>
-
-            <div class="dropdown-container">
-                <a href="#about" class="fa fa-user w3-bar-item w3-button w3-padding-large w3-hover-black"><p>ABOUT</p>
-                </a>
-                <a href="#contact" class="fa fa-envelope w3-bar-item w3-button w3-padding-large w3-hover-black"><p>
-                        CONTACT</p></a>
-            </div>
-
-            <button onclick="dropdown()"
-                    class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
-                <i class="fa fa-drivers-license-o w3-xxlarge"></i>
-                <p>ACCOUNT</p>
-            </button>
-            <button onclick="dropdown()"
-                    class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
-                <i class="fa fa-shopping-bag w3-xxlarge"></i>
-                <p>STORE</p>
-            </button>
-            <div class="dropdown-container">
-                <a href="<?php echo site_url() ?>/Customer/quotes"
-                   class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black">
-                    <p>QUOTES</p></a>
-                <a href="#contact" class="fa fa-gear w3-bar-item w3-button w3-padding-large w3-hover-black">
-                    <p>SETTINGS</p></a>
-            </div>
-
 
             <?php foreach ($side_bars as $side_bar) {
-                if(count($side_bar->sub_side_bar_array) == 0 ){
-                    
-                }
-                ?>
-
-                <div class="dropdown-container">
-                <?php foreach($side_bar->side_bar_dropdown as $side_bar_dropdown){ ?>
-                    <a href="<?php echo site_url() . $side_bar_dropdown->anchor_tag?>"
-                   class="<?php echo $side_bar_dropdown->class ?>">
-                    <p><?php echo $side_bar->name; ?></p></a>
-                <?php } ?>
-                </div>
-                <button onclick="dropdown()"
-                        class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
-                    <a href="<?php echo site_url() . $side_bar->anchor_tag; ?>"
-                       class=" w3-button w3-padding-large w3-hover-black">
+                //if the side bar is a drop down or not
+                if (count($side_bar->sub_side_bar_array) == 0) { ?>
+                        <div id="mySidenav" class="sidenav" style="display: none;">
+                            <a href="<?php echo site_url() . $side_bar->anchor_tag; ?>"
+                               class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+                                <i class="<?php echo $side_bar->class ?>"></i>
+                                <p><?php echo $side_bar->name; ?></p>
+                            </a>
+                        </div>
+               <?php } else { ?>
+                    <button onclick="dropdown()"
+                            class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
                         <i class="<?php echo $side_bar->class ?>"></i>
                         <p><?php echo $side_bar->name; ?></p>
-                    </a>
-                </button>
+                    </button>
+                    <div class="dropdown-container">
+                        <?php foreach ($side_bar->sub_side_bar_array as $side_bar_dropdown) { ?>
+                            <a href="<?php echo site_url() . $side_bar_dropdown->anchor_tag ?>"
+                               class="<?php echo $side_bar_dropdown->class ?>">
+                                <p><?php echo $side_bar_dropdown->name; ?></p></a>
+                        <?php } ?>
+                    </div>
+                <?php }
+                ?>
+
+
             <?php } ?>
-            <div class="dropdown-container">
-                <a href="#about" class="fa fa-puzzle-piece  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>
-                        CUSTOM ORDER</p></a>
-                <a href="#contact" class="fa fa-microchip w3-bar-item w3-button w3-padding-large w3-hover-black"><p>
-                        PARTS</p></a>
-                <a href="#contact" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>
-                        CART</p></a>
-            </div>
 
             <a href="<?php echo site_url() ?>/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
                 <i class="fa fa-rotate-left w3-xxlarge"></i>

@@ -25,7 +25,7 @@ class home extends CI_Controller
         $data['side_bars'] = $this->sidebar->get_sidebars_by_permission($account_status);
         // dynamically create sub_main when first loading the sub_home page
         //$data['sub_main'] = $this->load->view("default");
-        $this->load->view("loggedin", $data);
+        $this->load->view("login", $data);
     }
     //ajax will load this function
     public function load_sub_main($page_view = "default"){
