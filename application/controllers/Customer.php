@@ -19,4 +19,24 @@ class Customer extends CI_Controller {
         $this->load->view('loggedin');
     }
 
+    public function quotes(){
+        $this->load->view('searchquotes');
+    }
+
+
+    public function viewQuote(){
+        $this->load->view('customerquote');
+    }
+
+    public function payQuote(){
+        $this->load->view('payquote');
+    }
+
+    public function declineQuote(){
+        $this->load->view('declinequote');
+    }
+
+    public function paymentSuccess(){
+        $this->load->view('paymentsuccesfulquote');
+    }
 }
