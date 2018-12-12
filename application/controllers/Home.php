@@ -9,44 +9,101 @@ class home extends CI_Controller
         $this->load->model("sidebar");
         $login_info = $this->session->userdata('login_info');
         // if logged in...
-        if(isset($login_info)){
-            redirect(site_url() . site_url());
+        if (isset($login_info)) {
+            redirect(site_url() . "/dashboard");
         }
-        $this->load->view("template/header");
+    }
+    public function index(){
+        redirect(site_url() . "/home/login");
     }
     // show login page
     public function login()
     {
-        $login_info = $this->session->userdata('login_info');
-        //gets account status from session... e.g. 'customer/staff/admin
-        $account_status = $login_info['account_status'];
-        $header_data['css_data'] = array("global.css");
-        $header_data['title'] = "Sub Home - $account_status";
-        $this->load->view("header", $header_data);
-        // this will return a side_bar object with the side_bar name, with an associative array of sub side bar icons
-        // with side_bars associated with account info
-        $data['side_bar'] = $this->sidebar->get_side_bar_icons($account_status);
-        // dynamically create sub_main when first loading the sub_home page
-        $data['sub_main'] = $this->load->view("default");
-        $this->load->view("login");
+        $this->load->library('form_validation');
+        //if form validate successful
+        $email = $this->input->post("email");
+        $password = $this->input->post("password");
+        $this->form_validation->set_rules('email', 'Email', "required|callback_validate_login[$password]");
+        $this->form_validation->set_rules('password', 'Password', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            $account_info = $this->session->userdata("account_info");
+            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['account_status']);
+            $header_data['title'] = "MWE - Login";
+            $this->load->view("template/header", $header_data);
+            $this->load->view("generic/login");
+        } else {
+            redirect(site_url() . "/dashboard");
+        }
     }
-    // register as customer
+
+// register as customer
     public function register()
-    {hash('sha256', $_POST['ppasscode']);
-        $input_customer = array(
-            "first_name" => $this->input->post("first_name"),
-            "last_name" => $this->input->post("last_name"),
-            "email" => $this->input->post("email"),
-            "password" => hash("sha256", $this->input->post("password")),
-            "phone" => $this->input->post("phone"),
-            "address1" => $this->input->post("address1"),
-            "address2" => $this->input->post("address2"),
-            "town" => $this->input->post("town"),
-            "city" => $this->input->post("city"),
-            "country" => $this->input->post("country"),
-        );
-        $this->load->view("generic/signUp");
+    {
+        $this->load->library('form_validation');
+        //if form validate successful
+        $this->form_validation->set_rules('email', 'email', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            $account_info = $this->session->userdata("account_info");
+            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['account_status']);
+            $header_data['title'] = "Register";
+            $this->load->view("template/header");
+            $this->load->view("generic/signUp");
+        } else {
+            $this->load->model("customer");
+            $this->load->model("Login_data");
+            // this assoc array must have same key as DB field names
+            $customer_data = array(
+                "first_name" => $this->input->post("first_name"),
+                "last_name" => $this->input->post("last_name"),
+                "email" => $this->input->post("email"),
+                "password" => hash("sha256", $this->input->post("password")),
+                "phone" => $this->input->post("phone"),
+                "address_one" => $this->input->post("address_one"),
+                "address_two" => $this->input->post("address_one"),
+                "town" => $this->input->post("town"),
+                "city" => $this->input->post("city"),
+                "country" => $this->input->post("country"),
+            );
+            $this->customer->add_customer($customer_data);
+            $this->validate_login($customer_data['email'], $customer_data['password']);
+
+            redirect(site_url() . "/dashboard");
+        }
+
+
     }
+
+    public function validate_login($email, $password)
+    {
+        $this->load->model("Login_data");
+        $encrypted_password = $password;
+        // if password is not encrypted
+        if (!preg_match('/[A-Fa-f0-9]{64}/', $encrypted_password)) {
+            $encrypted_password = hash("sha256", $encrypted_password);
+        }
+        $data = array(
+            "email" => $email,
+            "password" => $encrypted_password
+        );
+        $this->load->model("Customer");
+        $this->load->model("Supplier");
+        $this->load->model("Staff");
+
+        if ($this->Customer->login_customer($data) !== FALSE) {
+            $login_info = array(
+                "customer_id" => $this->Customer->login_customer($data),
+                "account_status" => "customer"
+            );
+            $this->session->set_userdata("login_info", $login_info);
+            return true;
+        } else if ($this->Staff->login_staff($data) !== FALSE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     // show logged in page
     public function logged_in()
     {

@@ -1,26 +1,37 @@
 <?php
 
-class Login_data extends CI_Model{
-    
+class Login_data extends CI_Model
+{
+
     function add_login($data)
     {
         if ($this->db->insert("login_data", $data)) {
             return TRUE;
-        }
-        else
-        {
+        } else {
             return TRUE;
         }
     }
-    
-    function delete_login($id) { 
-                 
+
+    function delete_login($id)
+    {
 //        $id = $this->input->post('id');
-                       
-        $this->db->where('login_id', $id); 
-        $this->db->delete('login_data'); 
-              
-}
-    
+        $this->db->where('login_id', $id);
+        $this->db->delete('login_data');
+    }
+
+    function generic_login($data)
+    {
+        //check customer, supplier, staff
+        $this->load->model("Customer");
+        $this->load->model("Staff");
+        if ($this->Customer->login($data)) {
+
+        } else if ($this->Staff->login($data)) {
+
+        } else {
+            return false;
+        }
+
+    }
 }
 

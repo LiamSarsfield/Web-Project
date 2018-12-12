@@ -9,7 +9,7 @@
 
 <body>
 <header> 
-<a href="../index.html"><img src="images/logo.jpg" alt="logo" width="153" height="160" title="Home"/></a><img src="images/midwest.jpg" alt="" width="780" height="160" id="title"/><img src="images/memberlogin2.jpg" alt="login" width="120" height="150" id="crest"/>
+<a href="index.html"><img src="images/logo.jpg" alt="logo" width="153" height="160" title="Home"/></a><img src="images/midwest.jpg" alt="" width="780" height="160" id="title"/><img src="images/memberlogin2.jpg" alt="login" width="120" height="150" id="crest"/>
   <nav>
     <ul>
       <li><a class="active" href="customersearch.html">Customer</a></li>
@@ -20,7 +20,7 @@
  
 </header>
 <main>
- <a href="../index.html"><div class="button">Back To Index</div></a>
+ <a href="index.html"><div class="button">Back To Index</div></a>
   <form action="product_information.html" class="search_product_id generic_search">
     <fieldset>
       <legend>Search Product ID</legend>

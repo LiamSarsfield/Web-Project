@@ -46,7 +46,7 @@ class sidebar extends CI_Model
     public function get_permission_id_by_permission_name($name = "unregistered"){
         $this->db->from('permissions');
         $this->db->where("name", $name);
-        return $this->db->get()->row()->permission_id;
+        return $this->db->get()->row()->permission_id ?? "0";
     }
     public function get_permitted_side_bar_ids_by_permission_id($permission_id = "1")
     {

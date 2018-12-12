@@ -6,12 +6,15 @@ class dashboard extends CI_Controller
         parent::__construct();
         $login_info = $this->session->userdata('login_info') ?? NULL;
         // if session is not set redirect to sign in
-        if(!iset($login_info['account_status'])){
+        if(!isset($login_info['account_status'])){
             redirect(site_url(). "/user/sign_in");
         }
     }
+    public function index(){
+        redirect(site_url() . "/dashboard/sub_home");
+    }
     public function sub_home(){
-        $this->load->model("sidebar");
+
         $login_info = $this->session->userdata('login_info');
         //gets account status from session... e.g. 'customer/staff/admin
         $account_status = $login_info['account_status'];

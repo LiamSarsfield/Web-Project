@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Return Details</title>
+<title>Delivery Details</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 <style>
 table {
@@ -26,7 +26,7 @@ tr:nth-child(even) {
 <body>
 <div id="page">
 <header> 
-<a href="../index.html"><img src="images/logo.jpg" alt="logo" width="153" height="160" title="Home"/></a><img src="images/midwest.jpg" alt="" width="780" height="160" id="title"/><img src="images/memberlogin2.jpg" alt="login" width="120" height="150" id="crest"/>
+<a href="index.html"><img src="images/logo.jpg" alt="logo" width="153" height="160" title="Home"/></a><img src="images/midwest.jpg" alt="" width="780" height="160" id="title"/><img src="images/memberlogin2.jpg" alt="login" width="120" height="150" id="crest"/>
   <nav>
     <ul>
       <li><a class="active" href="customersearch.html">Customer</a></li>
@@ -37,13 +37,13 @@ tr:nth-child(even) {
  
 </header>
 <br><br>
-<h1>RETURN DETAILS</h1>
+<h1>DELIVERY DETAILS</h1>
 
 <div id="sup">
   
-<h2>Customer</h2>
+<h2>Supplier</h2>
 <br>
-<p>John Doe</p>
+<p>John Smith</p>
 <p>1234 Main</p>
 <p>Apt. 4B</p>
 <p>Springfield, ST 54321 </p>
@@ -81,28 +81,24 @@ tr:nth-child(even) {
 	<th>Name</th>
     <th>Description</th> 
     <th>Quantity</th>
-	<th>Return Condidtion</th>
   </tr>
   <tr>
-    <td>SOCK_123</td>
-    <td>Socket 1</td>
-    <td>General, all-purpose socket.</td>
+    <td>BS-200</td>
+    <td>Part 1</td>
+    <td>Desc</td>
 	<td>20</td>
-	<td>Good</td>
   </tr>
   <tr>
-    <td>SOCK_4252</td>
-    <td>Socket 2</td>
-    <td>General, all-purpose socket.</td>
+    <td>BS-400</td>
+    <td>Part 2</td>
+    <td>Desc</td>
 	<td>10</td>
-	<td>Used</td>
   </tr>
   <tr>
-    <td>SOCK_9439</td>
-    <td>Socket 3</td>
-    <td>General, all-purpose socket.</td>
+    <td>BS-1000</td>
+    <td>Part 3</td>
+    <td>Desc</td>
 	<td>60</td>
-	<td>Broken</td>
   </tr>
   
 </table>
