@@ -21,12 +21,12 @@
     <p>HOME</p>
   </a>
 
-    <a href="login.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <a href="generic/login.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
             <i class="fa fa-pencil w3-xxlarge"></i>
             <p>Login</p>
   </a>
 
-  <a href="signUp.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="generic/signUp.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
         <i class="fa fa-user-plus w3-xxlarge"></i>
         <p>Sign Up</p>
 </a>
