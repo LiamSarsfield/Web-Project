@@ -12,7 +12,7 @@
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
   <!-- Avatar image in top left corner -->
-  <a href="<?php echo site_url()?>/Customer/loggedIn"><img src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%"></a>
+  <a href="<?php echo site_url()?>/Staff/staffLogin"><img src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%"></a>
   
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"  class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
@@ -31,17 +31,16 @@
   
     <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-drivers-license-o w3-xxlarge"></i>
-    <p>ACCOUNT</p>
+    <p>CUSTOMERS</p>
 </button>
 
 <div  class="dropdown-container">
-    <a href="<?php echo site_url()?>/Customer/quotes" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>QUOTES</p></a>
-    <a href="#contact" class="fa fa-gear w3-bar-item w3-button w3-padding-large w3-hover-black"><p>SETTINGS</p></a>
+    <a href="<?php echo site_url()?>/Staff/viewCustomers" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>VIEW</p></a>
     </div>
   
     <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-shopping-bag w3-xxlarge"></i>
-    <p>STORE</p>
+    <p>PAYMENTS</p>
     </button>
 
     <div  class="dropdown-container">
@@ -116,7 +115,7 @@
 
     <p>Lets get in touch. Send me a message:</p>
 
-    <form action="/action_page.php" target="_blank">
+    <form action="mailto:keithclifford500@gmail.com" method="post" enctype="text/plain">
       <p><input class="w3-input w3-padding-16" type="number" placeholder="Name" required name="Name"></p>
       <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" required name="Email"></p>
       <p><input class="w3-input w3-padding-16" type="text" placeholder="Subject" required name="Subject"></p>
