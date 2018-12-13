@@ -31,10 +31,11 @@ class Store extends CI_Controller {
         
         
         
-    $data['display_block'] .= '<div class="w3-quarter w3-section w3-light-grey" style="margin-right:5%; padding: 2%; max-width: 30%;">';
-    $data['display_block'] .= '<span class="w3-xlarge"><a href="product_view.html"><img src='.base_url().'assests/Images/circuit_board.jpg width="200px"></a></span><br>';
+    $data['display_block'] .= '<div class="w3-quarter w3-section w3-light-grey" style="margin-right:5%; padding: 2%; max-width: 30%; border-radius: 3%;">';
+    $data['display_block'] .= '<span class="w3-xlarge"><a href="product_view.html"><img src='.base_url().'assests/Images/circuit_board.jpg width="200px" style="border-radius: 3%;"></a></span><br>';
     $data['display_block'] .= "<strong>$product_name</strong><hr>";
-    $data['display_block'] .= "<em>$product_desc</em><hr>";
+    $data['display_block'] .= "<em>$product_desc</em><hr>"; 
+    // Need to limit the $product_desc so it doesn't overflow within the div
     $data['display_block'] .= "<strong>€$product_price</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ";
     $data['display_block'] .= "<a href=".$tag."><button>View</button></a>";
     $data['display_block'] .= '</div>';

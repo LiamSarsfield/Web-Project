@@ -76,7 +76,8 @@ fa fa-shopping-basket w3-xxlarge"></i>
 		<!-- About Section -->
 		<div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
 			<h3 class="w3-text-light-grey">
-				<strong>Circuit Boards</strong>
+				<strong>Circuit Boards</strong> 
+				<!-- ^ needs to be changed into php get request for the product category -->
 			</h3>
 			<hr style="width:200px" class="w3-opacity">
 			<p>
