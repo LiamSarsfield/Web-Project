@@ -8,9 +8,7 @@ class Product extends CI_Model{
       $query = $this->db->get('product');        
       
       if ($query->num_rows() > 0) {
-             
-            return $query->result_array();
-            
+            return $query->result();
          } else {
             return FALSE;
          }

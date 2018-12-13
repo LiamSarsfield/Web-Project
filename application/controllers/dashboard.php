@@ -31,7 +31,7 @@ class dashboard extends CI_Controller
         // this will return a side_bar object with the side_bar name, with an associative array of sub side bar icons
         // with side_bars associated with account info
         if ($account_status === "customer") {
-            $this->load->view("customer/store");
+            redirect(site_url(). "store/view_store");
 
         } else if ($account_status === "") {
 
