@@ -59,9 +59,9 @@ class Store extends CI_Controller {
         $product = $this->Product->get_product_by_id($id);
         
         
-        
-               
-        $product_id  = $product->product_id; 
+//        $_SESSION['product_id'] = $product->product_id;      
+//        $product_id  = $product->product_id;
+          $data['product_id']  = $product->product_id;
  	$product_name = $product->product_name; 
  	$product_desc = $product->product_desc;
         $product_price = $product->product_price;

@@ -131,13 +131,14 @@ fa fa-shopping-basket w3-xxlarge"></i>
       <div class="container">
         <div class="w3-justify w3-half" style="float: right; clear: both; margin-top: 1;">
           <div class="w3-half" style="float:right; margin-top: 0px; border: 1px solid  lightgray; padding: 1%;">
-              <a href="cart.html"><button class="w3-small" style="float: right;">
+              <form method="POST" action="<?php echo base_url();?>index.php/Shopping_cart_controller/add_product_to_shopping_cart/">
+              <button class="w3-small" style="float: right;">
               <i class="fa fa-cart-plus w3-xxlarge"></i>
               <br>ADD TO CART&nbsp;&nbsp;&nbsp;
-              <select>
-                <option value="">1</option>
-                <option value="">2</option>
-                <option value="">3</option>
+              <select name="qty">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
               </select>
 
             </button>

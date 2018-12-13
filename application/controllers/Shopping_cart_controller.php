@@ -1,9 +1,9 @@
 <?php
 
-class Shopping_cart extends CI_Controller {
+class Shopping_cart_controller extends CI_Controller {
     
 
-    public function add_product_to_shopping_cart($item_id) {
+    public function add_product_to_shopping_cart($product_id) {
                 
         //Calls Shopping_cart->add_to_cart($data) model to add an item to the shopping cart. 
         
@@ -11,23 +11,27 @@ class Shopping_cart extends CI_Controller {
         //Get the information from the post that you wish to add to your cart 
         
         $data['date_added'] = date('Y-m-d H:i:s');
-        $data['item_id'] = $item_id;
+        $data['item_id'] = $product_id;
         $data['qty'] = $this->input->post('qty');
-        $data['price'] = $this->input->post('price');        
+//        $data['price'] = $this->input->post('price');        
         $data['session_id'] = $this->session->session_id; //Current Session Id
         
-                
-        //Call model method to add to the cart
-        if (!$this->Shopping_cart_model->add_to_cart($data)) {
-        echo "Error Adding to Shopping Cart </br>";
-        } else {
-        //Get all the information for this session from the shopping cart
-        $this->load->library('table'); //t
+        echo $data['date_added']. "<br>";
         
-        $data['display_block'] = $this->Shopping_cart_model->select_from_cart();
+        echo $data['qty']. "<br>";
+        echo $data['session_id']. "<br>";
         
-        $this->load->view('shopping_cart', $data);
-        }
+//        //Call model method to add to the cart
+//        if (!$this->Shopping_cart_model->add_to_cart($data)) {
+//        echo "Error Adding to Shopping Cart </br>";
+//        } else {
+//        //Get all the information for this session from the shopping cart
+//        $this->load->library('table'); //t
+//        
+//        $data['display_block'] = $this->Shopping_cart_model->select_from_cart();
+//        
+//        $this->load->view('shopping_cart', $data);
+//        }
         
     }
     
