@@ -7,12 +7,12 @@
     <?php
     $sidebars = $sidebars ?? array();
     foreach ($sidebars as $sidebar) {
-        if (count($side_bar->sub_side_bar_array) !== 0) { ?>
+        if (count($sidebar->sub_sidebar_array) !== 0) { ?>
             <div class="w3-quarter w3-section w3-light-grey">
                 <h2><strong><?php echo $sidebar->name ?></strong></h2>
-                <?php foreach ($side_bar->sub_side_bar_array as $side_bar_dropdown) { ?>
+                <?php foreach ($sidebar->sub_sidebar_array as $sidebar_dropdown) { ?>
                     <hr>
-                    <h4><a href="<?php $side_bar_dropdown->anchor_tag; ?>"><?php echo $side_bar_dropdown->name ?></a> </h4>
+                    <h4><a href="<?php $sidebar_dropdown->anchor_tag; ?>"><?php echo $sidebar_dropdown->name ?></a></h4>
                     <hr>
                 <?php } ?>
             </div>

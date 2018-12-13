@@ -16,25 +16,25 @@
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"
           class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav" style="display: none;">
-        <?php $side_bars = $side_bar ?? array();
-        foreach ($side_bars as $side_bar) {
+        <?php $sidebars = $sidebars ?? array();
+        foreach ($sidebars as $sidebar) {
             //if the side bar is a drop down or not
-            if (count($side_bar->sub_side_bar_array) == 0) { ?>
+            if (count($sidebar->sub_sidebar_array) == 0) { ?>
                 <div id="mySidenav" class="sidenav" style="display: none;">
-                    <a href="<?php echo site_url() . $side_bar->anchor_tag; ?>"
+                    <a href="<?php echo site_url() . $sidebar->anchor_tag; ?>"
                        class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-                        <i class="<?php echo $side_bar->class ?>"></i>
-                        <p><?php echo $side_bar->name; ?></p>
+                        <i class="<?php echo $sidebar->class ?>"></i>
+                        <p><?php echo $sidebar->name; ?></p>
                     </a>
                 </div>
             <?php } else { ?>
                 <button onclick="dropdown()"
                         class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
-                    <i class="<?php echo $side_bar->class ?>"></i>
-                    <p><?php echo $side_bar->name; ?></p>
+                    <i class="<?php echo $sidebar->class ?>"></i>
+                    <p><?php echo $sidebar->name; ?></p>
                 </button>
                 <div class="dropdown-container">
-                    <?php foreach ($side_bar->sub_side_bar_array as $side_bar_dropdown) { ?>
+                    <?php foreach ($sidebar->sub_sidebar_array as $side_bar_dropdown) { ?>
                         <a href="<?php echo site_url() . $side_bar_dropdown->anchor_tag ?>"
                            class="<?php echo $side_bar_dropdown->class ?>">
                             <p><?php echo $side_bar_dropdown->name; ?></p></a>

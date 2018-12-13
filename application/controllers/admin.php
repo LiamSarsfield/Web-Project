@@ -24,11 +24,11 @@ class admin extends CI_Controller
         $login_info = $this->session->userdata('login_info');
         //gets account status from session... e.g. 'customer/staff/admin
         $account_status = $login_info['account_status'];
-        $side_bars = $this->sidebar->get_sidebars_by_permission("admin");
+        $sidebars = $this->sidebar->get_sidebars_by_permission("admin");
         $header_data['css_data'] = array("global.css");
         $header_data['title'] = "Sub Home - $account_status";
-        $header_data['side_bars'] = $side_bars;
-        $data['side_bars'] = $side_bars;
+        $header_data['sidebars'] = $sidebars;
+        $data['sidebars'] = $sidebars;
         $this->load->view("template/header", $header_data);
         $this->load->view("staff/admin_home", $data);
     }
