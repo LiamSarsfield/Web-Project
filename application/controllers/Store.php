@@ -71,12 +71,13 @@ class Store extends CI_Controller {
        
         
         
-         $data['display_block'] .= "<h1>$product_name</h1>";
+         $data['display_block'] .= '<div class="w3-half" style="border-right: 1px solid  lightgray; padding-right: 10%;"><h1>'.$product_name.'</h1><img src='.base_url().'assests/Images/circuit_board.jpg width="600px" style="border-radius: 3%;"></div>';
+        
          $data['display_block'] .= '<p>';
          $data['display_block'] .= "<em>$product_desc</em>";
          $data['display_block'] .= ' </p>';
          $data['display_block'] .= ' <br>';
-         $data['display_block'] .= ' <img src="circuit_board.jpg" alt="circuit_board" width="500px">';
+      
          
          
          $this->load->view('view_product', $data);
