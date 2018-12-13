@@ -113,7 +113,7 @@ fa fa-shopping-basket w3-xxlarge"></i>
   </div>
   </div>
     <!-- About Section -->
-    <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
+<!--    <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
       <h3 class="w3-text-light-grey"><strong>Circuit Boards</strong></h3>
       <hr style="width:200px" class="w3-opacity">
       <p>
@@ -143,8 +143,8 @@ fa fa-shopping-basket w3-xxlarge"></i>
   
       
       
-    <!-- End About Section -->
-    </div>
+     End About Section 
+    </div>-->
 
   
     <!-- Footer -->
