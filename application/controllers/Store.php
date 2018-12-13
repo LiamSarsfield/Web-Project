@@ -74,7 +74,7 @@ class Store extends CI_Controller {
          $data['display_block'] .= "<em>$product_desc</em>";
          $data['display_block'] .= ' </p>';
          $data['display_block'] .= ' <br>';
-         $data['display_block'] .= ' <img src="circuit_board.jpg" alt="circuit_board" width="500px">';
+         $data['display_block'] .= ' <img src='.base_url().'assests/Images/circuit_board.jpg alt="circuit_board" width="500px">';
          
          
          $this->load->view('view_product', $data);
