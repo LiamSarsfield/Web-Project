@@ -6,7 +6,10 @@
 
 
       <?php echo form_open('home/login'); ?>
+
+      <?php echo form_error('email'); ?>
       <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" required name="email"></p>
+      <?php echo form_error('password'); ?>
       <p><input class="w3-input w3-padding-16" type="password" placeholder="Password" required name="password"></p>
         <button class="w3-button w3-light-grey w3-padding-large" type="submit">
           <i class="fa fa-paper-plane"></i> Login

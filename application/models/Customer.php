@@ -30,6 +30,7 @@ class Customer extends CI_Model
         if ($this->db->insert("customer", $data)) {
             return TRUE;
         }
+        return false;
     }
     function login_customer($data){
         $encrypted_password = $data['password'];

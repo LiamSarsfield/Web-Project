@@ -13,9 +13,12 @@ class home extends CI_Controller
             redirect(site_url() . "/dashboard");
         }
     }
-    public function index(){
+
+    public function index()
+    {
         redirect(site_url() . "/home/login");
     }
+
     // show login page
     public function login()
     {
@@ -23,8 +26,26 @@ class home extends CI_Controller
         //if form validate successful
         $email = $this->input->post("email");
         $password = $this->input->post("password");
-        $this->form_validation->set_rules('email', 'Email', "required|callback_validate_login[$password]");
-        $this->form_validation->set_rules('password', 'Password', 'required');
+        $config = array(
+            array(
+                'field' => 'email',
+                'label' => 'Email',
+                'rules' => "required|callback_validate_login[$password]",
+                'errors' => array(
+                    'required' => 'You must provide a {field}.',
+                    'validate_login' => "Your details are incorrect"
+                ),
+            ),
+            array(
+                'field' => 'last_name',
+                'label' => 'Last Name',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You musts provide a {field}.'
+                )
+            )
+        );
+        $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
             $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['account_status']);
@@ -41,7 +62,98 @@ class home extends CI_Controller
     {
         $this->load->library('form_validation');
         //if form validate successful
-        $this->form_validation->set_rules('email', 'email', 'required');
+        $config = array(
+            array(
+                'field' => 'first_name',
+                'label' => 'First Name',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.',
+                ),
+            ),
+            array(
+                'field' => 'last_name',
+                'label' => 'Last Name',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You musts provide a {field}.'
+                ),
+            ),
+            array(
+                'field' => 'email',
+                'label' => 'Email Address',
+                'rules' => 'required|is_unique[customer.email]|regex_match[/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/]|callback_validate_if_staff_email',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.',
+                    'is_unique' => 'The {field} you entered is already in our database.',
+                    'regex_match' => 'The {field} you entered is not an {field} ',
+                    'validate_if_staff_email' => "Your email is already registered as a Staff Email"
+                ),
+            ),
+            array(
+                'field' => 'password',
+                'label' => 'Password',
+                'rules' => 'required|min_length[6]|max_length[20]',
+                'errors' => array(
+                    'required' => 'You must provide an {field}.',
+                    'min_length' => "{field}'s must have 6 characters",
+                    'max_length' => "{field}'s must be less than 30 characters"
+                ),
+            ),
+            array(
+                'field' => 'phone',
+                'label' => 'Phone Number',
+                'rules' => 'required|min_length[8]',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.',
+                    'min_length' => 'Your {field} needs to have at least 8 digits'
+                ),
+            ),
+            array(
+                'field' => 'address_one',
+                'label' => 'Address One',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.'
+                ),
+            ),
+            array(
+                'field' => 'address_two',
+                'label' => 'Address Two',
+                'rules' => '',
+                'errors' => array(),
+            ),
+            array(
+                'field' => 'city',
+                'label' => 'City',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.'
+                ),
+            ), array(
+                'field' => 'postcode',
+                'label' => 'Postcode',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.'
+                ),
+            ), array(
+                'field' => 'state',
+                'label' => 'State',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.'
+                ),
+            ),
+            array(
+                'field' => 'country',
+                'label' => 'Country',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'You must provide a {field}.'
+                ),
+            ));
+        $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
             $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['account_status']);
@@ -59,11 +171,13 @@ class home extends CI_Controller
                 "password" => hash("sha256", $this->input->post("password")),
                 "phone" => $this->input->post("phone"),
                 "address_one" => $this->input->post("address_one"),
-                "address_two" => $this->input->post("address_one"),
-                "town" => $this->input->post("town"),
+                "address_two" => $this->input->post("address_two"),
                 "city" => $this->input->post("city"),
+                "postcode" => $this->input->post("postcode"),
+                "state" => $this->input->post("state"),
                 "country" => $this->input->post("country"),
             );
+
             $this->customer->add_customer($customer_data);
             $this->validate_login($customer_data['email'], $customer_data['password']);
 
@@ -88,7 +202,6 @@ class home extends CI_Controller
         $this->load->model("Customer");
         $this->load->model("Supplier");
         $this->load->model("Staff");
-
         if ($this->Customer->login_customer($data) !== FALSE) {
             $login_info = array(
                 "customer_id" => $this->Customer->login_customer($data),
@@ -103,6 +216,15 @@ class home extends CI_Controller
         }
     }
 
+    public function validate_if_staff_email($email)
+    {
+        $this->load->model("staff");
+        $query_result = $this->staff->get_staff_by_email($email);
+        if (count($query_result) > 0) {
+            return false;
+        }
+        return true;
+    }
 
     // show logged in page
     public function logged_in()
