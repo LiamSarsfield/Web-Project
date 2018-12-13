@@ -187,12 +187,9 @@ fa fa-shopping-basket w3-xxlarge"></i>
       </div>
 
       <div class="w3-half" style="border-right: 1px solid  lightgray; padding-right: 10%;">
-          <h1>Custom circuit board type - One</h1>
-          <p>
-            <em>This circuit board is custom built to order.</em>
-          </p>
-          <br>
-          <img src="circuit_board.jpg" alt="circuit_board" width="500px">
+          <?php 
+       echo $display_block;  
+      ?>
         </div>
     </div>
 
