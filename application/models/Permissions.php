@@ -1,0 +1,79 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Liam
+ * Date: 13/12/2018
+ * Time: 11:26
+ */
+
+class Permissions extends CI_Model
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    public function get_all_permissions(){
+        $this->db->from("permissions");
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_permission_id_by_permission_name($name = "unregistered"){
+        $this->db->from('permissions');
+        $this->db->where("name", $name);
+        return $this->db->get()->row()->permission_id ?? "0";
+    }
+    public function get_permission_function_by_id($permission_id){
+        $this->db->where("permission_id", $permission_id);
+        $this->db->from("permission_functions");
+        $query = $this->db->get()->result();
+        if($query->num_rows() > 0){
+            return $query->first_row();
+        }
+        return false;
+    }
+    public function get_permissions_by_name($permission_name){
+        $this->db->where("permission_name", $permission_name);
+        $this->db->from("permission_functions");
+        $query = $this->db->get()->result();
+        if($query->num_rows() > 0){
+            return $query->first_row();
+        }
+        return false;
+    }
+    public function get_function_header_by_id($functions_header_id){
+        $this->db->where("function_header_id", $functions_header_id);
+        $this->db->from("functions_header");
+        $query = $this->db->get()->result();
+        if($query->num_rows() > 0){
+            return $query->first_row();
+        }
+        return false;
+    }
+    public function get_function_header_by_name($name){
+        $this->db->where("name", $name);
+        $this->db->from("permission_functions");
+        $query = $this->db->get()->result();
+        if($query->num_rows() > 0){
+            return $query->first_row();
+        }
+        return false;
+    }
+    public function get_function_by_id($function_id){
+        $this->db->where("function_id", $function_id);
+        $this->db->from("function_header");
+        $query = $this->db->get()->result();
+        if($query->num_rows() > 0){
+            return $query->first_row();
+        }
+        return false;
+    }
+    public function get_function_by_name($name){
+        $this->db->where("name", $name);
+        $this->db->from("permission_functions");
+        $query = $this->db->get()->result();
+        if($query->num_rows() > 0){
+            return $query->first_row();
+        }
+        return false;
+    }
+}

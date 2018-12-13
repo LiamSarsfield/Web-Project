@@ -31,10 +31,11 @@ class dashboard extends CI_Controller
         // this will return a side_bar object with the side_bar name, with an associative array of sub side bar icons
         // with side_bars associated with account info
         if ($account_status === "customer") {
-            redirect(site_url(). "/store/view_store");
-
-        } else if ($account_status === "") {
-
+            redirect(site_url() . "/store/view_store");
+        } else if ($account_status === "staff") {
+            $this->load->view("staff/dashboard");
+        } else if ($account_status === "admin") {
+            $this->load->view("staff/dashboard");
         }
         // dynamically create sub_main when first loading the sub_home page
 

@@ -14,9 +14,9 @@ class sidebar extends CI_Model
     }
     public function get_sidebars_by_permission($name = "unregistered")
     {
-
         //get permission id for the name
-        $permission_id = $this->get_permission_id_by_permission_name($name);
+        $this->load->model("Permissions");
+        $permission_id = $this->Permissions->get_permission_id_by_permission_name($name);
         $side_bar_ids = $this->get_permitted_side_bar_ids_by_permission_id($permission_id);
         $side_bar_mains = array();
         foreach ($side_bar_ids as $side_bar_id) {
@@ -42,11 +42,6 @@ class sidebar extends CI_Model
     public function get_all_sidebars()
     {
 
-    }
-    public function get_permission_id_by_permission_name($name = "unregistered"){
-        $this->db->from('permissions');
-        $this->db->where("name", $name);
-        return $this->db->get()->row()->permission_id ?? "0";
     }
     public function get_permitted_side_bar_ids_by_permission_id($permission_id = "1")
     {

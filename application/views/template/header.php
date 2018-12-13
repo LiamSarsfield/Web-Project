@@ -8,50 +8,47 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript" src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
 <body class="w3-black">
-
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
     <!-- Avatar image in top left corner -->
     <a href="<?php echo site_url() ?>/Customer/loggedIn"><img
                 src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%"></a>
-
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"
           class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
-
-    <?php $side_bars = $side_bar ?? array();
-    foreach ($side_bars as $side_bar) {
-        //if the side bar is a drop down or not
-        if (count($side_bar->sub_side_bar_array) == 0) { ?>
-            <div id="mySidenav" class="sidenav" style="display: none;">
-                <a href="<?php echo site_url() . $side_bar->anchor_tag; ?>"
-                   class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <div id="mySidenav" class="sidenav" style="display: none;">
+        <?php $side_bars = $side_bar ?? array();
+        foreach ($side_bars as $side_bar) {
+            //if the side bar is a drop down or not
+            if (count($side_bar->sub_side_bar_array) == 0) { ?>
+                <div id="mySidenav" class="sidenav" style="display: none;">
+                    <a href="<?php echo site_url() . $side_bar->anchor_tag; ?>"
+                       class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+                        <i class="<?php echo $side_bar->class ?>"></i>
+                        <p><?php echo $side_bar->name; ?></p>
+                    </a>
+                </div>
+            <?php } else { ?>
+                <button onclick="dropdown()"
+                        class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
                     <i class="<?php echo $side_bar->class ?>"></i>
                     <p><?php echo $side_bar->name; ?></p>
-                </a>
-            </div>
-        <?php } else { ?>
-            <button onclick="dropdown()"
-                    class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
-                <i class="<?php echo $side_bar->class ?>"></i>
-                <p><?php echo $side_bar->name; ?></p>
-            </button>
-            <div class="dropdown-container">
-                <?php foreach ($side_bar->sub_side_bar_array as $side_bar_dropdown) { ?>
-                    <a href="<?php echo site_url() . $side_bar_dropdown->anchor_tag ?>"
-                       class="<?php echo $side_bar_dropdown->class ?>">
-                        <p><?php echo $side_bar_dropdown->name; ?></p></a>
-                <?php } ?>
-            </div>
-        <?php }
-        ?>
+                </button>
+                <div class="dropdown-container">
+                    <?php foreach ($side_bar->sub_side_bar_array as $side_bar_dropdown) { ?>
+                        <a href="<?php echo site_url() . $side_bar_dropdown->anchor_tag ?>"
+                           class="<?php echo $side_bar_dropdown->class ?>">
+                            <p><?php echo $side_bar_dropdown->name; ?></p></a>
+                    <?php } ?>
+                </div>
+            <?php }
+            ?>
 
 
-    <?php } ?>
-
-    <a href="<?php echo site_url() ?>/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-        <i class="fa fa-rotate-left w3-xxlarge"></i>
-        <p>Logout</p>
-    </a>
+        <?php } ?>
+        <a href="<?php echo site_url() ?>/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="fa fa-rotate-left w3-xxlarge"></i>
+            <p>Logout</p>
+        </a>
     </div>
 
 </nav>
