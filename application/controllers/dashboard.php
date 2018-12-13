@@ -9,13 +9,13 @@ class dashboard extends CI_Controller
         $login_info = $this->session->userdata('login_info') ?? NULL;
         // if session is not set redirect to sign in
         if (!isset($login_info['account_status'])) {
-            redirect(site_url() . "/user/sign_in");
+            redirect(site_url() . "/home/login");
         }
     }
 
     public function index()
     {
-        redirect(site_url() . "/dashboard/sub_home");
+        redirect(site_url() . "/dashboard/home");
     }
 
     public function home()
@@ -31,7 +31,7 @@ class dashboard extends CI_Controller
         // this will return a side_bar object with the side_bar name, with an associative array of sub side bar icons
         // with side_bars associated with account info
         if ($account_status === "customer") {
-            redirect(site_url(). "store/view_store");
+            redirect(site_url(). "/store/view_store");
 
         } else if ($account_status === "") {
 

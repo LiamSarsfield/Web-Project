@@ -2,7 +2,14 @@
 
 class Store extends CI_Controller
 {
-
+    function __construct()
+    {
+        parent::__construct();
+        $login_info = $this->session->userdata('login_info') ?? NULL;
+        if (!isset($login_info['account_status'])) {
+            redirect(site_url() . "/home");
+        }
+    }
 
     public function view_store()
     {
