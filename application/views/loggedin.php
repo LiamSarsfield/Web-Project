@@ -6,40 +6,56 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript"src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
 <body class="w3-black">
 
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
   <!-- Avatar image in top left corner -->
-  <a href="<?php echo site_url()?>/Home/index"><img src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%"></a>
+  <a href="<?php echo site_url()?>/Customer/loggedIn"><img src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%"></a>
   
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"  class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
-  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+        <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="#" class="w3-bar-item w3-button w3-hover-black" >
     <i class="
     fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
-  
-  <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-    <i class="fa fa-user w3-xxlarge"></i>
-    <p>ABOUT</p>
-  </a>
-  
-  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-    <i class="fa fa-envelope w3-xxlarge"></i>
-    <p>CONTACT</p>
+</button>
 
-    <a href="<?php echo site_url()?>/Customer/login" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-            <i class="fa fa-pencil w3-xxlarge"></i>
-            <p>Login</p>
-  </a>
+  <div  class="dropdown-container">
+    <a href="#about" class="fa fa-user w3-bar-item w3-button w3-padding-large w3-hover-black"><p>ABOUT</p></a>
+    <a href="#contact" class="fa fa-envelope w3-bar-item w3-button w3-padding-large w3-hover-black"><p>CONTACT</p></a>
+    </div>
+  
+    <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <i class="fa fa-drivers-license-o w3-xxlarge"></i>
+    <p>ACCOUNT</p>
+</button>
 
-  <a href="<?php echo site_url()?>/Customer/signUp" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-        <i class="fa fa-user-plus w3-xxlarge"></i>
-        <p>Sign Up</p>
-</a>
+<div  class="dropdown-container">
+    <a href="<?php echo site_url()?>/Customer/quotes" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>QUOTES</p></a>
+    <a href="#contact" class="fa fa-gear w3-bar-item w3-button w3-padding-large w3-hover-black"><p>SETTINGS</p></a>
+    </div>
+  
+    <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <i class="fa fa-shopping-bag w3-xxlarge"></i>
+    <p>STORE</p>
+    </button>
+
+    <div  class="dropdown-container">
+    <a href="#about" class="fa fa-puzzle-piece  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>CUSTOM ORDER</p></a>
+    <a href="#contact" class="fa fa-microchip w3-bar-item w3-button w3-padding-large w3-hover-black"><p>PARTS</p></a>
+    <a href="#contact" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>CART</p></a>
+    </div>
+
+    <a href="<?php echo site_url()?>/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="fa fa-rotate-left w3-xxlarge"></i>
+            <p>Logout</p>
+  </a>
 </div>
+
 </nav>
 
 
@@ -116,7 +132,7 @@
   
     <!-- Footer -->
   <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
-        <a href="<?php echo site_url()?>/Home/maintenance"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
+  <a href="<?php echo site_url()?>/Home/maintenance"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
         <a href="<?php echo site_url()?>/Home/maintenance"></a><i class="fa fa-instagram w3-hover-opacity"></i></a>
         <a href="<?php echo site_url()?>/Home/maintenance"><i class="fa fa-snapchat w3-hover-opacity"></i></a>
     <p class="w3-medium">Midwest Electronics </p>
@@ -125,23 +141,5 @@
 
 <!-- END PAGE CONTENT -->
 </div>
-
-
-<script>
-    
-        function openNav() {
-                var x = document.getElementById("mySidenav");
-             if (x.style.display === "none") {
-          x.style.display = "block";
-        } else {
-            x.style.display = "none";
-     }
-    }
-
-
-
-
-        
-</script>
 </body>
 </php>

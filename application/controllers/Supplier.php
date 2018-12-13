@@ -1,6 +1,6 @@
 <?php
 
-class Home extends CI_Controller {
+class Supplier extends CI_Controller {
     
 
     public function index() {
@@ -15,10 +15,6 @@ class Home extends CI_Controller {
         
         $this->load->view('maintain_supplier');
         
-    }
-
-    public function maintenance(){
-        $this->load->view('maintenance');
     }
 
 }
