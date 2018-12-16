@@ -35,9 +35,10 @@
                 </button>
                 <div class="dropdown-container">
                     <?php foreach ($sidebar->sub_sidebar_array as $side_bar_dropdown) { ?>
-                        <a href="<?php echo site_url() . $side_bar_dropdown->anchor_tag ?>"
+                        <a href="<?php echo site_url() . $side_bar_dropdown->view_location ?>"
                            class="<?php echo $side_bar_dropdown->class ?>">
-                            <p><?php echo $side_bar_dropdown->name; ?></p></a>
+                            <p><?php echo $side_bar_dropdown->name; ?></p>
+                        </a>
                     <?php } ?>
                 </div>
             <?php }

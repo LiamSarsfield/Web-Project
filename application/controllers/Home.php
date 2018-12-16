@@ -7,9 +7,9 @@ class home extends CI_Controller
     {
         parent::__construct();
         $this->load->model("sidebar");
-        $login_info = $this->session->userdata('login_info');
+        $account_info = $this->session->userdata('account_info');
         // if logged in...
-        if (isset($login_info)) {
+        if (isset($account_info)) {
             redirect(site_url() . "/dashboard");
         }
     }
@@ -206,24 +206,24 @@ class home extends CI_Controller
         $validate_login_customer = $this->Customer_model->login_customer($data);
         if ($validate_login_customer !== FALSE) {
             $account_status = "customer";
-            $login_info = array(
+            $account_info = array(
                 "account_id" => $validate_login_customer,
                 "permission_id" => $this->Permission->get_permission_id_by_permission_name("$account_status"),
                 "permission_status" => $account_status,
             );
-            $this->session->set_userdata("login_info", $login_info);
+            $this->session->set_userdata("account_info", $account_info);
             return true;
         } else {
             $validate_login_staff = $this->Staff->login_staff($data);
             if ($validate_login_staff !== FALSE) {
                 $account_status = "staff";
-                $login_info = array(
+                $account_info = array(
                     "account_id" => $validate_login_staff,
                     "permission_id" => $this->permission->get_permission_id_by_permission_name("$account_status"),
                     "permission_status" => $account_status,
 
                 );
-                $this->session->set_userdata("login_info", $login_info);
+                $this->session->set_userdata("account_info", $account_info);
                 return true;
             }
         }

@@ -24,17 +24,29 @@ class Customer_model extends CI_Model
         return $this->db->get("customer")->result();
     }
 
-    function get_customer_by_id($id)
+    function get_customer_info_by_id($id)
     {
-        $this->db->select("customer_id, first_name, last_name, email, phone, address1, address2, town, city, country");
         $this->db->where("customer_id", $id);
         $query = $this->db->get('customer');
         if ($query->num_rows() > 0) {
-            return $query->row(0);
+            return $query->row_array(0);
         }
         return false;
     }
-
+    function get_info_for_display_by_id($id)
+    {
+        $this->db->select("customer_id AS Customer ID, 
+        CONCAT(first_name, ' ', last_name) AS name, 
+        email AS Email, phone as Phone, company AS Company, 
+        address_one AS Address One, address_two AS Address Two,
+        city AS City, postcode AS Postcode, state AS State, country AS Country");
+        $this->db->where("customer_id", $id);
+        $query = $this->db->get('customer');
+        if ($query->num_rows() > 0) {
+            return $query->row_array(0);
+        }
+        return false;
+    }
     function add_customer($data)
     {
         if ($this->db->insert("customer", $data)) {
@@ -79,6 +91,9 @@ class Customer_model extends CI_Model
             return $query->first_row()->customer_id;
         }
 
+    }
+    function get_field_names(){
+        return $this->db->list_fields('customer');
     }
 }
 
