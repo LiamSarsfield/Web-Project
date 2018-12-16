@@ -6,7 +6,7 @@
  * Time: 14:36
  */
 
-class customer extends CI_Controller
+class Customer extends CI_Controller
 {
     function __construct()
     {

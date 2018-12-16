@@ -1,14 +1,14 @@
 <?php
 
 //dashboard is when you're logged in
-class dashboard extends CI_Controller
+class Dashboard extends CI_Controller
 {
     function __construct()
     {
         parent::__construct();
         $account_info = $this->session->userdata('account_info') ?? NULL;
         // if session is not set redirect to sign in
-        if (!isset($account_info['permission_status']) && $account_info['permission_status'] !== "unregistered") {
+        if (!isset($account_info['permission_id']) && $account_info['permission_id'] !== "unregistered") {
             redirect(site_url() . "/home/login");
         }
     }
@@ -20,34 +20,31 @@ class dashboard extends CI_Controller
 
     public function home()
     {
-        $this->load->model("sidebar");
+        $this->load->model("Sidebar");
         $account_info = $this->session->userdata('account_info');
         //gets account status from session... e.g. 'customer/staff/admin
-        $account_status = $account_info['permission_status'];
         $header_data['css_data'] = array("global.css");
-        $header_data['title'] = "Sub Home - $account_status";
-        $header_data['side_bars'] = $this->sidebar->get_sidebars_by_permission($account_status);
+        $header_data['title'] = "Sub Home";
+        $sidebars = $this->Sidebar->get_sidebars_by_permission_id($account_info['permission_id']);
+        $header_data['sidebars'] = $sidebars;
+        $data['sidebars'] = $sidebars;
         $this->load->view("template/header", $header_data);
         // this will return a side_bar object with the side_bar name, with an associative array of sub side bar icons
         // with side_bars associated with account info
-        if ($account_status === "customer") {
-            redirect(site_url() . "/store/view_store");
-        } else if ($account_status === "staff") {
-            $this->load->view("staff/dashboard");
-        } else if ($account_status === "admin") {
-            $this->load->view("staff/dashboard");
-        }
+        $this->load->view("generic/dashboard", $data);
         // dynamically create sub_main when first loading the sub_home page
     }
-    public function sub_home($function_name){
+
+    public function sub_home($function_name)
+    {
         // where you go when you click a sub label
-        if(!isset($function_name)){
+        if (!isset($function_name)) {
             redirect(site_url() . "/dashboard/home");
         }
         $this->load->model("sidebar");
         $account_info = $this->session->userdata("account_info");
         $sidebar_info = $this->sidebar->get_sub_sidebar_info_by_name($function_name);
-        if(!$this->sidebar->is_permitted_to_view_sub_sidebar($account_info['permission_id'], $sidebar_info->sub_sidebar_id)){
+        if (!$this->sidebar->is_permitted_to_view_sub_sidebar($account_info['permission_id'], $sidebar_info->sub_sidebar_id)) {
             redirect(site_url() . "/dashboard/home");
         }
         // what you need is function_names view all ...(e.g. customer, or order, or product, or lot traveller)..
@@ -57,6 +54,7 @@ class dashboard extends CI_Controller
         $this->$sidebar_info->model_name->$model_function();
         $this->load->view($sidebar_info->view_location);
     }
+
     //ajax will load this function
     public function load_sub_main($page_view = "default")
     {

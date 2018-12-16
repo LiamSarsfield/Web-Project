@@ -37,8 +37,8 @@ class home extends CI_Controller
                 ),
             ),
             array(
-                'field' => 'last_name',
-                'label' => 'Last Name',
+                'field' => 'password',
+                'label' => 'Password',
                 'rules' => 'required',
                 'errors' => array(
                     'required' => 'You musts provide a {field}.'
@@ -82,12 +82,11 @@ class home extends CI_Controller
             array(
                 'field' => 'email',
                 'label' => 'Email Address',
-                'rules' => 'required|is_unique[customer.email]|regex_match[/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/]|callback_validate_if_staff_email',
+                'rules' => 'required|is_unique[account.email]|regex_match[/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/]',
                 'errors' => array(
                     'required' => 'You must provide a {field}.',
                     'is_unique' => 'The {field} you entered is already in our database.',
-                    'regex_match' => 'The {field} you entered is not an {field} ',
-                    'validate_if_staff_email' => "Your email is already registered as a Staff Email"
+                    'regex_match' => 'The {field} you entered is not an {field}.',
                 ),
             ),
             array(
@@ -199,40 +198,29 @@ class home extends CI_Controller
             "email" => $email,
             "password" => $encrypted_password
         );
-        $this->load->model("Customer_model");
-        $this->load->model("Supplier");
-        $this->load->model("Staff");
-        $this->load->model("Permission");
-        $validate_login_customer = $this->Customer_model->login_customer($data);
-        if ($validate_login_customer !== FALSE) {
-            $account_status = "customer";
-            $account_info = array(
-                "account_id" => $validate_login_customer,
-                "permission_id" => $this->Permission->get_permission_id_by_permission_name("$account_status"),
-                "permission_status" => $account_status,
-            );
-            $this->session->set_userdata("account_info", $account_info);
-            return true;
-        } else {
-            $validate_login_staff = $this->Staff->login_staff($data);
-            if ($validate_login_staff !== FALSE) {
-                $account_status = "staff";
-                $account_info = array(
-                    "account_id" => $validate_login_staff,
-                    "permission_id" => $this->permission->get_permission_id_by_permission_name("$account_status"),
-                    "permission_status" => $account_status,
-
-                );
-                $this->session->set_userdata("account_info", $account_info);
-                return true;
+        $this->load->model("Account");
+        $account_info = $this->Account->login($data);
+        if ($account_info !== FALSE) {
+            $this->load->model("Customer_model");
+            $this->load->model("Staff_model");
+            $account_session_info['account_id'] = $account_info->account_id;
+            $account_session_info['permission_id'] = $account_info->permission_id;
+            $customer_id = $this->Customer_model->get_customer_id_by_account_id($account_info->account_id);
+            $staff_id = $this->Staff_model->get_staff_id_by_account_id($account_info->account_id);
+            if ($customer_id !== FALSE) {
+                $account_session_info['customer_id'] = $customer_id;
+            } else if ($staff_id !== FALSE) {
+                $account_session_info['staff_id'] = $staff_id;
             }
+            $this->session->set_userdata("account_info", $account_session_info);
+            return true;
         }
         return false;
     }
 
     public function validate_if_staff_email($email)
     {
-        $this->load->model("staff");
+        $this->load->model("Staff_model");
         $query_result = $this->staff->get_staff_by_email($email);
         if (count($query_result) > 0) {
             return false;
@@ -245,7 +233,9 @@ class home extends CI_Controller
     {
         $this->load->view("logged_in");
     }
-    public function debugger(){
+
+    public function debugger()
+    {
         $var = "staff";
         $this->load->model($var);
         $var_method = "get_all_staff";

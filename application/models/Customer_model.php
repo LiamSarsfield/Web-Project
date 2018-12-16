@@ -18,10 +18,10 @@ class Customer_model extends CI_Model
         }
     }
 
-    public function get_customers_by_limit($limit, $start)
+    public function get_rows_by_limit($limit, $start)
     {
         $this->db->limit($limit, $start);
-        return $this->db->get("customer")->result();
+        return $this->db->get("customer")->result_array();
     }
 
     function get_customer_info_by_id($id)
@@ -33,6 +33,7 @@ class Customer_model extends CI_Model
         }
         return false;
     }
+
     function get_info_for_display_by_id($id)
     {
         $this->db->select("customer_id AS Customer ID, 
@@ -47,6 +48,7 @@ class Customer_model extends CI_Model
         }
         return false;
     }
+
     function add_customer($data)
     {
         if ($this->db->insert("customer", $data)) {
@@ -61,7 +63,7 @@ class Customer_model extends CI_Model
         $this->db->delete('customer');
     }
 
-    public function get_customer_rows()
+    public function get_rows()
     {
         $this->db->select("customer_id");
         $this->db->from('customer');
@@ -88,11 +90,25 @@ class Customer_model extends CI_Model
         if ($query->num_rows() === 0) {
             return false;
         } else {
-            return $query->first_row()->customer_id;
+            return $query->row()->customer_id;
         }
 
     }
-    function get_field_names(){
+
+    public function get_customer_id_by_account_id($account_id)
+    {
+        $this->db->select("customer_id, account_id");
+        $this->db->where("account_id", $account_id);
+        $this->db->from("customer");
+        $query = $this->db->get();
+        if ($query->num_rows() === 0) {
+            return false;
+        }
+        return $query->row()->customer_id;
+    }
+
+    function get_field_names()
+    {
         return $this->db->list_fields('customer');
     }
 }

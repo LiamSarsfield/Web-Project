@@ -34,10 +34,10 @@
                     <p><?php echo $sidebar->name; ?></p>
                 </button>
                 <div class="dropdown-container">
-                    <?php foreach ($sidebar->sub_sidebar_array as $side_bar_dropdown) { ?>
-                        <a href="<?php echo site_url() . $side_bar_dropdown->view_location ?>"
-                           class="<?php echo $side_bar_dropdown->class ?>">
-                            <p><?php echo $side_bar_dropdown->name; ?></p>
+                    <?php foreach ($sidebar->sub_sidebar_array as $sidebar_dropdown) { ?>
+                        <a href="<?php echo site_url() . $sidebar_dropdown->anchor_controller ."/" . $sidebar_dropdown->function ."/" .$sidebar->name?>"
+                           class="<?php echo $sidebar_dropdown->class ?>">
+                            <p><?php echo $sidebar_dropdown->name; ?></p>
                         </a>
                     <?php } ?>
                 </div>

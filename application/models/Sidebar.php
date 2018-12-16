@@ -6,7 +6,7 @@
  * Time: 16:07
  */
 
-class sidebar extends CI_Model
+class Sidebar extends CI_Model
 {
     public function __construct()
     {
@@ -28,6 +28,42 @@ class sidebar extends CI_Model
             foreach ($permitted_sub_sidebar_ids as $permitted_sub_sidebar_id) {
                 //returning sub_side_field info related to the sidebar that we want
                 $sub_side_info = $this->get_sub_sidebar_info_by_sub_sidebar_id($permitted_sub_sidebar_id);
+                $controller_name = "";
+                if ($name === "admin") {
+                    $controller_name = "customer";
+                }
+                $sub_side_info->anchor_controller = $controller_name;
+                // pushing the sub_sidebar info/fields into the sub_sidebar_array
+                $sidebar_main->sub_sidebar_array[] = $sub_side_info;
+            }
+            //appending the sidebar we just got with the established sidebar_main
+            $sidebar_mains[] = $sidebar_main;
+            // optimization method(clears query memory)
+            //$query->free_result();
+        }
+        //returns an array of classes that include sidebar info + array of sub_sidebars classes within each sidebar
+        return $sidebar_mains;
+    }
+
+    public function get_sidebars_by_permission_id($permission_id = "0")
+    {
+        //get permission id for the name
+        $this->load->model("Permission");
+        $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id($permission_id);
+        $sidebar_mains = array();
+        foreach ($sidebar_ids as $sidebar_id) {
+            $sidebar_main = $this->get_sidebar_info_by_sidebar_id($sidebar_id);
+            $sidebar_main->sub_sidebar_array = array();
+            //get sub_sidebar_ids that the user has permission to access
+            $permitted_sub_sidebar_ids = $this->get_permitted_sub_sidebar_ids_by_sidebar_id($permission_id, $sidebar_id);
+            foreach ($permitted_sub_sidebar_ids as $permitted_sub_sidebar_id) {
+                //returning sub_side_field info related to the sidebar that we want
+                $sub_side_info = $this->get_sub_sidebar_info_by_sub_sidebar_id($permitted_sub_sidebar_id);
+                $controller_name = "";
+                if ($permission_id === "3") {
+                    $controller_name = "customer";
+                }
+                $sub_side_info->anchor_controller = $controller_name;
                 // pushing the sub_sidebar info/fields into the sub_sidebar_array
                 $sidebar_main->sub_sidebar_array[] = $sub_side_info;
             }
@@ -114,15 +150,18 @@ class sidebar extends CI_Model
         $this->db->from('sub_sidebar');
         return $this->db->get()->row();
     }
-    public function is_permitted_to_view_sub_sidebar($permission_id, $sub_sidebar_id){
+
+    public function is_permitted_to_view_sub_sidebar($permission_id, $sub_sidebar_id)
+    {
         $this->db->where("sub_sidebar_id", $sub_sidebar_id);
         $this->db->where("permission_id", $permission_id);
         $this->db->from("sub_sidebar_permissions");
-        if($this->db->get()->num_rows() === 1){
+        if ($this->db->get()->num_rows() === 1) {
             return true;
         };
         return false;
     }
+
     public function get_sub_sidebar_info_by_name($name)
     {
         $this->db->where("name", $name);

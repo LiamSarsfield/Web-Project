@@ -1,6 +1,6 @@
 <?php
 
-class Staff extends CI_Model
+class Staff_model extends CI_Model
 {
 
     function get_all_staff()
@@ -26,14 +26,26 @@ class Staff extends CI_Model
             return $query->row(0);
 
         }
-
         return false;
-
     }
 
+    public function get_staff_id_by_account_id($account_id)
+    {
+        $this->db->select("staff_id, account_id");
+        $this->db->where("account_id", $account_id);
+        $this->db->from("staff");
+        $query = $this->db->get();
+        if ($query->num_rows() === 0) {
+            return false;
+        }
+        return $query->row()->customer_id;
+    }
     function login_staff($data)
     {
-        $encrypted_password = hash("sha256", $data['password']);
+        $encrypted_password = $data['password'];
+        if (!preg_match('/[A-Fa-f0-9]{64}/', $data['password'])) {
+            $encrypted_password = hash("sha256", $encrypted_password);
+        }
         $this->db->select("staff_id, email, password");
         $this->db->where("email", $data['email']);
         $this->db->where("password", $encrypted_password);
@@ -42,7 +54,7 @@ class Staff extends CI_Model
         if ($query->num_rows() === 0) {
             return false;
         } else {
-            return $query->first_row()->staff_id;
+            return $query->row()->staff_id;
         }
     }
 
