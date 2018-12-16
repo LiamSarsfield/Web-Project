@@ -25,4 +25,13 @@ class Account extends CI_Model
             return $query->row();
         }
     }
+    function add_account($data){
+        if ($this->db->insert("account", $data)) {
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+    function last_insert_id(){
+        $this->db->select("LAST_INSERT_ID()");
+    }
 }

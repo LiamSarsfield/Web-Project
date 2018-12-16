@@ -28,11 +28,8 @@ class Sidebar extends CI_Model
             foreach ($permitted_sub_sidebar_ids as $permitted_sub_sidebar_id) {
                 //returning sub_side_field info related to the sidebar that we want
                 $sub_side_info = $this->get_sub_sidebar_info_by_sub_sidebar_id($permitted_sub_sidebar_id);
-                $controller_name = "";
-                if ($name === "admin") {
-                    $controller_name = "customer";
-                }
-                $sub_side_info->anchor_controller = $controller_name;
+
+                $sub_side_info->anchor_controller =  $sub_side_info->function;
                 // pushing the sub_sidebar info/fields into the sub_sidebar_array
                 $sidebar_main->sub_sidebar_array[] = $sub_side_info;
             }

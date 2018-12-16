@@ -130,15 +130,15 @@ class home extends CI_Controller
                     'required' => 'You must provide a {field}.'
                 ),
             ), array(
-                'field' => 'postcode',
-                'label' => 'Postcode',
+                'field' => 'postal_code',
+                'label' => 'Postal Code',
                 'rules' => 'required',
                 'errors' => array(
                     'required' => 'You must provide a {field}.'
                 ),
             ), array(
-                'field' => 'state',
-                'label' => 'State',
+                'field' => 'province',
+                'label' => 'Province',
                 'rules' => 'required',
                 'errors' => array(
                     'required' => 'You must provide a {field}.'
@@ -158,12 +158,13 @@ class home extends CI_Controller
             $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['permission_status']);
             $header_data['title'] = "Register";
             $this->load->view("template/header");
-            $this->load->view("generic/signUp");
+            $this->load->view("generic/sign_up");
         } else {
             $this->load->model("Customer_model");
-            $this->load->model("Login_data");
+            $this->load->model("Account");
             // this assoc array must have same key as DB field names
-            $customer_data = array(
+            $account_data = array(
+                "permission_id" => "2",
                 "first_name" => $this->input->post("first_name"),
                 "last_name" => $this->input->post("last_name"),
                 "email" => $this->input->post("email"),
@@ -172,14 +173,17 @@ class home extends CI_Controller
                 "address_one" => $this->input->post("address_one"),
                 "address_two" => $this->input->post("address_two"),
                 "city" => $this->input->post("city"),
-                "postcode" => $this->input->post("postcode"),
-                "state" => $this->input->post("state"),
-                "country" => $this->input->post("country"),
+                "province" => $this->input->post("province"),
+                "postal_code" => $this->input->post("postal_code"),
+                "country" => $this->input->post("country")
             );
-
+            $account_id = $this->Account->add_account($account_data);
+            $customer_data = array(
+                "account_id" => $account_id,
+                "company" => $this->input->post("company")
+            );
             $this->Customer_model->add_customer($customer_data);
-            $this->validate_login($customer_data['email'], $customer_data['password']);
-
+            $this->validate_login($account_data['email'], $account_data['password']);
             redirect(site_url() . "/dashboard");
         }
 

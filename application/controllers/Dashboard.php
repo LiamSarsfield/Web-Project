@@ -11,6 +11,7 @@ class Dashboard extends CI_Controller
         if (!isset($account_info['permission_id']) && $account_info['permission_id'] !== "unregistered") {
             redirect(site_url() . "/home/login");
         }
+        print_r($account_info);
     }
 
     public function index()

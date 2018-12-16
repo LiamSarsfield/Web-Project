@@ -21,10 +21,10 @@
     <p><input class="w3-input w3-padding-16" type="text" placeholder="Street Address 2(optional)" required name="address_two" value="<?php echo set_value('address_two'); ?>"></p>
     <?php echo form_error('city'); ?>
     <p><input class="w3-input w3-padding-16" type="text" placeholder="City" required name="city" value="<?php echo set_value('city'); ?>"></p>
-    <?php echo form_error('postcode'); ?>
-    <p><input class="w3-input w3-padding-16" type="text" placeholder="Postcode" required name="postcode" value="<?php echo set_value('postcode'); ?>"></p>
-    <?php echo form_error('state'); ?>
-    <p><input class="w3-input w3-padding-16" type="text" placeholder="State/Province" required name="state" value="<?php echo set_value('state'); ?>"></p>
+    <?php echo form_error('province'); ?>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="State/Province" required name="province" value="<?php echo set_value('province'); ?>"></p>
+    <?php echo form_error('postal_code'); ?>
+    <p><input class="w3-input w3-padding-16" type="text" placeholder="Postcode" required name="postal_code" value="<?php echo set_value('postal_code'); ?>"></p>
     <?php echo form_error('country'); ?>
     <select name="country">
         <option selected="selected" value="IE">Ireland</option>

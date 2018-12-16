@@ -19,6 +19,7 @@ class Login_data extends CI_Model
         $this->db->delete('login_data');
     }
 
+    //DEPRECIATED
     function generic_login($data)
     {
         //check customer, supplier, staff
