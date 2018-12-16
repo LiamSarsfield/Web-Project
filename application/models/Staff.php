@@ -42,9 +42,7 @@ class Staff extends CI_Model
         if ($query->num_rows() === 0) {
             return false;
         } else {
-            $user_data['staff_id'] = $query->first_row()->staff_id;
-            $this->session->set_userdata('user_data', $user_data);
-            return true;
+            return $query->first_row()->staff_id;
         }
     }
 

@@ -1,7 +1,11 @@
 <?php
 
-class Customer extends CI_Model
+class Customer_model extends CI_Model
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     function get_all_customers()
     {
@@ -12,6 +16,12 @@ class Customer extends CI_Model
         } else {
             return FALSE;
         }
+    }
+
+    public function get_customers_by_limit($limit, $start)
+    {
+        $this->db->limit($limit, $start);
+        return $this->db->get("customer")->result();
     }
 
     function get_customer_by_id($id)
@@ -32,35 +42,19 @@ class Customer extends CI_Model
         }
         return false;
     }
-    function login_customer($data){
-        $encrypted_password = $data['password'];
-        if(!preg_match('/[A-Fa-f0-9]{64}/', $data['password'])) {
-            $encrypted_password = hash("sha256", $encrypted_password);
-        }
-        $this->db->select("customer_id, email, password");
-        $this->db->where("email", $data['email']);
-        $this->db->where("password", $encrypted_password);
-        $this->db->from("customer");
-        $query = $this->db->get();
-        $debugger = $this->db->last_query();
-        if($query->num_rows() === 0){
-            return false;
-        } else{
-            return $query->first_row()->customer_id;
-        }
-
-    }
 
     function delete_customer($id)
     {
-
-//        $id = $this->input->post('id');
-
         $this->db->where('customer_id', $id);
         $this->db->delete('customer');
-
     }
 
+    public function get_customer_rows()
+    {
+        $this->db->select("customer_id");
+        $this->db->from('customer');
+        return $this->db->get()->num_rows();
+    }
 
     function update_customer_details($data)
     {
@@ -68,5 +62,23 @@ class Customer extends CI_Model
         $this->db->update('customer', $data);
     }
 
+    function login_customer($data)
+    {
+        $encrypted_password = $data['password'];
+        if (!preg_match('/[A-Fa-f0-9]{64}/', $data['password'])) {
+            $encrypted_password = hash("sha256", $encrypted_password);
+        }
+        $this->db->select("customer_id, email, password");
+        $this->db->where("email", $data['email']);
+        $this->db->where("password", $encrypted_password);
+        $this->db->from("customer");
+        $query = $this->db->get();
+        if ($query->num_rows() === 0) {
+            return false;
+        } else {
+            return $query->first_row()->customer_id;
+        }
+
+    }
 }
 

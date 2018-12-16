@@ -6,7 +6,7 @@ class Store extends CI_Controller
     {
         parent::__construct();
         $login_info = $this->session->userdata('login_info') ?? NULL;
-        if (!isset($login_info['account_status'])) {
+        if (!isset($login_info['permission_status'])) {
             redirect(site_url() . "/home");
         }
     }

@@ -48,7 +48,7 @@ class home extends CI_Controller
         $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
-            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['account_status']);
+            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['permission_status']);
             $header_data['title'] = "MWE - Login";
             $this->load->view("template/header", $header_data);
             $this->load->view("generic/login");
@@ -156,12 +156,12 @@ class home extends CI_Controller
         $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
-            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['account_status']);
+            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['permission_status']);
             $header_data['title'] = "Register";
             $this->load->view("template/header");
             $this->load->view("generic/signUp");
         } else {
-            $this->load->model("customer");
+            $this->load->model("Customer_model");
             $this->load->model("Login_data");
             // this assoc array must have same key as DB field names
             $customer_data = array(
@@ -178,7 +178,7 @@ class home extends CI_Controller
                 "country" => $this->input->post("country"),
             );
 
-            $this->customer->add_customer($customer_data);
+            $this->Customer_model->add_customer($customer_data);
             $this->validate_login($customer_data['email'], $customer_data['password']);
 
             redirect(site_url() . "/dashboard");
@@ -199,21 +199,35 @@ class home extends CI_Controller
             "email" => $email,
             "password" => $encrypted_password
         );
-        $this->load->model("Customer");
+        $this->load->model("Customer_model");
         $this->load->model("Supplier");
         $this->load->model("Staff");
-        if ($this->Customer->login_customer($data) !== FALSE) {
+        $this->load->model("Permission");
+        $validate_login_customer = $this->Customer_model->login_customer($data);
+        if ($validate_login_customer !== FALSE) {
+            $account_status = "customer";
             $login_info = array(
-                "customer_id" => $this->Customer->login_customer($data),
-                "account_status" => "customer"
+                "account_id" => $validate_login_customer,
+                "permission_id" => $this->Permission->get_permission_id_by_permission_name("$account_status"),
+                "permission_status" => $account_status,
             );
             $this->session->set_userdata("login_info", $login_info);
             return true;
-        } else if ($this->Staff->login_staff($data) !== FALSE) {
-            return true;
         } else {
-            return false;
+            $validate_login_staff = $this->Staff->login_staff($data);
+            if ($validate_login_staff !== FALSE) {
+                $account_status = "staff";
+                $login_info = array(
+                    "account_id" => $validate_login_staff,
+                    "permission_id" => $this->permission->get_permission_id_by_permission_name("$account_status"),
+                    "permission_status" => $account_status,
+
+                );
+                $this->session->set_userdata("login_info", $login_info);
+                return true;
+            }
         }
+        return false;
     }
 
     public function validate_if_staff_email($email)
@@ -231,5 +245,10 @@ class home extends CI_Controller
     {
         $this->load->view("logged_in");
     }
-
+    public function debugger(){
+        $var = "staff";
+        $this->load->model($var);
+        $var_method = "get_all_staff";
+        $this->$var->$var_method();
+    }
 }

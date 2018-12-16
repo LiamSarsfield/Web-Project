@@ -22,9 +22,9 @@ class Login_data extends CI_Model
     function generic_login($data)
     {
         //check customer, supplier, staff
-        $this->load->model("Customer");
+        $this->load->model("Customer_model");
         $this->load->model("Staff");
-        if ($this->Customer->login($data)) {
+        if ($this->Customer_model->login($data)) {
 
         } else if ($this->Staff->login($data)) {
 

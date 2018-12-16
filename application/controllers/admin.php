@@ -11,7 +11,7 @@ class admin extends CI_Controller
     function __construct() {
         parent::__construct();
         $login_info = $this->session->userdata('login_info') ?? NULL;
-//        if(!iset($login_info['account_status'])){
+//        if(!iset($login_info['permission_status'])){
 //            redirect(site_url(). "/home");
 //        }
     }
@@ -23,7 +23,7 @@ class admin extends CI_Controller
         $this->load->model("sidebar");
         $login_info = $this->session->userdata('login_info');
         //gets account status from session... e.g. 'customer/staff/admin
-        $account_status = $login_info['account_status'];
+        $account_status = $login_info['permission_status'];
         $sidebars = $this->sidebar->get_sidebars_by_permission("admin");
         $header_data['css_data'] = array("global.css");
         $header_data['title'] = "Sub Home - $account_status";
