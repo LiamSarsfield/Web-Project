@@ -29,8 +29,11 @@ class customer extends CI_Controller
         $this->load->view("template/header");
         //pagination
         $customer_row_count = $this->Customer_model->get_customer_rows();
-        $config['total_rows'] = $customer_row_count;
+        // lets say there is 200 customers in database
+        $config['total_rows'] = 200;
         $config['per_page'] = 10;
+        $config['base_url'] = site_url('Home/select_entries_per_page');
+
         $this->pagination->initialize($config);
 
         $page = $this->uri->segment(3) ??  0;
