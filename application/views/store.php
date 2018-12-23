@@ -3,8 +3,8 @@
 <title>W3.CSS Template</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
-<script rel="text/javascript" src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
+<script rel="text/javascript" src="<?php echo base_url(); ?>assets/script/navs.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -13,7 +13,7 @@
 	<!-- Icon Bar (Sidebar - hidden on small screens) -->
 	<nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
 		<!-- Avatar image in top left corner -->
-		<img src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%">
+		<img src="<?php echo base_url(); ?>assets/Images/MweLogo.png" style="width:100%">
 
 		<span style="font-size:30px;cursor:pointer" onclick="openNav()" class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
 		<div id="mySidenav" class="sidenav">
@@ -70,7 +70,7 @@ fa fa-shopping-basket w3-xxlarge"></i>
 	<div class="w3-padding-large" id="main">
 		<!-- Header/Home -->
 		<header class="w3-container w3-padding-32 w3-center w3-black" id="home">
-			<img src="<?php echo base_url(); ?>/assests/Images/banner2.png">
+			<img src="<?php echo base_url(); ?>assets/Images/banner2.png">
 		</header>
 
 		<!-- About Section -->

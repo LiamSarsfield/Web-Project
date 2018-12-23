@@ -3,8 +3,8 @@
 <title>W3.CSS Template</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
-<script rel="text/javascript" src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
+<script rel="text/javascript" src="<?php echo base_url(); ?>assets/script/navs.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <body class="w3-black">
@@ -12,7 +12,7 @@
   <!-- Icon Bar (Sidebar - hidden on small screens) -->
   <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
     <!-- Avatar image in top left corner -->
-    <img src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%">
+    <img src="<?php echo base_url(); ?>assets/images/MweLogo.png" style="width:100%">
 
     <span style="font-size:30px;cursor:pointer" onclick="openNav()" class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
@@ -69,16 +69,16 @@ fa fa-shopping-basket w3-xxlarge"></i>
   <div class="w3-padding-large" id="main">
     <!-- Header/Home -->
     <header class="w3-container w3-center w3-black" id="home">
-    <img src="<?php echo base_url(); ?>/assests/Images/banner2.png">
+    <img src="<?php echo base_url(); ?>assets/images/banner2.png">
 
 
     </header>
-
+    <!-- need to move this section over like the rest, backend checks to see if the product is in stock. Leaving the css alone until i can work with this -->
     <!-- About Section -->
     <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
       <div class="container">
-        <div class="w3-justify w3-half" style="float: right; clear: both; margin-top: 1;">
-          <div class="w3-half" style="float:right; margin-top: 0px; border: 1px solid  lightgray; padding: 1%;">
+        <div class="w3-half" style="float: right; clear: both; margin-top: 1;">
+          <div class="w3-half" style="float:right;margin-top: 0px; border: 1px solid  lightgray; padding: 3%;">
               <a href="cart.html"><button class="w3-small" style="float: right;">
               <i class="fa fa-cart-plus w3-xxlarge"></i>
               <br>ADD TO CART&nbsp;&nbsp;&nbsp;
