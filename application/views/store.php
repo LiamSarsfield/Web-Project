@@ -83,9 +83,26 @@ fa fa-shopping-basket w3-xxlarge"></i>
 			</p>
 
 			<div class="w3-row w3-center w3-padding-16 w3-sectiFFon">
-				<?php 
-       echo $display_block;  
-      ?>
+		                                
+                        <?php
+                        //If no details found 
+                        if ($query == false ) { 
+                               echo "<p><em>Sorry, no items to display.</em></p>"; 
+                        } else { 
+                        foreach ($query->result() as $row)
+                        {
+//                                $tag = '/Web-Project/index.php/Store/view_selected_product/'.$row->product_id;
+                                echo '<div class="w3-quarter w3-section w3-light-grey" style="margin-right:5%; padding: 2%; max-width: 30%;">';
+                                echo '<span class="w3-xlarge"><a href="product_view.html"><img src='.base_url().'assests/Images/circuit_board.jpg width="200px"></a></span><br>';
+                                echo "<strong>$row->product_name</strong><hr>";
+                                echo "<em>$row->product_desc</em><hr>";
+                                echo "<strong>€$row->product_price</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ";
+                                echo "<a href=".'/Web-Project/index.php/Store/view_selected_product/'.$row->product_id."><button>View</button></a>";                             
+                                echo '</div>';
+                               
+                        }
+    }        
+                        ?>    
 				<!-- End About Section -->
 			</div>
 		</div>
