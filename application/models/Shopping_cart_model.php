@@ -17,7 +17,7 @@ class Shopping_cart_model extends CI_Model{
    public function select_from_cart(){
        
                 
-       $this->db->select('id, session_id, product_id, product_name, product_desc, quantity, price, date_added, (price * quantity) AS Total');
+       $this->db->select('id, session_id, product_id, product_name, product_desc, quantity, price, image_path, date_added, (price * quantity) AS Total');
        $this->db->from('shopping_cart');
        $this->db->where('session_id =', $this->session->session_id);
        $query = $this->db->get();  

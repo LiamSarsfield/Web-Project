@@ -87,10 +87,11 @@ fa fa-shopping-basket w3-xxlarge"></i>
         <table style="padding: 1%; margin-bottom: 1%;">
           <th></th>
           <th>Name</th>
-          <th>Description</th>
-          <th>Quantity</th>
+          <th>Description</th>          
           <th>Price</th>
-          <th>Delete</th>
+          <th>Quantity</th>
+          <th>Total Price</th>
+          <th>Action</th>
            
           <!-- quantity checker todo -->
           
@@ -98,18 +99,21 @@ fa fa-shopping-basket w3-xxlarge"></i>
            //If no details found 
         if ($query == false ) { 
                echo "<p><em>You have no items in your basket.</em></p>";
-               echo '<a href="'.base_url().'index.php/Store/view_store">Continue shopping</a><br><br>';
+               echo '<a href="'.base_url().'index.php/Store/view_store"><button>Continue shopping</button></a><br><br>';
         } else { 
         foreach ($query->result() as $row)
         {
          echo '<tr>';
          echo '<td style="">';   
-         echo '<img src="'.base_url().'/assests/Images/cb.jpg" alt="product picture"'.$row->product_name.'" width="100px">'; 
+//         echo '<img src="'.base_url().'/assets/images/cb.jpg" alt="product picture"'.$row->product_name.'" width="100px">';
+         echo '<img src="'.base_url().$row->image_path.'" alt="product picture"'.$row->product_name.'" width="100px">';    
+         
          echo '</td>';   
          echo '<td>'.$row->product_name.'</td>';   
-         echo '<td>'.$row->product_desc.'</td>';   
-         echo '<td><center>'.$row->quantity.'</center></td>'; 
-         echo '<td><center>€'.$row->price.'</center></td>';   
+         echo '<td>'.$row->product_desc.'</td>';            
+         echo '<td><center>€'.$row->price.'</center></td>';
+         echo '<td><center>'.$row->quantity.'</center></td>';
+         echo '<td><center>€'.($row->price)*($row->quantity).'</center></td>';
          echo '<td>';   
          echo '<a href="'.base_url().'index.php/Shopping_cart_controller/remove_product_from_cart/'.$row->id.'"><button>Remove</button></a>';    
          echo '</td>';   

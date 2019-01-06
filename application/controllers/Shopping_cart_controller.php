@@ -18,17 +18,10 @@ class Shopping_cart_controller extends CI_Controller {
         $query = $this->Product->get_product_by_id($product_id);
         $data['product_name'] = $query->product_name;
         $data['product_desc'] = $query->product_desc;
-        $data['price'] = $query->product_price * $data['quantity'];
-        $data['image_path'] = "assests/Images/circuit_board.jpg";
+        $data['price'] = $query->product_price;
+//        $data['total'] = $query->product_price * $data['quantity'];
+        $data['image_path'] = $query->image_path;
         
-//        echo $data['date_added']. "<br>";
-//        echo $data['item_id']. "<br>";
-//        echo $data['qty']. "<br>";
-//        echo $data['session_id']. "<br>";
-//        echo $data['product_name']. "<br>";
-//        echo $data['product_desc']. "<br>";
-//        echo $data['price']. "<br>";
-//        echo $data['image_path']. "<br>";
         
         
         //Call model method to add to the cart
@@ -53,17 +46,7 @@ class Shopping_cart_controller extends CI_Controller {
          
          // Calls  model to remove an item from the shopping cart.
          $this->Shopping_cart_model->remove_from_cart($id);
-         
-         
-//         //Calls model to reload the shopping cart 
-//         $data['display_block'] = $this->Shopping_cart_from->SelectFromCart();
-//         
-//         $this->load->view('shopping_cart', $data);
-//         
-//         //         redirect('Shopping_cart/select_from_cart');
-         
-         
-         
+                 
          $data['query'] = $this->Shopping_cart_model->select_from_cart();
         
         $this->load->view('shopping_cart', $data);

@@ -122,31 +122,16 @@ fa fa-shopping-basket w3-xxlarge"></i>
             <h1>
               <strong>Specs</strong>
             </h1>
-            <h4 class="w3-text-black">
-              <strong>Board Thickness</strong>
-            </h4>
-            <p>031" / .062" / .093" / .125"</p>
-            <h4 class="w3-text-black">
-              <strong>Copper Weight</strong>
-            </h4>
-            <p>1 oz. Inner / Up to 2 oz. Outer</p>
-            <h4 class="w3-text-black">
-              <strong>Trace/Space</strong>
-            </h4>
-            <p>5 / 5 Mils</p>
-            <h4 class="w3-text-black">
-              <strong>Solder Mask (LPI)</strong>
-            </h4>
-            <p>Green</p>
+              <br>  
+              <h5 style="max-width: 190px;">
+             <?php echo $product->product_specs ?>
+           
+            </h5>
             <br>
           </div>
         </div>
         
         <br>
-
-       
-
-
 
       </div>
 
@@ -156,7 +141,8 @@ fa fa-shopping-basket w3-xxlarge"></i>
          <em><?php echo $product->product_desc ?></em>
          </p>
          <br>
-         <img src="<?php echo base_url(); ?>assests/Images/circuit_board.jpg" alt="circuit_board" width="400px">
+         <img src="<?php echo base_url().$product->image_path ?>" alt="circuit_board" width="400px">
+          
         </div>
     </div>
 

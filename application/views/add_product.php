@@ -75,34 +75,51 @@ fa fa-shopping-basket w3-xxlarge"></i>
 
 		<!-- About Section -->
 		<div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
-			<h3 class="w3-text-light-grey">
-				<strong>Circuit Boards</strong>
-			</h3>
-			<hr style="width:200px" class="w3-opacity">
-			<p>
-			</p>
+                    
+                    <section>
+                        <fieldset>
 
-			<div class="w3-row w3-center w3-padding-16 w3-sectiFFon">
+                          <div >
+                          <form action="success_add_material.html" method="post" name="form" id="form" onSubmit="">
+                          <h1>ADD PRODUCT</h1>
+                            <p>
+                              <label for="name">Product Category:*</label>
+                            <input name="category_id" type="text" required id=""></p>
+                            <p>
+                            <p>
+                              <label for="name">Product Name:*</label>
+                            <input name="name" type="text" required id="name"></p>
+                            <p>
+                              <label for="Description">Product Description</label>
+                              <textarea name="Description" cols="55" rows="5" id="Description"></textarea>
+                            </p>
+                            <p>
+                              <label for="Description">Product Specs</label>
+                              <textarea name="Description" cols="55" rows="5" id="Description"></textarea>
+                            </p>
+                            <p>
+                              <label for="Price">Price €</label>
+                              <input name="Price" type="text" required id="Price">
+                            </p>
+                            <p>
+                              <label for="Quantity">Quantity</label>
+                              <input name="Quantity" type="text" required id="Quantity">
+                            </p>
+                            <p>
+                            <label for="picture">Product Picture:*</label>
+                            <input type="file" name="picture" required>
+                            </p>
+                            <p>
+                              <input type="submit" name="submit" id="submit" value="Submit">
+                            </p>
+                            <p>* required field</p>
+                          </form>
+                            </div>
+                        </fieldset>
+                      </section>
+			
 		                                
-                        <?php
-                        //If no details found 
-                        if ($query == false ) { 
-                               echo "<p><em>Sorry, no items to display.</em></p>"; 
-                        } else { 
-                        foreach ($query->result() as $row)
-                        {
-//                                $tag = '/Web-Project/index.php/Store/view_selected_product/'.$row->product_id;
-                                echo '<div class="w3-quarter w3-section w3-light-grey" style="margin-right:5%; padding: 2%; max-width: 30%;">';
-                                echo '<span class="w3-xlarge"><a href="product_view.html"><img src='.base_url().$row->image_path.' width="200px"></a></span><br>';
-                                echo "<strong>$row->product_name</strong><hr>";
-                                echo "<em>$row->product_desc</em><hr>";
-                                echo "<strong>€$row->product_price</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ";
-                                echo "<a href=".'/Web-Project/index.php/Store/view_selected_product/'.$row->product_id."><button>View</button></a>";                             
-                                echo '</div>';
-                               
-                        }
-    }        
-                        ?>    
+                        
 				<!-- End About Section -->
 			</div>
 		</div>
@@ -134,3 +151,4 @@ fa fa-shopping-basket w3-xxlarge"></i>
 </body>
 
 </html>
+
