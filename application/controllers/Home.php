@@ -6,7 +6,7 @@ class home extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model("sidebar");
+        $this->load->model("sidebar_model");
         $account_info = $this->session->userdata('account_info');
         // if logged in...
         if (isset($account_info)) {
@@ -48,7 +48,7 @@ class home extends CI_Controller
         $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
-            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['permission_status']);
+            $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission($account_info['permission_status']);
             $header_data['title'] = "MWE - Login";
             $this->load->view("template/header", $header_data);
             $this->load->view("generic/login");
@@ -155,13 +155,13 @@ class home extends CI_Controller
         $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
-            $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['permission_status']);
+            $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission($account_info['permission_status']);
             $header_data['title'] = "Register";
             $this->load->view("template/header");
             $this->load->view("generic/sign_up");
         } else {
             $this->load->model("Customer_model");
-            $this->load->model("Account");
+            $this->load->model("account_model");
             // this assoc array must have same key as DB field names
             $account_data = array(
                 "permission_id" => "2",
@@ -177,7 +177,7 @@ class home extends CI_Controller
                 "postal_code" => $this->input->post("postal_code"),
                 "country" => $this->input->post("country")
             );
-            $account_id = $this->Account->add_account($account_data);
+            $account_id = $this->account_model->add_account($account_data);
             $customer_data = array(
                 "account_id" => $account_id,
                 "company" => $this->input->post("company")
@@ -192,9 +192,9 @@ class home extends CI_Controller
 
     public function validate_login($email, $password)
     {
-        $this->load->model("Login_data");
+        $this->load->model("login_data_model");
         $encrypted_password = $password;
-        // if password is not encrypted
+        // if password is not encrypted, encrypt it
         if (!preg_match('/[A-Fa-f0-9]{64}/', $encrypted_password)) {
             $encrypted_password = hash("sha256", $encrypted_password);
         }
@@ -202,8 +202,8 @@ class home extends CI_Controller
             "email" => $email,
             "password" => $encrypted_password
         );
-        $this->load->model("Account");
-        $account_info = $this->Account->login($data);
+        $this->load->model("account_model");
+        $account_info = $this->account_model->login($data);
         if ($account_info !== FALSE) {
             $this->load->model("Customer_model");
             $this->load->model("Staff_model");
@@ -225,7 +225,7 @@ class home extends CI_Controller
     public function validate_if_staff_email($email)
     {
         $this->load->model("Staff_model");
-        $query_result = $this->staff->get_staff_by_email($email);
+        $query_result = $this->staff_model->get_staff_by_email($email);
         if (count($query_result) > 0) {
             return false;
         }

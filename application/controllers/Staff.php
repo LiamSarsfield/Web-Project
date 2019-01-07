@@ -19,10 +19,10 @@ class Staff extends CI_Controller
 
     public function home()
     {
-        $this->load->model("Sidebar");
+        $this->load->model("sidebar_model");
         $account_info = $this->session->userdata('account_info');
         //gets account status from session... e.g. 'customer/staff/admin
-        $sidebars = $this->Sidebar->get_sidebars_by_permission_id(1);
+        $sidebars = $this->sidebar_model->get_sidebars_by_permission_id(1);
         $header_data['css_data'] = array("global.css");
         $header_data['sidebars'] = $sidebars;
         $data['sidebars'] = $sidebars;
@@ -40,7 +40,7 @@ class Staff extends CI_Controller
         $object .="_model";
         $this->load->library(array('pagination', 'table'));
         $this->load->model($object);
-        $this->load->model("sidebar");
+        $this->load->model("sidebar_model");
         //pagination
         $customer_row_count = $this->$object->get_rows();
         // lets say there is 200 customers in database
@@ -67,7 +67,7 @@ class Staff extends CI_Controller
         $data['table'] = $this->table->generate();
 
         $account_info = $this->session->userdata("account_info");
-        $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['permission_status']);
+        $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission($account_info['permission_status']);
         $header_data['title'] = "Register";
         $this->load->view("template/header", $header_data);
         $this->load->view("generic/staff_view", $data);
@@ -76,9 +76,9 @@ class Staff extends CI_Controller
     public function maintain($id)
     {
         $this->load->model("customer_model");
-        $this->load->model("sidebar");
+        $this->load->model("sidebar_model");
         $account_info = $this->session->userdata("account_info");
-        $header_data['sidebars'] = $this->sidebar->get_sidebars_by_permission($account_info['permission_status']);
+        $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission($account_info['permission_status']);
 
         $customer_assoc_array = $this->customer_model->get_info_for_display_by_id($id);
         if ($customer_assoc_array === FALSE) {

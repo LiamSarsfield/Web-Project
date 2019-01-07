@@ -6,14 +6,14 @@
  * Time: 11:26
  */
 
-class permission extends CI_Model
+class permission_model extends CI_Model
 {
     public function __construct()
     {
         parent::__construct();
     }
     public function get_all_permissions(){
-        $this->db->from("permission");
+        $this->db->from("permission_model");
         $query = $this->db->get();
         return $query->result();
     }

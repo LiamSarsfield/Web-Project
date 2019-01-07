@@ -1,6 +1,6 @@
 <?php
 
-class Login_data extends CI_Model
+class Login_data_model extends CI_Model
 {
 
     function add_login($data)
@@ -27,7 +27,7 @@ class Login_data extends CI_Model
         $this->load->model("Staff");
         if ($this->Customer_model->login($data)) {
 
-        } else if ($this->Staff->login($data)) {
+        } else if ($this->staff_model->login($data)) {
 
         } else {
             return false;

@@ -111,5 +111,14 @@ class Customer_model extends CI_Model
     {
         return $this->db->list_fields('customer');
     }
+
+    public function get_all_search_info()
+    {
+        $this->db->select("customer_id, CONCAT(`first_name`, ' ', `last_name`) AS 'customer_name', email");
+        $this->db->from("customer");
+        $this->db->join('account', 'customer.account_id = account.account_id', 'left');
+        return $this->db->get()->result();
+
+    }
 }
 

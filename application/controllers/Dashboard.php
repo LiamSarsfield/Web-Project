@@ -11,7 +11,6 @@ class Dashboard extends CI_Controller
         if (!isset($account_info['permission_id']) && $account_info['permission_id'] !== "unregistered") {
             redirect(site_url() . "/home/login");
         }
-        print_r($account_info);
     }
 
     public function index()
@@ -21,12 +20,12 @@ class Dashboard extends CI_Controller
 
     public function home()
     {
-        $this->load->model("Sidebar");
+        $this->load->model("sidebar_model");
         $account_info = $this->session->userdata('account_info');
         //gets account status from session... e.g. 'customer/staff/admin
         $header_data['css_data'] = array("global.css");
         $header_data['title'] = "Sub Home";
-        $sidebars = $this->Sidebar->get_sidebars_by_permission_id($account_info['permission_id']);
+        $sidebars = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
         $header_data['sidebars'] = $sidebars;
         $data['sidebars'] = $sidebars;
         $this->load->view("template/header", $header_data);
@@ -42,10 +41,10 @@ class Dashboard extends CI_Controller
         if (!isset($function_name)) {
             redirect(site_url() . "/dashboard/home");
         }
-        $this->load->model("sidebar");
+        $this->load->model("sidebar_model");
         $account_info = $this->session->userdata("account_info");
-        $sidebar_info = $this->sidebar->get_sub_sidebar_info_by_name($function_name);
-        if (!$this->sidebar->is_permitted_to_view_sub_sidebar($account_info['permission_id'], $sidebar_info->sub_sidebar_id)) {
+        $sidebar_info = $this->sidebar_model->get_sub_sidebar_info_by_name($function_name);
+        if (!$this->sidebar_model->is_permitted_to_view_sub_sidebar($account_info['permission_id'], $sidebar_info->sub_sidebar_id)) {
             redirect(site_url() . "/dashboard/home");
         }
         // what you need is function_names view all ...(e.g. customer, or order, or product, or lot traveller)..
@@ -62,5 +61,11 @@ class Dashboard extends CI_Controller
         return $this->load->view($page_view, '', TRUE);
     }
 
-
+    public function search_supplier()
+    {
+        $header_data['css_data'] = array("global.css");
+        $header_data['title'] = "Sub Home";
+        $this->load->view("template/header", $header_data);
+        $this->load->view("supplier/searchsuppliers");
+    }
 }

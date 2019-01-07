@@ -6,7 +6,7 @@
  * Time: 18:49
  */
 
-class Account extends CI_Model
+class Account_model extends CI_Model
 {
     function login($data)
     {
@@ -34,4 +34,5 @@ class Account extends CI_Model
     function last_insert_id(){
         $this->db->select("LAST_INSERT_ID()");
     }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-class Admin extends CI_Model{
+class Admin_model extends CI_Model{
     
     function add_admin($data)
     {

@@ -6,7 +6,7 @@
  * Time: 16:07
  */
 
-class Sidebar extends CI_Model
+class Sidebar_model extends CI_Model
 {
     public function __construct()
     {
@@ -16,8 +16,8 @@ class Sidebar extends CI_Model
     public function get_sidebars_by_permission($name = "unregistered")
     {
         //get permission id for the name
-        $this->load->model("Permission");
-        $permission_id = $this->Permission->get_permission_id_by_permission_name($name);
+        $this->load->model("permission_model");
+        $permission_id = $this->permission_model->get_permission_id_by_permission_name($name);
         $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id($permission_id);
         $sidebar_mains = array();
         foreach ($sidebar_ids as $sidebar_id) {
@@ -45,7 +45,7 @@ class Sidebar extends CI_Model
     public function get_sidebars_by_permission_id($permission_id = "0")
     {
         //get permission id for the name
-        $this->load->model("Permission");
+        $this->load->model("permission_model");
         $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id($permission_id);
         $sidebar_mains = array();
         foreach ($sidebar_ids as $sidebar_id) {
@@ -120,7 +120,7 @@ class Sidebar extends CI_Model
     {
         //going to return one sidebar info but NOT sub_side bar info (until further down)
         $this->db->where('sidebar_id', $sidebar_id);
-        $this->db->from('sidebar');
+        $this->db->from('Sidebar');
         $query = $this->db->get();
         return $query->row();
     }
