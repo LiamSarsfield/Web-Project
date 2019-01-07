@@ -6,9 +6,9 @@ class Store extends CI_Controller {
     public function view_store() {
         
         
-        $this->load->model("Product");
+        $this->load->model("Product_model");
         
-        $data['query'] = $this->Product->get_all_products();
+        $data['query'] = $this->Product_model->get_all_products();
         
         $this->load->view('store', $data);
         
@@ -18,9 +18,9 @@ class Store extends CI_Controller {
         
         
         
-        $this->load->model("Product");
+        $this->load->model("Product_model");
         
-        $data['product'] = $this->Product->get_product_by_id($id);
+        $data['product'] = $this->Product_model->get_product_by_id($id);
          
         $this->load->view('view_product', $data);
         

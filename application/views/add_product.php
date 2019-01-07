@@ -80,7 +80,7 @@ fa fa-shopping-basket w3-xxlarge"></i>
                         <fieldset>
 
                           <div >
-                          <form action="" method="post" name="form" id="form">
+                          <?php echo form_open('Product/add_product'); ?>
                           <h1>ADD PRODUCT</h1>
                             <p>
                               <label for="category_id">Product Category:*</label>
@@ -105,12 +105,12 @@ fa fa-shopping-basket w3-xxlarge"></i>
                               <textarea name="product_desc" cols="55" rows="5" id=""></textarea>
                             </p>
                             <p>
-                              <label for="product_spec">Product Specs</label>
-                              <textarea name="product_spec" cols="55" rows="5" id=""></textarea>
+                              <label for="product_specs">Product Specs</label>
+                              <textarea name="product_specs" cols="55" rows="5" id=""></textarea>
                             </p>
                             <p>
-                              <label for="price">Price €</label>
-                              <input name="price" type="text" required id="">
+                              <label for="product_price">Price €</label>
+                              <input name="product_price" type="text" required id="">
                             </p>
                             <p>
                               <label for="quantity">Quantity</label>

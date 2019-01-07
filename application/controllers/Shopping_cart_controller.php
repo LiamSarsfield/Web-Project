@@ -25,8 +25,8 @@ class Shopping_cart_controller extends CI_Controller {
         $data['session_id'] = $this->session->session_id; //Current Session Id
         
         //Get more information about the product
-        $this->load->model("Product");
-        $query = $this->Product->get_product_by_id($product_id);
+        $this->load->model("Product_model");
+        $query = $this->Product_model->get_product_by_id($product_id);
         $data['product_name'] = $query->product_name;
         $data['product_desc'] = $query->product_desc;
         $data['price'] = $query->product_price;

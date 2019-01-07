@@ -40,7 +40,7 @@
     </div>
   
     <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
-    <i class="fa fa-shopping-bag w3-xxlarge"></i>
+        <a href="<?php echo site_url()?>/Store/view_store"><i class="fa fa-shopping-bag w3-xxlarge"></i></a>
     <p>STORE</p>
     </button>
 

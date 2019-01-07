@@ -20,9 +20,7 @@
 		<div id="mySidenav" class="sidenav">
 			<button class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
 				<a href="#" class="w3-bar-item w3-button w3-hover-black">
-					<i class="
-    
-fa fa-shopping-basket w3-xxlarge"></i>
+					<i class="fa fa-shopping-basket w3-xxlarge"></i>
 					<p>
 						<strong>CART</strong>
 					</p>
