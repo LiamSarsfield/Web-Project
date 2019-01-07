@@ -80,30 +80,41 @@ fa fa-shopping-basket w3-xxlarge"></i>
                         <fieldset>
 
                           <div >
-                          <form action="success_add_material.html" method="post" name="form" id="form" onSubmit="">
+                          <form action="" method="post" name="form" id="form">
                           <h1>ADD PRODUCT</h1>
                             <p>
-                              <label for="name">Product Category:*</label>
-                            <input name="category_id" type="text" required id=""></p>
+                              <label for="category_id">Product Category:*</label>
+                              <select name="category_id" type="text" required id="">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                            </select>  
+                            </p>                 
                             <p>
-                            <p>
-                              <label for="name">Product Name:*</label>
-                            <input name="name" type="text" required id="name"></p>
-                            <p>
-                              <label for="Description">Product Description</label>
-                              <textarea name="Description" cols="55" rows="5" id="Description"></textarea>
+                              <label for="product_name">Product Name:*</label>
+                              <input name="product_name" type="text" required id="name">
                             </p>
                             <p>
-                              <label for="Description">Product Specs</label>
-                              <textarea name="Description" cols="55" rows="5" id="Description"></textarea>
+                              <label for="product_desc">Product Description</label>
+                              <textarea name="product_desc" cols="55" rows="5" id=""></textarea>
                             </p>
                             <p>
-                              <label for="Price">Price €</label>
-                              <input name="Price" type="text" required id="Price">
+                              <label for="product_spec">Product Specs</label>
+                              <textarea name="product_spec" cols="55" rows="5" id=""></textarea>
                             </p>
                             <p>
-                              <label for="Quantity">Quantity</label>
-                              <input name="Quantity" type="text" required id="Quantity">
+                              <label for="price">Price €</label>
+                              <input name="price" type="text" required id="">
+                            </p>
+                            <p>
+                              <label for="quantity">Quantity</label>
+                              <input name="quantity" type="text" required id="">
                             </p>
                             <p>
                             <label for="picture">Product Picture:*</label>

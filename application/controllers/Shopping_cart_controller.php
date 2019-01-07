@@ -2,6 +2,17 @@
 
 class Shopping_cart_controller extends CI_Controller {
     
+    
+    public function view_shopping_cart() {
+        
+        $this->load->model("Shopping_cart_model");
+        
+        $data['query'] = $this->Shopping_cart_model->select_from_cart();
+        
+        $this->load->view('shopping_cart', $data);
+        
+    }
+    
 
     public function add_product_to_shopping_cart($product_id) {
        //Calls Shopping_cart->add_to_cart($data) model to add an item to the shopping cart. 
@@ -35,6 +46,8 @@ class Shopping_cart_controller extends CI_Controller {
         $data['query'] = $this->Shopping_cart_model->select_from_cart();
         
         $this->load->view('shopping_cart', $data);
+        
+        redirect(site_url('/shopping_cart_controller/view_shopping_cart'));
         }
         
     }
