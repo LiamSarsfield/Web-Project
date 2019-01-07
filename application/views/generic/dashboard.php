@@ -7,12 +7,13 @@
     <?php
     $sidebars = $sidebars ?? array();
     foreach ($sidebars as $sidebar) {
+        //if no sub side bars, it is a big sidebar with a function
         if (count($sidebar->sub_sidebar_array) !== 0) { ?>
             <div class="w3-quarter w3-section w3-light-grey">
                 <h2><strong><?php echo $sidebar->name ?></strong></h2>
-                <?php foreach ($sidebar->sub_sidebar_array as $sidebar_dropdown) { ?>
+                <?php foreach ($sidebar->sub_sidebar_array as $sub_sidebar) { ?>
                     <hr>
-                    <h4><a href="<?php echo site_url() . $sidebar_dropdown->anchor_controller ."/" . $sidebar_dropdown->function ."/" .$sidebar->name?>"><?php echo $sidebar_dropdown->name; ?></a></h4>
+                    <h4><a href="<?php echo site_url() . "functions/$sub_sidebar->anchor_tag"?>"><?php echo $sub_sidebar->name; ?></a></h4>
                     <hr>
                 <?php } ?>
             </div>

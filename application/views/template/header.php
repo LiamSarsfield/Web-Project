@@ -18,7 +18,7 @@
     <div id="mySidenav" class="sidenav" style="display: none;">
         <?php $sidebars = $sidebars ?? array();
         foreach ($sidebars as $sidebar) {
-            //if the side bar is a drop down or not
+            //if the side bar has no sub side bars, style is different
             if (count($sidebar->sub_sidebar_array) == 0) { ?>
                 <div id="mySidenav" class="sidenav" style="display: none;">
                     <a href="<?php echo site_url() . $sidebar->anchor_tag; ?>"
@@ -34,10 +34,9 @@
                     <p><?php echo $sidebar->name; ?></p>
                 </button>
                 <div class="dropdown-container">
-                    <?php foreach ($sidebar->sub_sidebar_array as $sidebar_dropdown) { ?>
-                        <a href="<?php echo site_url() . $sidebar_dropdown->anchor_controller ."/" . $sidebar_dropdown->function ."/" .$sidebar->name?>"
-                           class="<?php echo $sidebar_dropdown->class ?>">
-                            <p><?php echo $sidebar_dropdown->name; ?></p>
+                    <?php foreach ($sidebar->sub_sidebar_array as $sub_sidebar) { ?>
+                        <a href="<?php echo site_url() . "$sub_sidebar->model_function/$sidebar->model_name" ?>" class="<?php echo $sub_sidebar->class; ?>" >
+                            <p><?php echo $sub_sidebar->name; ?></p>
                         </a>
                     <?php } ?>
                 </div>

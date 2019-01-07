@@ -164,7 +164,7 @@ class home extends CI_Controller
             $this->load->model("account_model");
             // this assoc array must have same key as DB field names
             $account_data = array(
-                "permission_id" => "2",
+                "permission_id" => "1",
                 "first_name" => $this->input->post("first_name"),
                 "last_name" => $this->input->post("last_name"),
                 "email" => $this->input->post("email"),
