@@ -18,7 +18,7 @@ class Functions extends CI_Controller
         }
     }
 
-    public function view($model, $search_string = NULL)
+    public function view($model, $search_id = NULL)
     {
         $model_formatted = $model . "_model";
         try {
@@ -33,10 +33,14 @@ class Functions extends CI_Controller
         $header_data['title'] = "Sub Home";
         $sidebars = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
         $header_data['sidebars'] = $sidebars;
-        $data['sidebars'] = $sidebars;
         $this->load->view("template/header", $header_data);
-        $data['model_info'] = $this->$model_formatted->get_all_search_info();
-        $this->load->view("{$model}/{$model}_view_search", $data);
+        if (isset($search_id)) {
+            $data['model_info'] = $this->$model_formatted->get_detailed_info_by_order_id($search_id);
+            $this->load->view("functions/{$model}_search", $data);
+        } else {
+            $data['model_info'] = $this->$model_formatted->get_all_search_info();
+            $this->load->view("functions/{$model}_view", $data);
+        }
     }
 
 

@@ -13,7 +13,7 @@
                 <h2><strong><?php echo $sidebar->name ?></strong></h2>
                 <?php foreach ($sidebar->sub_sidebar_array as $sub_sidebar) { ?>
                     <hr>
-                    <h4><a href="<?php echo site_url() . "functions/$sub_sidebar->anchor_tag"?>"><?php echo $sub_sidebar->name; ?></a></h4>
+                    <h4><a href="<?php echo site_url() . "/$sub_sidebar->anchor_tag/"?>"><?php echo $sub_sidebar->name; ?></a></h4>
                     <hr>
                 <?php } ?>
             </div>

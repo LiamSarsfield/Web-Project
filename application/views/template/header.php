@@ -35,7 +35,7 @@
                 </button>
                 <div class="dropdown-container">
                     <?php foreach ($sidebar->sub_sidebar_array as $sub_sidebar) { ?>
-                        <a href="<?php echo site_url() . "$sub_sidebar->model_function/$sidebar->model_name" ?>" class="<?php echo $sub_sidebar->class; ?>" >
+                        <a href="<?php echo site_url() . "/$sub_sidebar->anchor_tag/"?>" class="<?php echo $sub_sidebar->class; ?>" >
                             <p><?php echo $sub_sidebar->name; ?></p>
                         </a>
                     <?php } ?>
