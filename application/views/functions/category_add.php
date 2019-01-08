@@ -4,7 +4,7 @@
         <div id="container2">
             <?php echo form_open('functions/add/product'); ?>
 
-            <h1>ADD PRODUCT</h1>
+            <h1>ADD CATEGORY</h1>
             <p>
                 <label for="category_id">Product Category:*</label>
                 <select name="category_id" type="text" required id="">
