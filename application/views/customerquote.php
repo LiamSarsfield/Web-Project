@@ -5,9 +5,10 @@
     <head>
         <meta charset="utf-8">
         <title>Customer Quote</title>
-        <link href="<?php echo base_url(); ?>/assests/CSS/style.css" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-        <script type="text/javascript"src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
+        <link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript"src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
     </head>
 
     <body>
