@@ -39,6 +39,7 @@
       <p><input class="w3-input w3-padding-16" type="text" placeholder="City" required name="city"></p>
       <p><input class="w3-input w3-padding-16" type="text" placeholder="State/Province" required name="state"></p>
       <p><input class="w3-input w3-padding-16" type="text" placeholder="Postcode" required name="postal_code" value="<?php echo set_value('postal_code'); ?>"></p>
+      
     <?php echo form_error('country'); ?>
     <select name="country" class="w3-input w3-padding-16">
         <option selected="selected" value="IE">Ireland</option>
