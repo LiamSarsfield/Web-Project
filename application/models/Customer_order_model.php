@@ -45,7 +45,7 @@ class Customer_order_model extends CI_Model
     public function get_all_search_info()
     {
         $this->db->select("customer_order.order_id, CONCAT(account.first_name, ' ', account.last_name) AS 'customer_name', 
-        customer_order.date_ordered,  customer_order.total_price, IF(COUNT(account.account_id) > 0 ,'Yes', 'No') AS 'wip'");
+        customer_order.date_ordered, customer_order.total_price");
         $this->db->from("customer_order");
         $this->db->join('customer', 'customer_order.customer_id = customer.customer_id', 'inner');
         $this->db->join('account', 'customer.account_id = account.account_id', 'inner');

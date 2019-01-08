@@ -16,7 +16,6 @@
             <th scope="col">Customer Name</th>
             <th scope="col">Date Ordered</th>
             <th scope="col">Total Price</th>
-            <th scope="col">Work In Progress?</th>
             <th scope="col">View</th>
         </tr>
         <?php foreach ($model_info as $model) { ?>
@@ -25,8 +24,9 @@
                 <td><?php echo $model->customer_name; ?></td>
                 <td><?php echo $model->date_ordered; ?></td>
                 <td><?php echo $model->total_price; ?></td>
-                <td><?php echo $model->wip;?></td>
-                <td><a href="<?php echo $model->order_id; ?>"><div class="button">View info</div></a></td>
+                <td><a href="<?php echo $model->order_id; ?>">
+                        <div class="button">View info</div>
+                    </a></td>
             </tr>
         <?php } ?>
         </tbody>
