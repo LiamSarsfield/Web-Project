@@ -58,7 +58,7 @@ class Functions extends CI_Controller
         $sidebars = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
         $header_data['sidebars'] = $sidebars;
         $this->load->view("template/header", $header_data);
-
+        $this->load->view("functions/add_product");
     }
 
 
