@@ -1,6 +1,6 @@
 <?php
 
-class MWE_model extends CI_Model{
+class Material extends CI_Model{
     
     function get_all_materials() { 
           

@@ -7,7 +7,7 @@
             <h1>ADD PRODUCT</h1>
             <p>
                 <label for="category_id">Product Category:*</label>
-                <select name="category_id" type="text" required id="">
+                <select name="category_id" type="text"  id="">
                     <?php foreach ($model_info as $category) { ?>
                         <option><?php echo $category->name ?></option>
                     <?php } ?>
@@ -25,7 +25,7 @@
             <?php echo form_error('name'); ?>
             <p>
                 <label for="name">Product Name:*</label>
-                <input name="name" type="text" required id="name" value="<?php echo set_value('name'); ?>">
+                <input name="name" type="text"  id="name" value="<?php echo set_value('name'); ?>">
             </p>
             <?php echo form_error('description'); ?>
             <p>
@@ -35,29 +35,29 @@
             </p>
             <?php echo form_error('specs'); ?>
             <p>
-                <label for="spec">Product Specs</label>
-                <textarea name="spec" cols="55" rows="5" id="" value="<?php echo set_value('specs'); ?>"></textarea>
+                <label for="specs">Product Specs</label>
+                <textarea name="specs" cols="55" rows="5" id="" value="<?php echo set_value('specs'); ?>"></textarea>
             </p>
             <?php echo form_error('price'); ?>
             <p>
                 <label for="price">Price €</label>
-                <input name="price" type="text" required id="" value="<?php echo set_value('price'); ?>">
+                <input name="price" type="text"  id="" value="<?php echo set_value('price'); ?>">
             </p>
             <?php echo form_error('stock_quantity'); ?>
             <p>
                 <label for="stock_quantity">Available Quantity</label>
-                <input name="stock_quantity" type="text" required id=""
+                <input name="stock_quantity" type="text"  id=""
                        value="<?php echo (set_value('stock_quantity') == "") ? set_value('stock_quantity') : "0"; ?>">
             </p>
             <?php echo form_error('image_path'); ?>
             <p>
                 <label for="image_path">Product Picture:*</label>
-                <input type="file" name="image_path" required>
+                <input type="file" name="image_path" >
             </p>
             <p>
                 <input type="submit" name="submit" id="submit" value="Submit">
             </p>
-            <p>* required field</p>
+            <p>*  field</p>
             </form>
         </div>
     </fieldset>

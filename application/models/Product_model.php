@@ -34,7 +34,9 @@ class Product_model extends CI_Model
             return TRUE;
         }
     }
+    function add_entry(){
 
+    }
     function delete_product($id)
     {
 //        $id = $this->input->post('id');
@@ -59,8 +61,8 @@ class Product_model extends CI_Model
         return $this->db->get()->result();
     }
     public function get_all_add_info(){
-        $this->load->model("Categories_model");
-        $categories = $this->Categories_model->get_all_categories();
+        $this->load->model("category_model");
+        $categories = $this->category_model->get_all_categories();
         return $categories;
     }
 }

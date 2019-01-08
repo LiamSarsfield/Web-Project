@@ -78,6 +78,7 @@ class Functions extends CI_Controller
             $this->load->view("template/header", $header_data);
             $this->load->view("functions/{$model}_add");
         } else {
+                        $this->$model_formatted->add_{$model}();
             redirect(site_url() . "/dashboard");
         }
 
