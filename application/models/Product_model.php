@@ -7,7 +7,7 @@ class Product_model extends CI_Model
         $this->db->select("product_id, product_name, product_desc, product_price, image_path");
         $query = $this->db->get('product');
         if ($query->num_rows() > 0) {
-//            return $query->result_array();
+            //            return $query->result_array();
             return $query;
         } else {
             return FALSE;
@@ -16,7 +16,7 @@ class Product_model extends CI_Model
 
     function get_product_by_id($id)
     {
-//        $id = $this->input->post('product_id');
+        //        $id = $this->input->post('product_id');
         $this->db->select("product_id, product_name, product_desc, product_price, product_specs, quantity, image_path");
         $this->db->where("product_id", $id);
         $query = $this->db->get('product');
@@ -34,12 +34,31 @@ class Product_model extends CI_Model
             return TRUE;
         }
     }
-    function add_entry(){
+
+    public function add_product_by_post()
+    {
+        $product_data = array(
+            "category_id" => "1",
+            "name" => $this->input->post("name"),
+            "description" => $this->input->post("description"),
+            "specs" => $this->input->post("description"),
+            "image_path" => $this->input->post("image_path"),
+        );
+        if ($this->db->insert("product", $product_data)) {
+            return TRUE;
+        } else {
+            return TRUE;
+        }
+    }
+
+    function add_entry()
+    {
 
     }
+
     function delete_product($id)
     {
-//        $id = $this->input->post('id');
+        //        $id = $this->input->post('id');
         $this->db->where('product_id', $id);
         $this->db->delete('product');
     }
@@ -49,10 +68,14 @@ class Product_model extends CI_Model
         $this->db->where('id', $id);
         $this->db->update('product', $data);
     }
-    public function get_field_names(){
+
+    public function get_field_names()
+    {
         return $this->db->list_fields('product');
     }
-    public function get_form_field_names(){
+
+    public function get_form_field_names()
+    {
         $this->db->select("COLUMN_NAME");
         $this->db->where("TABLE_SCHEMA", "account");
         $this->db->where("TABLE_NAME", "account");
@@ -60,7 +83,9 @@ class Product_model extends CI_Model
         $this->db->from("INFORMATION_SCHEMA`.`COLUMNS");
         return $this->db->get()->result();
     }
-    public function get_all_add_info(){
+
+    public function get_all_add_info()
+    {
         $this->load->model("category_model");
         $categories = $this->category_model->get_all_categories();
         return $categories;

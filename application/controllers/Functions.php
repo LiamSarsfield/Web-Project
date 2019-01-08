@@ -51,20 +51,29 @@ class Functions extends CI_Controller
         } catch (RuntimeException $e) {
             redirect(site_url() . "/dashboard/home");
         }
-        $this->load->library('form_validation');
+        $this->load->library(array('form_validation', 'upload'));
         $config = array();
         $form_field_names = $this->Generic_model->get_form_field_names($model);
+        // getting all the required fields for the form
         foreach ($form_field_names as $form_field_name) {
+            $rules = "required";
+            $error_array = array(
+                'required' => 'You must provide a {field}.',
+                'do_upload' => ''
+            );
+            if($form_field_name->name === "image_path"){
+                $rules .= "|callback_do_upload";
+                $error_array['do_upload'] .= $this->upload->display_errors();
+            }
             $form_field_name_config = array(
                 'field' => $form_field_name->name,
                 'label' => ucfirst($form_field_name->name),
-                'rules' => 'required',
-                'errors' => array(
-                    'required' => 'You must provide a {field}.'
-                )
+                'rules' => $rules,
+                'errors' => $error_array
             );
             array_push($config, $form_field_name_config);
         }
+
         $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
@@ -78,11 +87,25 @@ class Functions extends CI_Controller
             $this->load->view("template/header", $header_data);
             $this->load->view("functions/{$model}_add");
         } else {
-                        $this->$model_formatted->add_{$model}();
+            $model_add_function = "add_{$model}_by_post";
+            $this->$model_formatted->$model_add_function();
             redirect(site_url() . "/dashboard");
         }
-
     }
 
+    public function do_upload()
+    {
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = 5000;
+        $config['max_width'] = 1024;
+        $config['max_height'] = 768;
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload('userfile')) {
+           return true;
+        } else {
+            return false;
+        }
+    }
 
 }
