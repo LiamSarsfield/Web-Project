@@ -8,9 +8,6 @@ class Home extends CI_Controller {
         $this->load->view('index');
         
     }
-    
-    
- 
     public function maintain_supplier() {
         
         $this->load->view('maintain_supplier');
@@ -20,5 +17,7 @@ class Home extends CI_Controller {
     public function maintenance(){
         $this->load->view('maintenance');
     }
+
+   
 
 }
