@@ -17,9 +17,10 @@ class Product extends CI_Controller {
            
             
             
-                $config['upload_path']          = './uploads/';
+//                $config['upload_path']          = './uploads/';
+                $config['upload_path']          = './assets/images/';
                 $config['allowed_types']        = 'gif|jpg|png';
-                $config['max_size']             = 100;
+                $config['max_size']             = 5000;
                 $config['max_width']            = 1024;
                 $config['max_height']           = 768;
                 $config['overwrite'] = false;
@@ -36,7 +37,7 @@ class Product extends CI_Controller {
                 {
                           
                         $data_upload_files = $this->upload->data();
-                        $data['image_path'] = 'uploads/'.$data_upload_files['file_name'];
+                        $data['image_path'] = 'assets/images/'.$data_upload_files['file_name'];
                         
                         $this->load->model("Product_model");
                         $this->Product_model->add_product($data);
