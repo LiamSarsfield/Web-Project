@@ -42,7 +42,10 @@ class Product extends CI_Controller {
                         $this->Product_model->add_product($data);
                         
 //                      $this->load->view('success');
-                        $this->load->view('add_product');
+                        
+                        $this->load->model("Product_model");       
+                        $data['query'] = $this->Product_model->get_all_products();
+                        $this->load->view('list_of_products', $data);
                 }
                        
         }
