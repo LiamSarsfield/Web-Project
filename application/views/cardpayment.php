@@ -11,13 +11,7 @@
     <body>
 	<header> 
 <a href="index.html"><img src="images/logo.jpg" alt="logo" width="153" height="160" title="Home"/></a><img src="images/midwest.jpg" alt="" width="780" height="160" id="title"/><img src="images/memberlogin2.jpg" alt="login" width="120" height="150" id="crest"/>
-  <nav>
-    <ul>
-      <li><a class="active" href="customersearch.html">Customer</a></li>
-      <li><a href="maintain_supplier.html">Supplier</a></li>
-      <li><a href="view_products.html">Production</a></li>
-      </ul>
-</nav>
+<?php require_once('customermenu.php'); ?>
  
 </header>
         <main>

@@ -245,7 +245,7 @@ li a:hover {background-color: #111;}
 li {width: 420px;}
 label {float: left;width: 200px;font-weight: bold;}
 #submit {margin-left: 200px;margin-top: 5px;width: 120px;}
-fieldset {background-color: #E6E6FA;border: 1px solid #332e2e;    }
+fieldset {border: 1px solid #332e2e; margin-top: 10px;   }
 body {font-family: calibri,sans-serif;font-size: medium;}
 #rightCol #legend p {text-align: justify;}
 #leftCol #about p {text-align: justify;}
@@ -275,11 +275,7 @@ label {
 	margin-top: 5px;
 	width: 120px;	
 }
-                                  
-fieldset{
-	background-color: #E6E6FA;
-	margin-top: 10px;
-}
+ 
 legend{
 	text-align: center;
 }
@@ -402,7 +398,7 @@ form fieldset legend {
     align-items: center;
 }
 .button {
-	background-color: #18bc9c;
+	background-color: #222;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	border-radius: 8px;
@@ -429,7 +425,7 @@ form fieldset legend {
 .generic_search .generic_search_submit {
 	height: 100%;
 	width: 35px;
-	background-color: #18bc9c;
+	background-color: #222;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	padding: 3px;

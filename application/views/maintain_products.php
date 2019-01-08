@@ -2,8 +2,8 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Add Supplier</title>
-<link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
+<title>Maintain Materials</title>
+<<link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript"src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
@@ -32,42 +32,22 @@
    
     
   </header>
+<br><br>
+<h1>MAINTAIN Products</h1>
+
+
+  
+
 <br>
+<div style="margin-left:40%;">
+<a href="<?php echo site_url()?>/Product/addProduct"><div class="button"style="margin-left:5%;">Add Product</div></a>
+<a href="<?php echo site_url()?>/Product/details"><div class="button"style="margin-left:5%;">View Product</div></a>
+</div>
 
-<section>
-    <fieldset style="width:60%; margin-left:20%;">
-      
-      <div id="container2">
-      <form action="success_add_material.html" method="post" name="form" id="form" onSubmit="">
-      <h1>ADD MATERIAL</h1>
-        <p>
-          <label for="name">Material Name:*</label>
-        <input name="name" type="text" required id="name"></p>
-        <p>
-          <label for="Description">Description</label>
-          <textarea name="Description" cols="55" rows="5" id="Description"></textarea>
-        </p>
-        <p>
-          <label for="Price">Price €</label>
-          <input name="Price" type="text" required id="Price">
-        </p>
-        <p>
-          <label for="Quantity">Quantity</label>
-          <input name="Quantity" type="text" required id="Quantity">
-        </p>
-        <p>
-          <input type="submit" name="submit" id="submit" value="Submit">
-        </p>
-        <p>* required field</p>
-      </form>
-        </div>
-    </fieldset>
-  </section>
-
-<footer style=" margin-left:20%;">
+<footer style="margin-top:2%; margin-left:43%;">
   <p>Copyright © 2018 Website by Dream Team </p>
 </footer>
-</div>
+
 
 </body>
 </html>
