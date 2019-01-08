@@ -112,10 +112,10 @@ fa fa-shopping-basket w3-xxlarge"></i>
             <h2 style="color: green;">
               <strong>In stock!</strong>
             </h2>
-            <h3>Deliver to: </h3>
+<!--            <h3>Deliver to: </h3>
             <p>Sam Harriman</p>
             <p>LIT, Mainstreet</p>
-            <p>Limerick</p>
+            <p>Limerick</p>-->
 
           </div>
           <div>
