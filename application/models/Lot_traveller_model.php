@@ -53,9 +53,30 @@ class Lot_traveller_model extends CI_Model
         $product = $this->product_model->get_product_by_id($product_id);
         // if product is false (No product was selected before hand...
         if (!$product) {
-        return "<a href=\"lot_traveller.html\"><div class=\"button\">You need to select a product first</div></a>";
-        };
-        return "<label for='name'>Product Name:</label>
-                <input name='name' type='text' readonly required id='' value='{$product->name}'>";
+            $model_info['product_label'] = "<a href=\"lot_traveller.html\"><div class=\"button\">You need to select a product first</div></a>";
+            $model_info['product_id'] = "0";
+        } else {
+            $model_info['product_labels_info'] =
+                "<p><label for='name'>Product ID:</label>
+                <input name='product_id' type='text' readonly required id='' value='{$product->product_id}'></p>
+                <p><label for='name'>Product Name:</label>
+                <input name='name' type='text' readonly required id='' value='{$product->name}'></p>";
+            $model_info['product_id'] = $product->product_id;
+        }
+        return $model_info;
+    }
+
+    public function add_lot_traveller_by_post()
+    {
+        $lot_traveller_info = array(
+            "product_id" => $this->input->post("product_id"),
+            "status" => $this->input->post("status"),
+            "production_quantity" => $this->input->post("production_quantity"),
+        );
+        if ($this->db->insert("lot_traveller", $lot_traveller_info)) {
+            return TRUE;
+        } else {
+            return TRUE;
+        }
     }
 }

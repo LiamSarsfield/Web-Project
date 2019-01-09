@@ -56,6 +56,7 @@ class Functions extends CI_Controller
         // getting all the required fields for the form
         foreach ($form_field_names as $form_field_name) {
             $rules = array();
+            $rules_error = array();
             if($form_field_name->name == "image_path"){
                 array_push($rules, "callback_upload_image");
                 if(!isset($_FILES['image_path'])){
@@ -77,6 +78,7 @@ class Functions extends CI_Controller
             $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
             $header_data['title'] = "MWE - Login";
             $add_info = $this->uri->segment(4, NULL);
+            // possible info the model view might need, returns on an assoc. array
             $data['model_info'] = $this->$model_formatted->get_all_add_info($add_info);
             $header_data['css_data'] = array("global.css");
             $header_data['title'] = "Sub Home";
@@ -84,8 +86,6 @@ class Functions extends CI_Controller
             $header_data['sidebars'] = $sidebars;
             $this->load->view("template/header", $header_data);
             $this->load->view("functions/{$model}_add", $data);
-        } else if ($this->input->post("imagine_path")) {
-
         } else {
             $model_add_function = "add_{$model}_by_post";
             $this->$model_formatted->$model_add_function();

@@ -1,12 +1,9 @@
 <section>
     <fieldset style="width:60%; margin-left:20%;">
         <div id="container2">
-            <?php echo form_open('functions/add/lot_traveller/'); ?>
+            <?php echo form_open("functions/add/lot_traveller/{$model_info['product_id']}"); ?>
             <h1>GENERATE LOT TRAVELLER</h1>
-            <?php echo form_error('name'); ?>
-            <p>
-            <?php echo $model_info; ?>
-            </p>
+            <?php echo $model_info['product_labels_info']; ?>
             <p>
                 <label for="name">Status</label>
                 <select name="status">
@@ -17,8 +14,9 @@
                 </select>
             </p>
             <p>
-                <label for="quantity">Quantity:</label>
-                <input name="quantity" type="text" required id="" value="<?php echo set_value('quantity'); ?>">
+                <?php echo form_error('production_quantity'); ?>
+                <label for="production_quantity">Quantity:</label>
+                <input name="production_quantity" type="text" required id="" value="<?php echo set_value('quantity'); ?>">
             </p>
             <p>
                 <input type="submit" name="submit" id="submit" value="Submit">

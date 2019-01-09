@@ -24,12 +24,14 @@ class Customer_model extends CI_Model
         return $this->db->get("customer")->result_array();
     }
 
-    function get_customer_info_by_id($id)
+    function get_customer_by_id($customer_id)
     {
-        $this->db->where("customer_id", $id);
+        $this->db->select("CONCAT(first_name, ' ', last_name) AS name, customer_id");
+        $this->db->join('account', 'account.account_id = customer.account_id', 'inner');
+        $this->db->where("customer_id", $customer_id);
         $query = $this->db->get('customer');
         if ($query->num_rows() > 0) {
-            return $query->row_array(0);
+            return $query->row(0);
         }
         return false;
     }
