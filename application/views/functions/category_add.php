@@ -5,13 +5,17 @@
             <h1>ADD CATEGORY</h1>
             <?php echo form_error('name'); ?>
             <p>
-                <label for="name">Name</label>
-                <input name="name" type="text" required id="" value="<?php echo set_value('name'); ?>">
+                <label for="name">Name:</label>
+                <input name="name" type="text" required id="" value="<?php echo set_value('name'); ?>"><label class="requiredfield"> * required field</label>
+                </br>
+                
             </p>
-            <p>
-                <input type="submit" name="submit" id="submit" value="Submit">
-            </p>
-            <p>* required field</p>
+</br>
+
+            <button id="submit" class="w3-button w3-light-grey w3-padding-large" type="submit">
+    <i class="fa fa-paper-plane"></i> Submit
+    </button>
+
             </form>
         </div>
     </fieldset>

@@ -412,8 +412,7 @@ form fieldset legend {
 }
 
 .requiredfield{
-	margin-right:5%;
-
+	float: right;
 }
 
 .customerselect {
