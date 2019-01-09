@@ -14,11 +14,10 @@ class Product_model extends CI_Model
         }
     }
 
-    function get_product_by_id($id)
+    function get_product_by_id($product_id)
     {
-        //        $id = $this->input->post('product_id');
-        $this->db->select("product_id, product_name, product_desc, product_price, product_specs, quantity, image_path");
-        $this->db->where("product_id", $id);
+        $this->db->select("product_id, name, description, price, specs, stock_quantity, image_path");
+        $this->db->where("product_id", $product_id);
         $query = $this->db->get('product');
         if ($query->num_rows() > 0) {
             return $query->row(0);
@@ -37,12 +36,14 @@ class Product_model extends CI_Model
 
     public function add_product_by_post()
     {
+        // image path is file path without base_url
+        $image_path = "/" . str_replace(str_replace('\\', '/', FCPATH), "", $this->upload->data('full_path'));
         $product_data = array(
             "category_id" => "1",
             "name" => $this->input->post("name"),
             "description" => $this->input->post("description"),
             "specs" => $this->input->post("description"),
-            "image_path" => $this->input->post("image_path"),
+            "image_path" => $image_path,
         );
         if ($this->db->insert("product", $product_data)) {
             return TRUE;
@@ -90,5 +91,6 @@ class Product_model extends CI_Model
         $categories = $this->category_model->get_all_categories();
         return $categories;
     }
+
 }
 
