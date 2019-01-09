@@ -51,30 +51,21 @@ class Functions extends CI_Controller
         } catch (RuntimeException $e) {
             redirect(site_url() . "/dashboard/home");
         }
-        $this->load->library(array('form_validation', 'upload'));
-        $config = array();
-        $form_field_names = $this->Generic_model->get_form_field_names($model);
+        $this->load->library(array('form_validation'));
+        $form_field_names = $this->Generic_model->get_required_form_field_names($model);
         // getting all the required fields for the form
         foreach ($form_field_names as $form_field_name) {
-            $rules = "required";
-            $error_array = array(
-                'required' => 'You must provide a {field}.',
-                'do_upload' => ''
-            );
-            if($form_field_name->name === "image_path"){
-                $rules .= "|callback_do_upload";
-                $error_array['do_upload'] .= $this->upload->display_errors();
+            $rules = array('required');
+            $rules_error['required'] = "You must provide a {field}";
+            if($form_field_name->name == "image_path"){
+                array_push($rules, "callback_upload_image");
             }
-            $form_field_name_config = array(
-                'field' => $form_field_name->name,
-                'label' => ucfirst($form_field_name->name),
-                'rules' => $rules,
-                'errors' => $error_array
+            $this->form_validation->set_rules($form_field_name->name, ucfirst($form_field_name->name), $rules,
+                $rules_error
             );
-            array_push($config, $form_field_name_config);
         }
 
-        $this->form_validation->set_rules($config);
+        // if form validation is invalid or if image is needed, and upload is invalid...
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
             $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
@@ -86,6 +77,8 @@ class Functions extends CI_Controller
             $header_data['sidebars'] = $sidebars;
             $this->load->view("template/header", $header_data);
             $this->load->view("functions/{$model}_add");
+        } else if ($this->input->post("imagine_path")) {
+
         } else {
             $model_add_function = "add_{$model}_by_post";
             $this->$model_formatted->$model_add_function();
@@ -93,17 +86,18 @@ class Functions extends CI_Controller
         }
     }
 
-    public function do_upload()
+    public function upload_image()
     {
-        $config['upload_path'] = './uploads/';
+        $config['upload_path'] = './assets/images/';
         $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = 5000;
-        $config['max_width'] = 1024;
-        $config['max_height'] = 768;
+        $config['max_size'] = 20000;
+        $config['max_width'] = 10243;
+        $config['max_height'] = 7638;
         $this->load->library('upload', $config);
-        if (!$this->upload->do_upload('userfile')) {
-           return true;
+        if ($this->upload->do_upload('image_path')) {
+            return true;
         } else {
+            $this->form_validation->set_message('upload_image', $this->upload->display_errors());
             return false;
         }
     }

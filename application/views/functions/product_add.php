@@ -2,7 +2,7 @@
     <fieldset style="width:60%; margin-left:20%;">
 
         <div id="container2">
-            <?php echo form_open('functions/add/product'); ?>
+            <?php echo form_open_multipart('functions/add/product'); ?>
 
             <h1>ADD PRODUCT</h1>
             <p>
@@ -52,7 +52,7 @@
             <?php echo form_error('image_path'); ?>
             <p>
                 <label for="image_path">Product Picture:*</label>
-                <input type="file" name="image_path" >
+                <input type="file" name="image_path" required>
             </p>
             <p>
                 <input type="submit" name="submit" id="submit" value="Submit">

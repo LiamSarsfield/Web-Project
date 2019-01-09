@@ -12,7 +12,7 @@ class Generic_model extends CI_Model
     {
         parent::__construct();
     }
-    public function get_form_field_names($table_name){
+    public function get_required_form_field_names($table_name){
     $this->db->select("COLUMN_NAME AS name");
     $this->db->where("TABLE_SCHEMA", $this->db->database);
     $this->db->where("TABLE_NAME", $table_name);
