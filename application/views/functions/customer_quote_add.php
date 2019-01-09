@@ -3,13 +3,14 @@
 
         <div id="container2">
             <?php echo form_open('functions/add/customer_quote'); ?>
-
+            
             <h1>ADD CUSTOMER QUOTE</h1>
             <?php echo $model_info['labels_info']; ?>
             <?php echo form_error('name'); ?>
             <p>
-                <label for="name">Name:*</label>
-                <input name="name" type="text" id="name" value="<?php echo set_value('name'); ?>">
+                <label for="name">Name:</label>
+                <input name="name" type="text" id="name" value="<?php echo set_value('name'); ?>"<label class> * required field</label>
+                
             </p>
             <?php echo form_error('description'); ?>
             <p>
@@ -28,9 +29,11 @@
                 <input name="price" type="text" id="" value="<?php echo set_value('price'); ?>">
             </p>
             <p>
-                <input type="submit" name="submit" id="submit" value="Submit">
+            <button id="submit" class="w3-button w3-light-grey w3-padding-large" type="submit">
+    <i class="fa fa-paper-plane"></i> Sign Up
+    </button>
             </p>
-            <p>* field</p>
+           
             </form>
         </div>
     </fieldset>

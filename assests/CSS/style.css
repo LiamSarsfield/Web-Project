@@ -410,6 +410,26 @@ form fieldset legend {
 	padding: 0 10px;
 	cursor: pointer;
 }
+
+.requiredfield{
+	margin-right:5%;
+
+}
+
+.customerselect {
+	margin-left: 31%;
+	background-color: red;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	border-radius: 8px;
+	box-sizing: border-box;
+	color: #FFFFFF;
+	line-height: 35px;
+	display: inline-block;
+	text-align: center;
+	padding: 0 10px;
+	cursor: pointer;
+}
 .generic_search {
 	margin: 10px;
 }

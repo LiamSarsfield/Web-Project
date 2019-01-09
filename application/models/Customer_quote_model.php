@@ -50,7 +50,7 @@ class Customer_quote_model extends CI_Model
         $customer = $this->customer_model->get_customer_by_id($customer_id);
         // if customer is false (No customer was selected before hand...
         if (!$customer) {
-            $model_info['labels_info'] = "<a href='customer.html'><div class='button'>You need to select a Customer first</div></a>";
+            $model_info['labels_info'] = "<a href='customer.html'><div class='customerselect'>You need to select a Customer first</div></a>";
             $model_info['customer_id'] = "0";
         } else {
             $model_info['labels_info'] =
