@@ -18,8 +18,8 @@ class Staff_model extends CI_Model
 
     function get_staff_by_id($id)
     {
-//        $id = $this->input->post('staff_id');
-        $this->db->select("staff_id, first_name, last_name, dob, hired_date, left_date, position, phone, address1, address2, town, city");
+        $this->db->select("staff_id, CONCAT(account.first_name, ' ', account.last_name) as 'name'");
+        $this->db->join("account", "account.account_id = staff.account_id", "inner");
         $this->db->where("staff_id", $id);
         $query = $this->db->get('staff');
         if ($query->num_rows() > 0) {
@@ -40,6 +40,7 @@ class Staff_model extends CI_Model
         }
         return $query->row()->customer_id;
     }
+
     function login_staff($data)
     {
         $encrypted_password = $data['password'];
@@ -87,5 +88,40 @@ class Staff_model extends CI_Model
         return $this->db->get()->result();
     }
 
+    function get_all_add_info($info = 0)
+    {
+        $customer_id = $info;
+        $this->load->model("customer_model");
+        $customer = $this->customer_model->get_customer_by_id($customer_id);
+        // if customer is false (No customer was selected before hand...
+        if (!$customer) {
+            $model_info['labels_info'] = "<a href='customer.html'><div class='button'>You need to select a Customer first</div></a>";
+            $model_info['customer_id'] = "0";
+        } else {
+            $model_info['labels_info'] =
+                "<p><label for='customer_id'>Customer ID:</label>
+                <input name='customer_id' type='text' readonly required id='' value='{$customer->customer_id}'></p>
+                <p><label for='name'>Customer Name:</label>
+                <input name='name' type='text' readonly required id='' value='{$customer->name}'></p>";
+            $model_info['customer_id'] = $customer->customer_id;
+        }
+        return $model_info;
+    }
+
+    public function add_customer_quote_by_post()
+    {
+        $customer_quote_info = array(
+            "customer_id" => $this->input->post("customer_id"),
+            "name" => $this->input->post("name"),
+            "description" => $this->input->post("description"),
+            "specs" => $this->input->post("specs"),
+            "price" => $this->input->post("price"),
+        );
+        if ($this->db->insert("customer_quote", $customer_quote_info)) {
+            return TRUE;
+        } else {
+            return TRUE;
+        }
+    }
 }
 

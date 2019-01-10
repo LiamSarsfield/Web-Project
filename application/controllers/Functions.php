@@ -57,13 +57,13 @@ class Functions extends CI_Controller
         foreach ($form_field_names as $form_field_name) {
             $rules = array();
             $rules_error = array();
-            if($form_field_name->name == "image_path"){
+            if ($form_field_name->name == "image_path") {
                 array_push($rules, "callback_upload_image");
-                if(!isset($_FILES['image_path'])){
+                if (!isset($_FILES['image_path'])) {
                     $rules = array('required');
                     $rules_error['required'] = "You must provide a {field}";
                 }
-            } else{
+            } else {
                 $rules = array('required');
                 $rules_error['required'] = "You must provide a {field}";
             }
@@ -77,8 +77,9 @@ class Functions extends CI_Controller
             $account_info = $this->session->userdata("account_info");
             $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
             $header_data['title'] = "MWE - Login";
-            $add_info = $this->uri->segment(4, NULL);
-            // possible info the model view might need, returns on an assoc. array
+            // add info includes id (foreign keys) the table might need for data, (need which customer id for customer order)
+            $add_info = array($this->uri->segment(4, "0"), $this->uri->segment(5, "0"), $this->uri->segment(6, "0") );
+            // possible info the view might need, returns an assoc. array
             $data['model_info'] = $this->$model_formatted->get_all_add_info($add_info);
             $header_data['css_data'] = array("global.css");
             $header_data['title'] = "Sub Home";
@@ -108,7 +109,9 @@ class Functions extends CI_Controller
             return false;
         }
     }
-    public function manage_permissions(){
+
+    public function manage_permissions()
+    {
 
     }
 }

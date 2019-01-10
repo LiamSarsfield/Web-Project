@@ -46,15 +46,17 @@ class Lot_traveller_model extends CI_Model
         $this->db->delete('lot_traveller');
     }
 
-    public function get_all_add_info($info = 0)
+    public function get_all_add_info($info)
     {
-        $product_id = $info;
+        // get product, get work order for lot traveller
+        // if product has lot traveller already, cannot create a new lot traveller
+        $product_id = $info[0];
         $this->load->model("product_model");
         $product = $this->product_model->get_product_by_id($product_id);
         // if product is false (No product was selected before hand...
         if (!$product) {
-            $model_info['product_label'] = "<a href=\"lot_traveller.html\"><div class=\"button\">You need to select a product first</div></a>";
-            $model_info['product_id'] = "0";
+            $model_info['labels_info'] = "<a href=\"lot_traveller.html\"><div class=\"button\">You need to select a product first</div></a>";
+            $model_info['lot_traveller_id'] = "0";
         } else {
             $model_info['product_labels_info'] =
                 "<p><label for='name'>Product ID:</label>

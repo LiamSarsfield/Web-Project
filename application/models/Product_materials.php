@@ -56,7 +56,6 @@ class Product_materials extends CI_Model{
 }
 
     function update_product_material($data){
-       
        $this->db->where('id', $id);
        $this->db->update('product_material', $data); 
    } 

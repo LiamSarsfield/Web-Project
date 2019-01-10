@@ -36,6 +36,7 @@ class Product_model extends CI_Model
 
     public function add_product_by_post()
     {
+        $lot_traveller_initialization =
         // image path is file path without base_url
         $image_path = "/" . str_replace(str_replace('\\', '/', FCPATH), "", $this->upload->data('full_path'));
         $product_data = array(
