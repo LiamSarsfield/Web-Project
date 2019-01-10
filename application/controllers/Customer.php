@@ -52,6 +52,7 @@ class Customer extends CI_Controller {
     
     public function add_customer() {
         
+         $this->load->view('maintaincustomer');
     }
 
 }
