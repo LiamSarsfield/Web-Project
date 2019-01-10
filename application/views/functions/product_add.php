@@ -6,7 +6,7 @@
 
             <h1>ADD PRODUCT</h1>
             <p>
-                <label for="category_id">Product Category:*</label>
+                <label for="category_id">Product Category:*</label><label class="requiredfield"> * required field</label>
                 <select name="category_id" type="text"  id="">
                     <?php foreach ($model_info as $category) { ?>
                         <option><?php echo $category->name ?></option>
@@ -25,7 +25,7 @@
             <?php echo form_error('name'); ?>
             <p>
                 <label for="name">Product Name:*</label>
-                <input name="name" type="text"  id="name" value="<?php echo set_value('name'); ?>">
+                <input name="name" type="text"  id="name" value="<?php echo set_value('name'); ?>"><label class="requiredfield"> * required field</label>
             </p>
             <?php echo form_error('description'); ?>
             <p>
@@ -53,11 +53,14 @@
             <p>
                 <label for="image_path">Product Picture:*</label>
                 <input type="file" name="image_path" required>
+              
             </p>
+            
             <p>
-                <input type="submit" name="submit" id="submit" value="Submit">
+            <button id="submit" class="w3-button w3-light-grey w3-padding-large" type="submit">
+    <i class="fa fa-paper-plane"></i> Submit    </button>
             </p>
-            <p>*  field</p>
+          
             </form>
         </div>
     </fieldset>

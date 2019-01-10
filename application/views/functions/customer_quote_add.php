@@ -8,8 +8,8 @@
             <?php echo $model_info['labels_info']; ?>
             <?php echo form_error('name'); ?>
             <p>
-                <label for="name">Name:</label>
-                <input name="name" type="text" id="name" value="<?php echo set_value('name'); ?>"<label class> * required field</label>
+                <label for="name">Name:</label><label class="requiredfield"> * required field</label>
+                <input name="name" type="text" id="name" value="<?php echo set_value('name'); ?>"
                 
             </p>
             <?php echo form_error('description'); ?>
@@ -30,7 +30,7 @@
             </p>
             <p>
             <button id="submit" class="w3-button w3-light-grey w3-padding-large" type="submit">
-    <i class="fa fa-paper-plane"></i> Sign Up
+    <i class="fa fa-paper-plane"></i> Submit
     </button>
             </p>
            
