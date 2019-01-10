@@ -108,18 +108,11 @@ fa fa-shopping-basket w3-xxlarge"></i>
                             echo '<td><center>€'.$row->product_price.'</center></td>';
                             echo '<td><center>'.$row->quantity.'</center></td>';
                             echo '<td>';   
-                            echo '<a href="'.base_url().'index.php/Product_controller/delete_product/'.$row->product_id.'"><button>Delete</button></a>';    
+                            echo '<a href="'.base_url().'index.php/Product/delete_product/'.$row->product_id.'"><button>Delete&nbsp;</button></a>';
+                            echo '<br><br>';
+                            echo '<a href="'.base_url().'index.php/Product/update_product/'.$row->product_id.'"><button>Update</button></a>';
                             echo '</td>';                               
-                            
-                            
-                            
-//                                echo '<div class="w3-quarter w3-section w3-light-grey" style="margin-right:5%; padding: 2%; max-width: 30%;">';
-//                                echo '<span class="w3-xlarge"><a href="product_view.html"><img src='.base_url().$row->image_path.' width="200px"></a></span><br>';
-//                                echo "<strong>$row->product_name</strong><hr>";
-//                                echo "<em>$row->product_desc</em><hr>";
-//                                echo "<strong>€$row->product_price</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ";
-//                                echo "<a href=".'/Web-Project/index.php/Store/view_selected_product/'.$row->product_id."><button>View</button></a>";                             
-//                                echo '</div>';
+                                                        
                                
                         }
     }        

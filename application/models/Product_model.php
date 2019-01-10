@@ -56,7 +56,7 @@ class Product_model extends CI_Model{
               
 }
 
-    function update_customer_details($data){
+    function update_product_details($data){
        
        $this->db->where('id', $id);
        $this->db->update('product', $data); 

@@ -58,5 +58,46 @@ class Product extends CI_Controller {
         }
     }
     
+    public function delete_product($id) {
+        
+        $this->load->model("Product_model");
+        $this->Product_model->delete_product($id);
+        
+        $data['query'] = $this->Product_model->get_all_products();
+        $this->load->view('list_of_products', $data);
+    }
+    
+    public function update_product($id) {
+        
+        
+        if($this->input->post('product_name')){
+                   
+        $data['category_id'] = $this->input->post("category_id");
+        $data['product_name'] = $this->input->post("product_name");
+        $data['product_desc'] = $this->input->post("product_desc");
+        $data['product_specs'] = $this->input->post("product_specs");
+        $data['product_price'] = $this->input->post("product_price");
+        $data['quantity'] = $this->input->post("quantity");
+        
+           
+        $this->load->model("Product_model");
+        
+        $this->Product_model->update_product($data);
+        
+        }
+        
+        else{
+            
+            $this->load->model("Product_model"); 
+            
+            $data['query'] = $this->Product_model->get_product_by_id($id);
+                       
+            $this->load->view('update_product', $data);
+            
+        }
+    }
+    
+    
+    
 }
 

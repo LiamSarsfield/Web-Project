@@ -38,9 +38,9 @@ require_once('adminmenu.php');
 
                           <div >
                              
-                          <?php echo form_open_multipart('Product/add_product');?>        
+                          <?php echo form_open_multipart('Product/update_product');?>        
                           
-                          <h1>ADD PRODUCT</h1>
+                          <h1>UPDATE  PRODUCT</h1>
                           <?php if(isset($error)){echo '<center><span style="color:red" >'.$error.'</span></center>';}?>
                             <p>
                               <label for="category_id">Product Category:*</label>
@@ -58,23 +58,23 @@ require_once('adminmenu.php');
                             </p>                 
                             <p>
                               <label for="product_name">Product Name:*</label>
-                              <input name="product_name" type="text" required id="name">
+                              <input name="product_name" type="text" value="<?php echo $query->product_name;?>" required id="name">
                             </p>
                             <p>
                               <label for="product_desc">Product Description</label>
-                              <textarea name="product_desc" cols="55" rows="5" id=""></textarea>
+                              <textarea name="product_desc" cols="55" rows="5" id=""><?php echo $query->product_desc;?></textarea>
                             </p>
                             <p>
                               <label for="product_specs">Product Specs</label>
-                              <textarea name="product_specs" cols="55" rows="5" id=""></textarea>
+                              <textarea name="product_specs" cols="55" rows="5" id=""><?php echo $query->product_specs;?></textarea>
                             </p>
                             <p>
                               <label for="product_price">Price €</label>
-                              <input name="product_price" type="text" required id="">
+                              <input name="product_price" type="text" value="<?php echo $query->product_price;?>" required id="">
                             </p>
                             <p>
                               <label for="quantity">Quantity</label>
-                              <input name="quantity" type="text" required id="">
+                              <input name="quantity" type="text" value="<?php echo $query->quantity;?>" required id="">
                             </p>
                             <p>
                             <label for="picture">Product Picture:*</label>
@@ -82,7 +82,7 @@ require_once('adminmenu.php');
                             
                             </p>
                             <p>
-                              <input type="submit" name="submit" id="submit" value="Add Product">
+                              <input type="submit" name="submit" id="submit" value="Update">
                             </p>
                             <p>* required field</p>
                           </form>
