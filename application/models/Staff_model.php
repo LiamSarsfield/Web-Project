@@ -23,8 +23,7 @@ class Staff_model extends CI_Model
         $this->db->where("staff_id", $id);
         $query = $this->db->get('staff');
         if ($query->num_rows() > 0) {
-            return $query->row(0);
-
+            return $query->row_array();
         }
         return false;
     }

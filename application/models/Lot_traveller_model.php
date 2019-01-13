@@ -38,7 +38,17 @@ class Lot_traveller_model extends CI_Model
             return TRUE;
         }
     }
-
+    public function initialize_lot_traveller(){
+        $lot_traveller_initialization = array(
+            "status" => "Not Produced",
+            "production_quantity" => "0"
+        );
+        if ($this->db->insert("lot_traveller", $lot_traveller_initialization)) {
+            return TRUE;
+        } else {
+            return TRUE;
+        }
+    }
     function delete_lot_traveller($id)
     {
 //      $id = $this->input->post('id');

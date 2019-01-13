@@ -20,13 +20,17 @@ class Product_model extends CI_Model
         $this->db->where("product_id", $product_id);
         $query = $this->db->get('product');
         if ($query->num_rows() > 0) {
-            return $query->row(0);
+            return $query->row_array();
         }
         return false;
     }
 
     function add_product($data)
     {
+        $this->load->model("lot_traveller");
+        $this->db->initialize_lot_traveller();
+        $lot_traveller_id = $this->db->insert_id();
+        $data['lot_traveller_id'] = $lot_traveller_id;
         if ($this->db->insert("product", $data)) {
             return TRUE;
         } else {
@@ -36,11 +40,14 @@ class Product_model extends CI_Model
 
     public function add_product_by_post()
     {
-        $lot_traveller_initialization =
+        $this->load->model("lot_traveller");
+        $this->db->initialize_lot_traveller();
+        $lot_traveller_id = $this->db->insert_id();
         // image path is file path without base_url
         $image_path = "/" . str_replace(str_replace('\\', '/', FCPATH), "", $this->upload->data('full_path'));
         $product_data = array(
             "category_id" => "1",
+            "lot_traveller_id" => $lot_traveller_id,
             "name" => $this->input->post("name"),
             "description" => $this->input->post("description"),
             "specs" => $this->input->post("description"),
@@ -86,11 +93,25 @@ class Product_model extends CI_Model
         return $this->db->get()->result();
     }
 
-    public function get_all_add_info()
+    public function get_all_add_info($info)
     {
         $this->load->model("category_model");
-        $categories = $this->category_model->get_all_categories();
-        return $categories;
+        $category_id = $info[0];
+        $category = $this->category_model->get_category_by_id($category_id);
+        if (!$category) {
+            $model_info['labels_info'] = "<a href=\"category.html\"><div class=\"button\">Select Category</div></a>";
+            $model_info['category_id'] = "0";
+        } else{
+            $model_info['labels_info'] = "<p><label for='category_id'>Category ID:</label>
+                <input name='category_id' type='text' readonly required id='category_id' value='{$category->category_id}'></p>
+                <p><label for='name'>Category Name:</label>
+                <input name='name' type='text' readonly required id='' value='{$category->name}'></p>";
+            $model_info['category_id'] = $category_id;
+        }
+        return $model_info;
+    }
+    public function get_select_info(){
+        $this->db->select("product_id, name");
     }
 
 }

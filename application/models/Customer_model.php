@@ -31,7 +31,7 @@ class Customer_model extends CI_Model
         $this->db->where("customer_id", $customer_id);
         $query = $this->db->get('customer');
         if ($query->num_rows() > 0) {
-            return $query->row(0);
+            return $query->row_array(0);
         }
         return false;
     }

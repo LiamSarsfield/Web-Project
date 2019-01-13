@@ -20,9 +20,8 @@ class Supplier_model extends CI_Model
         $this->db->select("supplier_id, name, address1, address2, town, city, phone, country");
         $this->db->where("supplier_id", $id);
         $query = $this->db->get('supplier');
-        if ($query->num_rows() > 0) {
-            return $query->row(0);
-
+        if($query->num_rows() > 0){
+            return $query->row_array();
         }
         return false;
     }

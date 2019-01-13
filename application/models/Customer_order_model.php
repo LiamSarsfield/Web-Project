@@ -17,8 +17,8 @@ class Customer_order_model extends CI_Model
     // just returns table data with fks
     function get_customer_order_by_id($customer_order)
     {
-        $this->db->select("order_id, date_ordered, total_price, customer_id, customer_invoice_id");
-        $this->db->where("order_id", $customer_order);
+        $this->db->select("customer_order_id, customer_id, date_ordered");
+        $this->db->where("customer_order_id", $customer_order);
         $query = $this->db->get('customer_order');
         if ($query->num_rows() > 0) {
             return $query->row(0);
@@ -87,12 +87,22 @@ class Customer_order_model extends CI_Model
     {
         $customer_id = $info[0];
         $this->load->model("customer_model");
-        $customer = $this->customer_model->get_customer_by_id($customer_id);
+        $customer = $this->customer_model->get_customer_info_by_id($customer_id);
+        $items = $this->session->userdata("staff_cart") ?? FALSE;
+        $model_info['labels_info'] = "";
         // if customer is false (No customer was selected before hand...
         if (!$customer) {
             $model_info['labels_info'] = "<a href='customer.html'><div class='button'>You need to select a Customer first</div></a>";
             $model_info['customer_id'] = "0";
-        } else {
+        } else if (!$items) {
+            $model_info['labels_info'] =
+                "<p><label for='customer_id'>Customer ID:</label>
+                <input name='customer_id' type='text' readonly required id='' value='{$customer->customer_id}'></p>
+                <p><label for='name'>Supplier Name:</label>
+                <input name='name' type='text' readonly required id='' value='{$customer->name}'></p>
+                <a href='materials.html'><div class='button'>Select Materials</div></a>";
+            $model_info['supplier_id'] = "0";
+        }else {
             $model_info['labels_info'] =
                 "<p><label for='customer_id'>Customer ID:</label>
                 <input name='customer_id' type='text' readonly required id='' value='{$customer->customer_id}'></p>
