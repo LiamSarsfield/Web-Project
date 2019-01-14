@@ -66,7 +66,21 @@ class Staff_model extends CI_Model
             return TRUE;
         }
     }
-
+    public function add_staff_by_post($model_data){
+        $this->load->model("Generic_model");
+        $columns_class = $this->Generic_model->get_non_primary_and_non_foreign_key_columns("staff");
+        $staff_data = array();
+        foreach($columns_class as $column_class){
+            $staff_data[$column_class->name] = $model_data[$column_class->name];
+            unset($model_data[$column_class->name]);
+        }
+        $model_data['permission_id'] = "2";
+        $model_data['password'] = hash('sha256', $model_data['password']);
+        $this->db->insert('account', $model_data);
+        $staff_data['account_id'] = $this->db->insert_id();
+        $this->db->insert('staff', $staff_data);
+        $ss = 2;
+    }
     function delete_staff_by_id($id)
     {
 //        $id = $this->input->post('id');

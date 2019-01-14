@@ -18,23 +18,34 @@ class Generic_model extends CI_Model
         $this->db->select('COLUMN_NAME as name');
         $this->db->where("TABLE_SCHEMA", $this->db->database);
         $this->db->where("TABLE_NAME", $table_name);
-        $this->db->where("COLUMN_KEY != ", "PRI");
+        $this->db->where("(`COLUMN_KEY` != 'PRI' OR COLUMN_NAME = 'account_id')");
         $this->db->from("INFORMATION_SCHEMA`.`COLUMNS");
         $this->db->limit(1);
         $display_col = $this->db->get()->row()->name;
+        $dd = $this->db->last_query();
+        if ($display_col)
+            $select_cols = array("{$table_name}_id", "$display_col");
+        $columns = $this->get_all_col_names($table_name);
+        foreach ($columns as $column) {
+            if ($column->label == "price") {
+                $select_cols[] = $column->label;
+                break;
+            }
+
+        }
         // getting first col (pk), getting first non column key col
-        $this->db->select("{$table_name}_id, $display_col");
+
+        $this->db->select($select_cols);
         $this->db->from($table_name);
-        return $this->db->get()->result();
+        return $this->db->get()->result_array();
     }
 
     public function get_all_col_names($table_name)
     {
         // returns all form fields, as well as data type
-        $this->db->select("COLUMN_NAME AS label, DATA_TYPE as data_type, IS_NULLABLE as can_be_null");
+        $this->db->select("COLUMN_NAME AS label, DATA_TYPE as data_type, IS_NULLABLE as can_be_null, COLUMN_KEY as column_key");
         $this->db->where("TABLE_SCHEMA", $this->db->database);
         $this->db->where("TABLE_NAME", $table_name);
-        $this->db->where("COLUMN_KEY != ", "PRI");
         $this->db->from("INFORMATION_SCHEMA`.`COLUMNS");
         $form_fields = $this->db->get()->result();
         foreach ($form_fields as $form_field) {
@@ -49,10 +60,12 @@ class Generic_model extends CI_Model
         // returns all form fields, as well as data type
         $this->db->select("COLUMN_NAME AS label, DATA_TYPE as data_type, IS_NULLABLE as can_be_null");
         $this->db->where("TABLE_SCHEMA", $this->db->database);
-        $this->db->where("TABLE_NAME", $table_name);
-        $this->db->where("COLUMN_KEY != ", "PRI");
+        if ($table_name)
+            $this->db->where("TABLE_NAME", $table_name);
+        $this->db->where("COLUMN_KEY", "");
         $this->db->from("INFORMATION_SCHEMA`.`COLUMNS");
         $form_fields = $this->db->get()->result();
+        $dd = $this->db->last_query();
         foreach ($form_fields as $form_field) {
             $form_field->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $form_field->label)));
             $form_field->is_required = ($form_field->can_be_null == "NO") ? TRUE : FALSE;
@@ -73,7 +86,7 @@ class Generic_model extends CI_Model
         }, $result);
     }
 
-    public function get_non_primary_and_foreign_key_columns($table_name)
+    public function get_non_primary_and_non_foreign_key_columns($table_name)
     {
         $this->db->select("COLUMN_NAME AS name, DATA_TYPE as data");
         $this->db->where("TABLE_SCHEMA", $this->db->database);
@@ -149,7 +162,17 @@ class Generic_model extends CI_Model
         $this->db->where("TABLE_SCHEMA", $this->db->database);
         $this->db->where("TABLE_NAME", $multi_table);
         $result = $this->db->get()->result();
-        return ($result[0]->name == "{$table_name}_id") ?  true : false;
+        return ($result[0]->name == "{$table_name}_id") ? true : false;
+    }
+
+    public function get_table_row_by_primary_key($table_name, $primary_key_id = "0")
+    {
+        $this->db->where("{$table_name}_id", $primary_key_id);
+        $result = $this->db->get($table_name)->row_array();
+        if (empty($result)) {
+            return FALSE;
+        }
+        return $result;
     }
 
     public function add_data($table_name)
@@ -169,7 +192,26 @@ class Generic_model extends CI_Model
                 $model_insert_data[$table_post_data_key] = $table_post_data[$table_post_data_key];
             }
         }
-        $this->db->insert($table_name, $model_insert_data);
+        if ($table_name == "staff" || $table_name == "customer") {
+            $this->add_account($model_insert_data, $table_name);
+        } else
+            $this->db->insert($table_name, $model_insert_data);
+    }
+
+    public function add_account($model_data, $account_type)
+    {
+        $columns_class = $this->Generic_model->get_non_primary_and_non_foreign_key_columns($account_type);
+        $data = array();
+        foreach ($columns_class as $column_class) {
+            $data[$column_class->name] = $model_data[$column_class->name];
+            unset($model_data[$column_class->name]);
+        }
+        if ($account_type != "staff")
+            $model_data['permission_id'] = "2";
+        $model_data['password'] = hash('sha256', $model_data['password']);
+        $this->db->insert('account', $model_data);
+        $data['account_id'] = $this->db->insert_id();
+        $this->db->insert($account_type, $data);
     }
 
     public function view_data($model, $table_id)

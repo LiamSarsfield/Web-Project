@@ -122,5 +122,12 @@ class Customer_model extends CI_Model
         return $this->db->get()->result();
 
     }
+    public function get_customer_account_name_by_customer_id($customer_id){
+        $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name'");
+        $this->db->from("customer");
+        $this->db->join('account', 'customer.account_id = account.account_id', 'inner');
+        $this->db->where("customer_id", $customer_id);
+        return $this->db->get()->row()->name;
+    }
 }
 

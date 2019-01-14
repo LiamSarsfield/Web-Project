@@ -34,5 +34,10 @@ class Account_model extends CI_Model
     function last_insert_id(){
         $this->db->select("LAST_INSERT_ID()");
     }
-
+    public function get_account_view_info_from_account_id($account_id){
+        $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name', `email");
+        $this->db->where("account_id", $account_id);
+        $this->db->from("account");
+        return $this->db->get()->row_array();
+    }
 }

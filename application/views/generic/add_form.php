@@ -13,23 +13,21 @@
                     foreach ($foreign_form_field->columns as $column) { ?>
                         <p>
                             <?php echo form_error("{$table_name}[{$column->label}]"); ?>
-                            <label for='<?php echo "{$table_name}[{$column->label}]"; ?>'><?php echo $column->field; ?></label>
-                            <input name='<?php echo "{$table_name}[{$column->label}]"; ?>'
+                            <label for='<?php echo ($column->label != "name") ? "{$table_name}[{$column->label}]" : ""; ?>'><?php echo $column->field; ?></label>
+                            <input name='<?php echo ($column->label != "name") ? "{$table_name}[{$column->label}]" : ""; ?>'
                                    type='text' id='<?php echo $column->label; ?>' value='<?php echo $column->value; ?>'>
                         </p>
                     <?php }
-                } else if ($foreign_form_field->is_multi_table == FALSE) {
-                    ?>
-                    <p><a href='/functions/select/<?php echo $foreign_form_field->name; ?>'>
-                            <div class='button'>Select <?php echo $foreign_form_field->field; ?></div>
-                        </a></p>
-                <?php } else if ($foreign_form_field->is_multi_table) {
-                    ?>
-                    <p><a href='/functions/select/<?php echo $foreign_form_field->name; ?>'>
+                } else { ?>
+                    <p><a href='<?php echo site_url("/functions/select/{$table_name}/{$foreign_form_field->name}"); ?>'>
                             <div class='button'>Select <?php echo $foreign_form_field->field;
-                                echo ($foreign_form_field->can_be_null) ? "(Optional)" : "(required)" ?></div>
+                                echo ($foreign_form_field->can_be_null) ? " (Optional)" : " (Required)"; ?></div>
                         </a></p>
-                <?php }
+                    <?php if (!$foreign_form_field->is_multi_table && !$foreign_form_field->can_be_null) {
+                        break;
+                    }
+                }
+
             }
             foreach ($form_field_data as $form_field) { ?>
                 <?php echo form_error("{$table_name}[{$form_field->label}]"); ?>

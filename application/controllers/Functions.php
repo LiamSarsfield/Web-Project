@@ -18,29 +18,46 @@ class Functions extends CI_Controller
         }
     }
 
-    public function view($model, $search_id = NULL)
+    public function view($table_name, $search_id = NULL)
     {
-        $model_formatted = $model . "_model";
-        try {
-            $this->load->model($model_formatted);
-        } catch (RuntimeException $e) {
-            redirect(site_url() . "/dashboard/home");
-        }
-        $this->load->model("sidebar_model");
-        $account_info = $this->session->userdata('account_info');
-        //gets account status from session... e.g. 'customer/staff/admin
-        $header_data['css_data'] = array("global.css");
-        $header_data['title'] = "Sub Home";
-        $sidebars = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
-        $header_data['sidebars'] = $sidebars;
-        $this->load->view("template/header", $header_data);
+        $this->load->library('table');
+        $this->load->model(array("Generic_model"));
         if (isset($search_id)) {
-            $data['model_info'] = $this->$model_formatted->get_detailed_info_by_order_id($search_id);
-            $this->load->view("functions/{$model}_search", $data);
+
         } else {
-            $data['model_info'] = $this->$model_formatted->get_all_search_info();
-            $this->load->view("functions/{$model}_view", $data);
+            $table_rows = $this->Generic_model->get_select_info($table_name);
+            foreach ($table_rows as $table_row) {
+                foreach ($table_row as $table_column_key => $table_column_value) {
+                    if ($table_column_key != "{$table_name}_id" && substr($table_column_key, -2) == "id") {
+                        if ($table_column_key == "account_id") {
+                            $this->load->model("Account_model");
+                            $test = $this->Account_model->get_account_view_info_from_account_id($table_column_value);
+                            $table_row = array_merge($table_row, $test);
+                        }
+                        unset($table_row[$table_column_key]);
+                    }
+                    $changed_table_row = $table_row;
+                }
+                $add_button = site_url("/functions/view/{$table_name}/{$table_name}_id");
+                $table_row[] = "<p><a href='{$add_button}'><div class='button'>Add</div></a></p>";
+                $this->table->add_row($table_row);
+                // if table_row has a foreign key in it, remove it
+            }
+            if (!empty($table_rows)) {
+                $column_headers = array();
+                foreach ($changed_table_row as $column => $value) {
+                    $column_headers[] = str_replace("Id", "ID", ucwords(str_replace("_", " ", $column)));
+                }
+                $column_headers[] = "View";
+                $this->table->set_heading($column_headers);
+                $data['table'] = $this->table->generate();
+                initialize_header();
+                $this->load->view("generic/view_form", $data);
+            }
+            $dd = 2;
         }
+
+
     }
 
     public function add($model)
@@ -52,9 +69,20 @@ class Functions extends CI_Controller
             redirect(site_url() . "/dashboard/home");
         }
         $this->load->library(array('form_validation'));
+        $foreign_form_field_data = array();
+        $form_field_data = array();
+        // if your adding staff or customer, account table cols need to be displayed
+        if ($model == "staff" || $model == "customer") {
+            $form_field_data = array_merge($form_field_data, $this->Generic_model->get_col_names("account"));
+            // if adding staff, you can change permission type
+            if ($model == "staff") {
+                $foreign_form_field_data = array_merge($foreign_form_field_data, $this->initialize_foreign_data("account"));
+            }
+        } else {
 //      returns foreign field data in array within array of id and name or else button
-        $foreign_form_field_data = $this->initialize_foreign_data($model);
-        $form_field_data = $this->Generic_model->get_col_names($model);
+            $foreign_form_field_data = array_merge($foreign_form_field_data, $this->initialize_foreign_data($model));
+        }
+        $form_field_data = array_merge($form_field_data, $this->Generic_model->get_col_names($model));
         $this->initialize_form_validation($model, $form_field_data);
         // if form validation is invalid or if image is needed, and upload is invalid...
         if ($this->form_validation->run() == FALSE) {
@@ -79,21 +107,70 @@ class Functions extends CI_Controller
         if (!isset($table_name) || !isset($foreign_table)) {
             redirect(site_url("home/dashboard"));
         }
+        $this->load->library('table');
         $this->load->model("Generic_model");
         // tables are multi related
         $multi_related_tables = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
+        $foreign_table_data = $this->Generic_model->get_select_info($foreign_table);
+        $columns = array();
+        $column_headers = array();
+        if (!empty($foreign_table_data)) {
+            $foreign_table_columns = array_keys($foreign_table_data[0]);
+            foreach ($foreign_table_columns as $foreign_table_column) {
+                $column_class = new stdClass();
+                $column_class->label = $foreign_table_column;
+                $column_class->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table_column)));;
+                $columns[] = $column_class;
+                $column_headers[] = $column_class->field;
+            }
+        }
+
         if (!$multi_related_tables) {
 
         } else {
-            $additional_columns = $this->Generic_model->get_non_primary_and_foreign_key_columns($multi_related_tables);
-            foreach ($additional_columns as $additional_column) {
-                $additional_column->label = ucwords(str_replace("_", " ", $additional_column->name));
-                initialize_header();
-                $products = $this->Generic_model->get_select_info($foreign_table);
-                $this->load->view("generic/select_form");
+            $multi_columns = $this->Generic_model->get_non_primary_and_non_foreign_key_columns($multi_related_tables);
+            foreach ($multi_columns as $multi_column) {
+                $column_class = new stdClass();
+                $column_class->label = $multi_column->name;
+                $column_class->field = ucwords(str_replace("_", " ", $multi_column->name));
+                $column_class->data = $multi_column->data;
+                $columns[] = $column_class;
+                $column_headers[] = $column_class->field;
             }
         };
+        $column_headers[] = "Add";
+        $this->table->set_heading($column_headers);
+        foreach ($foreign_table_data as $foreign_table_datum) {
+            $rows = array();
+            foreach ($columns as $column) {
+                if ($column->label == "quantity")
+                    $rows[] = "<select name=\"amount\" class=\"w3-input w3-padding-16\">
+                      <option value='1'>1</option>
+                      <option value='2'>2</option>
+                      <option value='3'>3</option>
+                      <option value='4'>4</option>
+                      <option value='5'>5</option>
+                      <option value='6'>6</option>
+                      <option value='7'>7</option>
+                      <option value='8'>8</option>
+                      <option value='9'>9</option>
+                      <option value='10'>10</option>
+                      </select>";
+                else
+                    $rows[] = $foreign_table_datum[$column->label];
+            }
+            $add_button = site_url("/functions/add/{$table_name}/{$rows[0]}");
+            $rows[] = "<p><a href='{$add_button}'><div class='button'>Add</div></a></p>";
+            $this->table->add_row($rows);
+        }
+        $table_template = array(
+            'table_open' => "<table style='width:60%; margin-left:20%;'>"
+        );
+        $this->table->set_template($table_template);
+        $data['table'] = $this->table->generate();
 
+        initialize_header();
+        $this->load->view("generic/select_form", $data);
     }
 
     public function initialize_form_validation($table_name, $form_field_data)
@@ -139,12 +216,19 @@ class Functions extends CI_Controller
             $foreign_table_id = $uri_strings[$i] ?? NULL;
             $foreign_table_formatted = $foreign_tables[$i] . "_model";
             $this->load->model($foreign_table_formatted);
-            $get_function = "get_{$foreign_tables[$i]}_by_id";
-            $foreign_table_info = $this->$foreign_table_formatted->$get_function($foreign_table_id);
-            // if info was found... will return 1d array with pk first and name second...
-            if ($foreign_table_info) {
-                $foreign_table_info_required = array_slice($foreign_table_info, 0, 2);
+            // if uri has an id in it, find the needed info for it to display what the user selected
+            $foreign_table_row_result = $this->Generic_model->get_table_row_by_primary_key($foreign_tables[$i], $foreign_table_id);
+            // if info was found... will return 1d array with pk first and a human readable name second (e.g. name)
+            if ($foreign_table_row_result) {
+                foreach ($foreign_table_row_result as $key => $value) {
+                    // if value is not primary key and ends in id, it must be foreign key, therefore strip it from array of values
+                    if ($key != "{$foreign_tables[$i]}_id" && substr($key, -2) == "id") {
+                        unset($foreign_table_row_result[$key]);
+                    }
+                }
+                $foreign_table_info_required = array_slice($foreign_table_row_result, 0, 2);
                 $foreign_table->exists = TRUE;
+                // if this info exists then we know the user can select from a multi table
                 $all_single_tables_info_exist = TRUE;
                 $foreign_table_columns = array_keys($foreign_table_info_required);
                 foreach ($foreign_table_columns as $foreign_table_column) {
@@ -153,6 +237,14 @@ class Functions extends CI_Controller
                     $foreign_table_column_class->label = $foreign_table_column;
                     $foreign_table_column_class->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table_column)));
                     $foreign_table->columns[] = $foreign_table_column_class;
+                    if ($foreign_table_column == "customer_id") {
+                        $foreign_table_column_class = new stdClass();
+                        $this->load->model("Customer_model");
+                        $foreign_table_column_class->value = $this->Customer_model->get_customer_account_name_by_customer_id($foreign_table_id);
+                        $foreign_table_column_class->label = "name";
+                        $foreign_table_column_class->field = "Name";
+                        $foreign_table->columns[] = $foreign_table_column_class;
+                    }
                 }
             }
             array_push($foreign_form_field_data, $foreign_table);
@@ -160,8 +252,8 @@ class Functions extends CI_Controller
         if ($all_single_tables_info_exist && !empty($foreign_multi_tables)) {
             // if there are more than 1 multi relationship...
             foreach ($foreign_multi_tables as $foreign_multi_table) {
-            if(!$this->Generic_model->form_is_multi_related($table_name, $foreign_multi_table))
-                continue;
+                if (!$this->Generic_model->form_is_multi_related($table_name, $foreign_multi_table))
+                    continue;
                 // getting specific multi info
                 $foreign_multi_table_data = $this->Generic_model->get_multi_foreign_table_info($foreign_multi_table);
                 if ($foreign_multi_table_data) {
@@ -198,8 +290,7 @@ class Functions extends CI_Controller
         }
     }
 
-    public
-    function manage_permissions()
+    public function manage_permissions()
     {
 
     }

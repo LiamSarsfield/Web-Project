@@ -101,7 +101,7 @@ class Product_model extends CI_Model
         if (!$category) {
             $model_info['labels_info'] = "<a href=\"category.html\"><div class=\"button\">Select Category</div></a>";
             $model_info['category_id'] = "0";
-        } else{
+        } else {
             $model_info['labels_info'] = "<p><label for='category_id'>Category ID:</label>
                 <input name='category_id' type='text' readonly required id='category_id' value='{$category->category_id}'></p>
                 <p><label for='name'>Category Name:</label>
@@ -110,7 +110,9 @@ class Product_model extends CI_Model
         }
         return $model_info;
     }
-    public function get_select_info(){
+
+    public function get_select_info()
+    {
         $this->db->select("product_id, name");
     }
 
