@@ -31,10 +31,8 @@ class Generic_model extends CI_Model
                 $select_cols[] = $column->label;
                 break;
             }
-
         }
         // getting first col (pk), getting first non column key col
-
         $this->db->select($select_cols);
         $this->db->from($table_name);
         return $this->db->get()->result_array();
@@ -62,7 +60,7 @@ class Generic_model extends CI_Model
         $this->db->where("TABLE_SCHEMA", $this->db->database);
         if ($table_name)
             $this->db->where("TABLE_NAME", $table_name);
-        $this->db->where("COLUMN_KEY", "");
+        $this->db->where("(`COLUMN_KEY` = '' OR `COLUMN_KEY` = 'UNI')");
         $this->db->from("INFORMATION_SCHEMA`.`COLUMNS");
         $form_fields = $this->db->get()->result();
         $dd = $this->db->last_query();
@@ -98,17 +96,27 @@ class Generic_model extends CI_Model
 
     public function get_foreign_key_table_names($table_name)
     {
-        $this->db->select("REFERENCED_TABLE_NAME as table");
+        $this->db->select("LEFT(COLUMN_NAME,length(COLUMN_NAME)-3)  as 'name'");
         $this->db->where("TABLE_SCHEMA", $this->db->database);
         $this->db->where("TABLE_NAME", $table_name);
-        $this->db->where("CONSTRAINT_NAME != ", "PRIMARY");
-        $this->db->from("INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE");
+        $this->db->where("COLUMN_KEY != ", "");
+        $this->db->where("COLUMN_KEY != ", "UNI");
+        $this->db->where("ORDINAL_POSITION != ", "1");
+        $this->db->from("`INFORMATION_SCHEMA`.`COLUMNS`");
         $result = $this->db->get()->result_array();
+        $dd = $this->db->last_query();
         return array_map(function ($value) {
-            return $value['table'];
+            return $value['name'];
         }, $result);
     }
-
+    public function inner_join_tables_by_foreign_pk($table_name, $foreign_table, $join_id){
+        $this->db->from("$table_name");
+        $this->db->join("$foreign_table", "{$foreign_table}.{$foreign_table}_id = $table_name.{$foreign_table}_id", 'inner');
+        $this->db->where("{$table_name}.{$foreign_table}_id", $join_id);
+        $result = $this->db->get()->row();
+        $dd = $this->db->last_query();
+        return $result;
+    }
     public function get_multi_foreign_key_table_names($table_name)
     {
         $this->db->select("TABLE_NAME as table");
@@ -133,7 +141,7 @@ class Generic_model extends CI_Model
         return $this->db->get()->result();
     }
 
-    public function tables_are_multi_related($table_name, $foreign_table = 2)
+    public function tables_are_multi_related($table_name, $foreign_table)
     {
         $foreign_table_potential = $this->get_multi_foreign_key_table_names($table_name);
         if (empty($foreign_table_potential)) {
@@ -165,6 +173,13 @@ class Generic_model extends CI_Model
         return ($result[0]->name == "{$table_name}_id") ? true : false;
     }
 
+    public function get_account_name_by_id($account, $account_id){
+        $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name'");
+        $this->db->from("$account");
+        $this->db->join('account', "{$account}.account_id = account.account_id", 'inner');
+        $this->db->where("{$account}_id", $account_id);
+        return $this->db->get()->row()->name;
+    }
     public function get_table_row_by_primary_key($table_name, $primary_key_id = "0")
     {
         $this->db->where("{$table_name}_id", $primary_key_id);
@@ -178,24 +193,19 @@ class Generic_model extends CI_Model
     public function add_data($table_name)
     {
         // form field names is array with form
-        $model_insert_data = array();
         $table_post_data = $this->input->post($table_name);
-        $table_post_data_keys = array_keys($table_post_data);
-        foreach ($table_post_data_keys as $table_post_data_key) {
-            if ($table_post_data[$table_post_data_key] == "image_path") {
+        if ($table_name == "staff" || $table_name == "customer") {
+            $this->add_account($table_post_data, $table_name);
+        } else{
+            if(isset($_FILES['image_path'])){
                 // getting absolute path, replacing backslashes with forward slashes due to full_path data is forward slash
                 $absolute_path = str_replace('\\', '/', FCPATH);
                 //finding absolute path in full_path and reverting it to project path to be used as image
                 $image_path = "/" . str_replace($absolute_path, "", $this->upload->data('full_path'));
-                $model_insert_data[$table_post_data[$table_post_data_key]] = $image_path;
-            } else {
-                $model_insert_data[$table_post_data_key] = $table_post_data[$table_post_data_key];
+                $table_post_data['image_path'] = $image_path;
             }
+            $this->db->insert($table_name, $table_post_data);
         }
-        if ($table_name == "staff" || $table_name == "customer") {
-            $this->add_account($model_insert_data, $table_name);
-        } else
-            $this->db->insert($table_name, $model_insert_data);
     }
 
     public function add_account($model_data, $account_type)
@@ -207,10 +217,11 @@ class Generic_model extends CI_Model
             unset($model_data[$column_class->name]);
         }
         if ($account_type != "staff")
-            $model_data['permission_id'] = "2";
+            $model_data['permission_id'] = "1";
         $model_data['password'] = hash('sha256', $model_data['password']);
         $this->db->insert('account', $model_data);
         $data['account_id'] = $this->db->insert_id();
+        unset($data['permission_id']);
         $this->db->insert($account_type, $data);
     }
 

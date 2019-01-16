@@ -32,10 +32,17 @@
             foreach ($form_field_data as $form_field) { ?>
                 <?php echo form_error("{$table_name}[{$form_field->label}]"); ?>
                 <p>
+                <?php if ($form_field->label == "image_path") { ?>
+                    <label for="<?php echo $form_field->label; ?>">Picture:</label>
+                    <input type="file" name="<?php echo $form_field->label; ?>">
+                <?php } else { ?>
                     <label for='<?php echo "{$table_name}[{$form_field->label}]" ?>'><?php echo $form_field->field; ?></label>
                     <input name='<?php echo "{$table_name}[{$form_field->label}]"; ?>'
                            type='text' <?php // echo $form_field->is_required; ?>
-                           id='<?php echo $form_field->label; ?>' value='<?php // echo $form_field->value; ?>'></p>
+                           id='<?php echo $form_field->label; ?>' value='<?php // echo $form_field->value; ?>'>
+                    </p>
+                <?php } ?>
+
             <?php }
             ?>
             <p>

@@ -12,49 +12,95 @@ class Functions extends CI_Controller
     {
         parent::__construct();
         $account_info = $this->session->userdata('account_info') ?? NULL;
+        $prev_url = $this->session->userdata("prev_url");
+        $this->session->set_userdata("prev_url", uri_string());
         // if session is not set redirect to sign in
         if (!isset($account_info['permission_id']) && $account_info['permission_id'] !== "unregistered") {
             redirect(site_url() . "/home/login");
         }
     }
 
-    public function view($table_name, $search_id = NULL)
+    public function view($table_name = NULL, $search_id = NULL, $multi_foreign_table = NULL)
     {
+        if (!isset($table_name)) {
+            redirect(site_url("dashboard/home"));
+        }
         $this->load->library('table');
         $this->load->model(array("Generic_model"));
+        //if uri after search id is set, engage in a foreach to search if it matches a foreign table
+        // if matches foreign table, display info from its primary keys
+        // if it isn't set AND foreign table is a multi table, display button to select all
         if (isset($search_id)) {
+            if (isset($multi_foreign_table)) {
+                $tables_multi_related_info = $this->Generic_model->tables_are_multi_related($table_name, $multi_foreign_table);
+                if ($tables_multi_related_info) {
 
-        } else {
+                } else {
+                    // tables aren't multi related...
+                    redirect("functions/view/$table_name/$search_id");
+                }
+            } else {
+                $view_data = $this->get_all_table_details_by_pk($table_name, $search_id);
+                foreach ($view_data as $view_info_key => $view_table) {
+                    $columns = array();
+                    foreach ($view_table as $table_column => $table_value) {
+                        if($table_column == "password")
+                            continue;
+                        if($table_column == "image_path"){
+                            $table_column = "Image";
+                            $table_value = base_url($table_value);
+                            $table_value = "<img class = 'view_image' src='$table_value' alt='Image'>";
+                        }
+                        $column = new stdClass();
+                        $column->label = $table_column;
+                        $column->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $table_column)));;
+                        $column->value = $table_value;
+                        $columns[] = $column;
+                        unset($view_data[$view_info_key][$table_column]);
+                    }
+                    $view_data[$view_info_key] = new stdClass();
+                    $view_data[$view_info_key]->columns = $columns;
+//                    $view_data[$view_info_key] = $columns;
+                }
+                $data['table_name'] = ucwords(str_replace("_", " ", $table_name));
+                $data['view_data'] = $view_data;
+                initialize_header();
+                $this->load->view("generic/view_selected_form", $data);
+                //customer table will have account table, inner join every foreign table with main table
+            }
+        }
+        else {
+            $column_headers = array();
             $table_rows = $this->Generic_model->get_select_info($table_name);
             foreach ($table_rows as $table_row) {
                 foreach ($table_row as $table_column_key => $table_column_value) {
                     if ($table_column_key != "{$table_name}_id" && substr($table_column_key, -2) == "id") {
                         if ($table_column_key == "account_id") {
                             $this->load->model("Account_model");
-                            $test = $this->Account_model->get_account_view_info_from_account_id($table_column_value);
-                            $table_row = array_merge($table_row, $test);
+                            $account_info = $this->Account_model->get_account_view_info_from_account_id($table_column_value);
+                            $table_row = array_merge($table_row, $account_info);
                         }
+                        //unsets foreign key from table view
                         unset($table_row[$table_column_key]);
                     }
-                    $changed_table_row = $table_row;
                 }
-                $add_button = site_url("/functions/view/{$table_name}/{$table_name}_id");
-                $table_row[] = "<p><a href='{$add_button}'><div class='button'>Add</div></a></p>";
+                $table_row_primary_key = "{$table_name}_id";
+                $add_button = site_url("/functions/view/{$table_name}/$table_row[$table_row_primary_key]");
+                $table_row['View'] = "<p><a href='{$add_button}'><div class='button'>View</div></a></p>";
                 $this->table->add_row($table_row);
                 // if table_row has a foreign key in it, remove it
             }
             if (!empty($table_rows)) {
-                $column_headers = array();
-                foreach ($changed_table_row as $column => $value) {
+                foreach ($table_row as $column => $value) {
                     $column_headers[] = str_replace("Id", "ID", ucwords(str_replace("_", " ", $column)));
                 }
-                $column_headers[] = "View";
                 $this->table->set_heading($column_headers);
                 $data['table'] = $this->table->generate();
-                initialize_header();
-                $this->load->view("generic/view_form", $data);
+            } else {
+                redirect(site_url(('dashboard/home')));
             }
-            $dd = 2;
+            initialize_header();
+            $this->load->view("generic/view_form", $data);
         }
 
 
@@ -62,6 +108,7 @@ class Functions extends CI_Controller
 
     public function add($model)
     {
+        $model = strtolower($model);
         $model_formatted = $model . "_model";
         try {
             $this->load->model(array($model_formatted, "Generic_model", "Sidebar_model"));
@@ -109,6 +156,8 @@ class Functions extends CI_Controller
         }
         $this->load->library('table');
         $this->load->model("Generic_model");
+        $table_name = strtolower($table_name);
+        $foreign_table = strtolower(($foreign_table));
         // tables are multi related
         $multi_related_tables = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
         $foreign_table_data = $this->Generic_model->get_select_info($foreign_table);
@@ -206,6 +255,9 @@ class Functions extends CI_Controller
         $foreign_multi_tables = $this->Generic_model->get_multi_foreign_key_table_names($table_name);
         $all_single_tables_info_exist = FALSE;
         $foreign_form_field_data = array();
+        if (empty($foreign_table)) {
+            $all_single_tables_info_exist = TRUE;
+        }
         for ($i = 0; $i < count($foreign_tables); $i++) {
             $foreign_table = new stdClass();
             $foreign_table->name = $foreign_tables[$i];
@@ -214,8 +266,7 @@ class Functions extends CI_Controller
             $foreign_table->can_be_null = FALSE;
             $foreign_table->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table->name)));
             $foreign_table_id = $uri_strings[$i] ?? NULL;
-            $foreign_table_formatted = $foreign_tables[$i] . "_model";
-            $this->load->model($foreign_table_formatted);
+
             // if uri has an id in it, find the needed info for it to display what the user selected
             $foreign_table_row_result = $this->Generic_model->get_table_row_by_primary_key($foreign_tables[$i], $foreign_table_id);
             // if info was found... will return 1d array with pk first and a human readable name second (e.g. name)
@@ -237,10 +288,9 @@ class Functions extends CI_Controller
                     $foreign_table_column_class->label = $foreign_table_column;
                     $foreign_table_column_class->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table_column)));
                     $foreign_table->columns[] = $foreign_table_column_class;
-                    if ($foreign_table_column == "customer_id") {
+                    if ($foreign_table_column == "customer_id" || $foreign_table_column == "staff_id") {
                         $foreign_table_column_class = new stdClass();
-                        $this->load->model("Customer_model");
-                        $foreign_table_column_class->value = $this->Customer_model->get_customer_account_name_by_customer_id($foreign_table_id);
+                        $foreign_table_column_class->value = $this->Generic_model->get_account_name_by_id($foreign_tables[$i], $foreign_table_id);
                         $foreign_table_column_class->label = "name";
                         $foreign_table_column_class->field = "Name";
                         $foreign_table->columns[] = $foreign_table_column_class;
@@ -274,6 +324,26 @@ class Functions extends CI_Controller
         return $foreign_form_field_data;
     }
 
+    public function get_all_table_details_by_pk($table_name, $primary_id)
+    {
+        $foreign_tables = $this->initialize_foreign_data($table_name);
+        $table_row = $this->Generic_model->get_table_row_by_primary_key($table_name, $primary_id);
+        $result_table_row = array();
+        foreach ($foreign_tables as $foreign_table) {
+            $result_table_row = $this->get_all_table_details_by_pk($foreign_table->name, $table_row["{$foreign_table->name}_id"]);
+        }
+        foreach ($table_row as $table_column => $table_value) {
+            if (substr($table_column, -2) == "id")
+                unset($table_row[$table_column]);
+            else
+                break;
+        }
+        $result_table_row["$table_name"] = $table_row;
+        return $result_table_row;
+        // recursive function returns ALL data related to a table
+
+    }
+
     public function upload_image()
     {
         $config['upload_path'] = './assets/images/product';
@@ -282,7 +352,7 @@ class Functions extends CI_Controller
         $config['max_width'] = 10243;
         $config['max_height'] = 7638;
         $this->load->library('upload', $config);
-        if ($this->upload->do_upload('image_path')) {
+        if ($this->upload->do_upload("image_path")) {
             return true;
         } else {
             $this->form_validation->set_message('upload_image', $this->upload->display_errors());
