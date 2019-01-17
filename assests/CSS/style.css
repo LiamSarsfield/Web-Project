@@ -2169,3 +2169,7 @@ tbody tr td {
     padding: 10px;
     margin: 10px 0;
 }
+input:read-only {
+    background-color: #dbdbdb;
+    cursor: default;
+}

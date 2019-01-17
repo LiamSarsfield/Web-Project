@@ -12,6 +12,9 @@ class Functions extends CI_Controller
     {
         parent::__construct();
         $account_info = $this->session->userdata('account_info') ?? NULL;
+        $this->load->model("Permission_model");
+        $ddd = uri_string();
+//        $this->Permission_model->user_has_access_to_function(uri_string());
         $prev_url = $this->session->userdata("prev_url");
         $this->session->set_userdata("prev_url", uri_string());
         // if session is not set redirect to sign in
@@ -44,9 +47,9 @@ class Functions extends CI_Controller
                 foreach ($view_data as $view_info_key => $view_table) {
                     $columns = array();
                     foreach ($view_table as $table_column => $table_value) {
-                        if($table_column == "password")
+                        if ($table_column == "password")
                             continue;
-                        if($table_column == "image_path"){
+                        if ($table_column == "image_path") {
                             $table_column = "Image";
                             $table_value = base_url($table_value);
                             $table_value = "<img class = 'view_image' src='$table_value' alt='Image'>";
@@ -68,8 +71,7 @@ class Functions extends CI_Controller
                 $this->load->view("generic/view_selected_form", $data);
                 //customer table will have account table, inner join every foreign table with main table
             }
-        }
-        else {
+        } else {
             $column_headers = array();
             $table_rows = $this->Generic_model->get_select_info($table_name);
             foreach ($table_rows as $table_row) {
@@ -110,11 +112,7 @@ class Functions extends CI_Controller
     {
         $model = strtolower($model);
         $model_formatted = $model . "_model";
-        try {
-            $this->load->model(array($model_formatted, "Generic_model", "Sidebar_model"));
-        } catch (RuntimeException $e) {
-            redirect(site_url() . "/dashboard/home");
-        }
+        $this->load->model(array($model_formatted, "Generic_model", "Sidebar_model"));
         $this->load->library(array('form_validation'));
         $foreign_form_field_data = array();
         $form_field_data = array();
@@ -127,7 +125,7 @@ class Functions extends CI_Controller
             }
         } else {
 //      returns foreign field data in array within array of id and name or else button
-            $foreign_form_field_data = array_merge($foreign_form_field_data, $this->initialize_foreign_data($model));
+            $foreign_form_field_data = $this->initialize_foreign_data($model);
         }
         $form_field_data = array_merge($form_field_data, $this->Generic_model->get_col_names($model));
         $this->initialize_form_validation($model, $form_field_data);
@@ -149,10 +147,25 @@ class Functions extends CI_Controller
         }
     }
 
-    public function select($table_name = NULL, $foreign_table = NULL, $id = "0")
+    public function select($table_name = NULL, $foreign_table = NULL, $id = NULL, $quantity = NULL)
     {
         if (!isset($table_name) || !isset($foreign_table)) {
             redirect(site_url("home/dashboard"));
+        }
+        if(isset($id)){
+            $multi_related_tables = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
+            if($multi_related_tables){
+                $multi_add_data = $this->session->userdata("{$table_name}_add_data") ?? array(
+                        "$foreign_table" => array(),
+                    );
+                $multi_table_row_info["{$foreign_table}_id"] = $id;
+                if(isset($quantity)){
+                    $multi_table_row_info[$multi_related_tables] = $quantity;
+                }
+                $multi_add_data["$foreign_table"][] = $multi_table_row_info;
+                $this->session->set_userdata("{$table_name}_add_data", $multi_add_data);
+                redirect(site_url("functions/select/{$table_name}/{$foreign_table}/"));
+            }
         }
         $this->load->library('table');
         $this->load->model("Generic_model");
@@ -164,19 +177,18 @@ class Functions extends CI_Controller
         $columns = array();
         $column_headers = array();
         if (!empty($foreign_table_data)) {
-            $foreign_table_columns = array_keys($foreign_table_data[0]);
-            foreach ($foreign_table_columns as $foreign_table_column) {
+            foreach ($foreign_table_data[0] as $foreign_table_column => $foreign_table_value) {
                 $column_class = new stdClass();
+                if($foreign_table_column == "account_id")
+                    $foreign_table_column = "Name";
                 $column_class->label = $foreign_table_column;
                 $column_class->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table_column)));;
                 $columns[] = $column_class;
                 $column_headers[] = $column_class->field;
             }
         }
-
-        if (!$multi_related_tables) {
-
-        } else {
+        // if you're selecting many from a multi table (productS for customer_order)
+        if ($multi_related_tables) {
             $multi_columns = $this->Generic_model->get_non_primary_and_non_foreign_key_columns($multi_related_tables);
             foreach ($multi_columns as $multi_column) {
                 $column_class = new stdClass();
@@ -186,13 +198,16 @@ class Functions extends CI_Controller
                 $columns[] = $column_class;
                 $column_headers[] = $column_class->field;
             }
-        };
-        $column_headers[] = "Add";
+            $column_headers[] = "Add";
+        } else
+            $column_headers[] = "Select";
         $this->table->set_heading($column_headers);
+
+        //now to add the rows
         foreach ($foreign_table_data as $foreign_table_datum) {
             $rows = array();
-            foreach ($columns as $column) {
-                if ($column->label == "quantity")
+            foreach ($columns as $column_value) {
+                if ($column_value->label == "quantity")
                     $rows[] = "<select name=\"amount\" class=\"w3-input w3-padding-16\">
                       <option value='1'>1</option>
                       <option value='2'>2</option>
@@ -205,11 +220,20 @@ class Functions extends CI_Controller
                       <option value='9'>9</option>
                       <option value='10'>10</option>
                       </select>";
-                else
-                    $rows[] = $foreign_table_datum[$column->label];
+                else if ($column_value->label == "Name") {
+                    $rows [] = $this->Generic_model->get_account_name_by_account_id($foreign_table, $foreign_table_datum['account_id']);
+                } else {
+                    $rows[] = $foreign_table_datum[$column_value->label];
+                }
             }
             $add_button = site_url("/functions/add/{$table_name}/{$rows[0]}");
-            $rows[] = "<p><a href='{$add_button}'><div class='button'>Add</div></a></p>";
+            if ($multi_related_tables) {
+                $multi_table_params =  ($column_class->label == "quantity") ? "$rows[0]/1" : "$rows[0]";
+                //if quantity is set, then an extra param will be set
+                $rows[] = "<p><a href='$multi_table_params'><div class='button'>Add</div></a></p>";
+            } else {
+                $rows[] = "<p><a href='{$add_button}'><div class='button'>Select</div></a></p>";
+            }
             $this->table->add_row($rows);
         }
         $table_template = array(
@@ -217,7 +241,7 @@ class Functions extends CI_Controller
         );
         $this->table->set_template($table_template);
         $data['table'] = $this->table->generate();
-
+        // if the user selected something from the multi table its added to a session
         initialize_header();
         $this->load->view("generic/select_form", $data);
     }
@@ -290,7 +314,7 @@ class Functions extends CI_Controller
                     $foreign_table->columns[] = $foreign_table_column_class;
                     if ($foreign_table_column == "customer_id" || $foreign_table_column == "staff_id") {
                         $foreign_table_column_class = new stdClass();
-                        $foreign_table_column_class->value = $this->Generic_model->get_account_name_by_id($foreign_tables[$i], $foreign_table_id);
+                        $foreign_table_column_class->value = $this->Generic_model->get_account_name_by_foreign_account_id($foreign_tables[$i], $foreign_table_id);
                         $foreign_table_column_class->label = "name";
                         $foreign_table_column_class->field = "Name";
                         $foreign_table->columns[] = $foreign_table_column_class;
@@ -314,6 +338,7 @@ class Functions extends CI_Controller
                         $foreign_table->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_multi_table_column->name)));
                         $foreign_table->is_multi_table = TRUE;
                         $foreign_table->can_be_null = ($foreign_multi_table_column->can_be_null == "YES") ? TRUE : FALSE;
+                        //multi column values will come true as session data as there can be many of them
                         $foreign_table->columns = (isset($_SESSION[$foreign_multi_table])) ? $this->session->userdata($foreign_multi_table) : array();
                         $foreign_form_field_data[] = $foreign_table;
                     }

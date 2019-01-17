@@ -173,12 +173,23 @@ class Generic_model extends CI_Model
         return ($result[0]->name == "{$table_name}_id") ? true : false;
     }
 
-    public function get_account_name_by_id($account, $account_id){
+    public function get_account_name_by_account_id($account, $account_id){
         $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name'");
         $this->db->from("$account");
         $this->db->join('account', "{$account}.account_id = account.account_id", 'inner');
-        $this->db->where("{$account}_id", $account_id);
-        return $this->db->get()->row()->name;
+        $this->db->where("account.account_id", $account_id);
+        $result = $this->db->get()->row()->name;
+        $dd = $this->db->last_query();
+        return $result;
+    }
+    public function get_account_name_by_foreign_account_id($account, $account_id){
+        $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name'");
+        $this->db->from("$account");
+        $this->db->join('account', "{$account}.account_id = account.account_id", 'inner');
+        $this->db->where("{$account}.{$account}_id", $account_id);
+        $result = $this->db->get()->row()->name;
+        $dd = $this->db->last_query();
+        return $result;
     }
     public function get_table_row_by_primary_key($table_name, $primary_key_id = "0")
     {

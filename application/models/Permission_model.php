@@ -76,4 +76,10 @@ class permission_model extends CI_Model
         }
         return false;
     }
+    public function user_has_access_to_function($url = NULL){
+        $url = $url ?? uri_string();
+        $this->db->from("permission");
+        $this->db->join("multi_sub_sidebar_permissions", "multi_sub_sidebar_permissions.permission_id = permission.permission_id", 'inner');
+        $this->db->join("sub_sidebar", "sub_sidebar.sub_sidebar_id = sub_sidebar.sub_sidebar_id", 'inner');
+    }
 }
