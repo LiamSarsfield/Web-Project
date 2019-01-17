@@ -2169,7 +2169,21 @@ tbody tr td {
     padding: 10px;
     margin: 10px 0;
 }
+
 input:read-only {
     background-color: #dbdbdb;
     cursor: default;
+}
+
+.table_select_basket_info {
+    border: 1px solid #b2b2b2;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 60%;
+    margin: 10px auto;
+}
+
+.select_back_button .button {
+    margin-left: 20%;
+    margin-bottom: 15px;
 }

@@ -13,10 +13,6 @@ class Functions extends CI_Controller
         parent::__construct();
         $account_info = $this->session->userdata('account_info') ?? NULL;
         $this->load->model("Permission_model");
-        $ddd = uri_string();
-//        $this->Permission_model->user_has_access_to_function(uri_string());
-        $prev_url = $this->session->userdata("prev_url");
-        $this->session->set_userdata("prev_url", uri_string());
         // if session is not set redirect to sign in
         if (!isset($account_info['permission_id']) && $account_info['permission_id'] !== "unregistered") {
             redirect(site_url() . "/home/login");
@@ -110,6 +106,9 @@ class Functions extends CI_Controller
 
     public function add($model)
     {
+        $uri_strings = explode('/', uri_string());
+        $uri_strings = array_splice($uri_strings, "3");
+        $this->session->set_userdata("{$model}_add_uris", $uri_strings);
         $model = strtolower($model);
         $model_formatted = $model . "_model";
         $this->load->model(array($model_formatted, "Generic_model", "Sidebar_model"));
@@ -149,37 +148,37 @@ class Functions extends CI_Controller
 
     public function select($table_name = NULL, $foreign_table = NULL, $id = NULL, $quantity = NULL)
     {
+        $this->load->library('table');
+        $this->load->model("Generic_model");
         if (!isset($table_name) || !isset($foreign_table)) {
             redirect(site_url("home/dashboard"));
         }
-        if(isset($id)){
-            $multi_related_tables = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
-            if($multi_related_tables){
+        $multi_related_tables = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
+        $foreign_table_data = $this->Generic_model->get_select_info($foreign_table);
+        if (isset($id)) {
+            if ($multi_related_tables) {
                 $multi_add_data = $this->session->userdata("{$table_name}_add_data") ?? array(
-                        "$foreign_table" => array(),
+                        "$multi_related_tables" => array(),
                     );
                 $multi_table_row_info["{$foreign_table}_id"] = $id;
-                if(isset($quantity)){
-                    $multi_table_row_info[$multi_related_tables] = $quantity;
+                if (isset($quantity)) {
+                    $multi_table_row_info['quantity'] = $quantity;
                 }
-                $multi_add_data["$foreign_table"][] = $multi_table_row_info;
+                $multi_add_data["$multi_related_tables"][] = $multi_table_row_info;
                 $this->session->set_userdata("{$table_name}_add_data", $multi_add_data);
                 redirect(site_url("functions/select/{$table_name}/{$foreign_table}/"));
             }
         }
-        $this->load->library('table');
-        $this->load->model("Generic_model");
         $table_name = strtolower($table_name);
         $foreign_table = strtolower(($foreign_table));
         // tables are multi related
-        $multi_related_tables = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
-        $foreign_table_data = $this->Generic_model->get_select_info($foreign_table);
+
         $columns = array();
         $column_headers = array();
         if (!empty($foreign_table_data)) {
             foreach ($foreign_table_data[0] as $foreign_table_column => $foreign_table_value) {
                 $column_class = new stdClass();
-                if($foreign_table_column == "account_id")
+                if ($foreign_table_column == "account_id")
                     $foreign_table_column = "Name";
                 $column_class->label = $foreign_table_column;
                 $column_class->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table_column)));;
@@ -189,6 +188,42 @@ class Functions extends CI_Controller
         }
         // if you're selecting many from a multi table (productS for customer_order)
         if ($multi_related_tables) {
+            $selected_data_rows = $_SESSION["{$table_name}_add_data"]["$multi_related_tables"] ?? array(
+                    "$multi_related_tables" => array(),
+                );
+            $all_selected_basket_details = array();
+            $selected_basket_details = array();
+            foreach ($selected_data_rows as $selected_data_row_index => $selected_data_row) {
+                foreach ($selected_data_row as $row_col => $row_value) {
+                    //if it is equal to id, then we get its all the id's info
+                    if (substr($row_col, -2) == "id") {
+                        $selected_basket_details = array();
+                        $basket_table_name = substr($row_col, 0, -3);
+                        $selected_basket_details['table_name'] = $basket_table_name;
+                        $all_table_basket_details = $this->Generic_model->get_table_row_by_primary_key($basket_table_name, $row_value);
+                        if ($basket_table_name == "product" || $basket_table_name == "customer_quote") {
+                            $selected_basket_details['Name'] = $all_table_basket_details['name'];
+                            $selected_basket_details['Price'] = $all_table_basket_details['price'];
+                        } else if ($basket_table_name == "customer" || "staff") {
+                            $selected_basket_details['Name'] = $this->Generic_model->get_account_name_by_foreign_account_id($basket_table_name, $all_table_basket_details["{$basket_table_name}_id"]);
+                        } else {
+                            foreach ($all_table_basket_details as $basket_col => $basket_value) {
+                                if (substr($basket_col, -2) == "id") {
+                                    unset($all_table_basket_details[$basket_col]);
+                                } else
+                                    break;
+                            }
+                            $all_table_basket_details = array_slice($all_table_basket_details, 0, 2);
+                            $selected_basket_details = $all_table_basket_details;
+                        }
+                    }
+                }
+                $selected_data_rows[$selected_data_row_index] = array_merge($selected_data_rows[$selected_data_row_index], $selected_basket_details);
+                $data['table_name'] = $table_name;
+                $data['multi_related_tables'] = $multi_related_tables;
+                $data['selected_data_rows'] = $selected_data_rows;
+            }
+
             $multi_columns = $this->Generic_model->get_non_primary_and_non_foreign_key_columns($multi_related_tables);
             foreach ($multi_columns as $multi_column) {
                 $column_class = new stdClass();
@@ -199,6 +234,7 @@ class Functions extends CI_Controller
                 $column_headers[] = $column_class->field;
             }
             $column_headers[] = "Add";
+            $data['current_selected_items'] = $all_selected_basket_details;
         } else
             $column_headers[] = "Select";
         $this->table->set_heading($column_headers);
@@ -228,7 +264,7 @@ class Functions extends CI_Controller
             }
             $add_button = site_url("/functions/add/{$table_name}/{$rows[0]}");
             if ($multi_related_tables) {
-                $multi_table_params =  ($column_class->label == "quantity") ? "$rows[0]/1" : "$rows[0]";
+                $multi_table_params = ($column_class->label == "quantity") ? "$rows[0]/1" : "$rows[0]";
                 //if quantity is set, then an extra param will be set
                 $rows[] = "<p><a href='$multi_table_params'><div class='button'>Add</div></a></p>";
             } else {
@@ -366,6 +402,11 @@ class Functions extends CI_Controller
         $result_table_row["$table_name"] = $table_row;
         return $result_table_row;
         // recursive function returns ALL data related to a table
+
+    }
+
+    public function get_sanatized_session_basket()
+    {
 
     }
 
