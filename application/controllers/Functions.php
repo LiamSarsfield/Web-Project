@@ -153,18 +153,18 @@ class Functions extends CI_Controller
         if (!isset($table_name) || !isset($foreign_table)) {
             redirect(site_url("home/dashboard"));
         }
-        $multi_related_tables = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
+        $multi_related_table_name = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
         $foreign_table_data = $this->Generic_model->get_select_info($foreign_table);
         if (isset($id)) {
-            if ($multi_related_tables) {
+            if ($multi_related_table_name) {
                 $multi_add_data = $this->session->userdata("{$table_name}_add_data") ?? array(
-                        "$multi_related_tables" => array(),
+                        "$multi_related_table_name" => array(),
                     );
                 $multi_table_row_info["{$foreign_table}_id"] = $id;
                 if (isset($quantity)) {
                     $multi_table_row_info['quantity'] = $quantity;
                 }
-                $multi_add_data["$multi_related_tables"][] = $multi_table_row_info;
+                $multi_add_data["$multi_related_table_name"][$foreign_table][] = $multi_table_row_info;
                 $this->session->set_userdata("{$table_name}_add_data", $multi_add_data);
                 redirect(site_url("functions/select/{$table_name}/{$foreign_table}/"));
             }
@@ -172,7 +172,6 @@ class Functions extends CI_Controller
         $table_name = strtolower($table_name);
         $foreign_table = strtolower(($foreign_table));
         // tables are multi related
-
         $columns = array();
         $column_headers = array();
         if (!empty($foreign_table_data)) {
@@ -187,44 +186,10 @@ class Functions extends CI_Controller
             }
         }
         // if you're selecting many from a multi table (productS for customer_order)
-        if ($multi_related_tables) {
-            $selected_data_rows = $_SESSION["{$table_name}_add_data"]["$multi_related_tables"] ?? array(
-                    "$multi_related_tables" => array(),
-                );
-            $all_selected_basket_details = array();
-            $selected_basket_details = array();
-            foreach ($selected_data_rows as $selected_data_row_index => $selected_data_row) {
-                foreach ($selected_data_row as $row_col => $row_value) {
-                    //if it is equal to id, then we get its all the id's info
-                    if (substr($row_col, -2) == "id") {
-                        $selected_basket_details = array();
-                        $basket_table_name = substr($row_col, 0, -3);
-                        $selected_basket_details['table_name'] = $basket_table_name;
-                        $all_table_basket_details = $this->Generic_model->get_table_row_by_primary_key($basket_table_name, $row_value);
-                        if ($basket_table_name == "product" || $basket_table_name == "customer_quote") {
-                            $selected_basket_details['Name'] = $all_table_basket_details['name'];
-                            $selected_basket_details['Price'] = $all_table_basket_details['price'];
-                        } else if ($basket_table_name == "customer" || "staff") {
-                            $selected_basket_details['Name'] = $this->Generic_model->get_account_name_by_foreign_account_id($basket_table_name, $all_table_basket_details["{$basket_table_name}_id"]);
-                        } else {
-                            foreach ($all_table_basket_details as $basket_col => $basket_value) {
-                                if (substr($basket_col, -2) == "id") {
-                                    unset($all_table_basket_details[$basket_col]);
-                                } else
-                                    break;
-                            }
-                            $all_table_basket_details = array_slice($all_table_basket_details, 0, 2);
-                            $selected_basket_details = $all_table_basket_details;
-                        }
-                    }
-                }
-                $selected_data_rows[$selected_data_row_index] = array_merge($selected_data_rows[$selected_data_row_index], $selected_basket_details);
-                $data['table_name'] = $table_name;
-                $data['multi_related_tables'] = $multi_related_tables;
-                $data['selected_data_rows'] = $selected_data_rows;
-            }
-
-            $multi_columns = $this->Generic_model->get_non_primary_and_non_foreign_key_columns($multi_related_tables);
+        if ($multi_related_table_name) {
+            $data['multi_related_table_name'] = $multi_related_table_name;
+            $test = $this->get_multi_table_basket_info($table_name, $foreign_table, $multi_related_table_name);
+            $multi_columns = $this->Generic_model->get_non_primary_and_non_foreign_key_columns($multi_related_table_name);
             foreach ($multi_columns as $multi_column) {
                 $column_class = new stdClass();
                 $column_class->label = $multi_column->name;
@@ -234,7 +199,6 @@ class Functions extends CI_Controller
                 $column_headers[] = $column_class->field;
             }
             $column_headers[] = "Add";
-            $data['current_selected_items'] = $all_selected_basket_details;
         } else
             $column_headers[] = "Select";
         $this->table->set_heading($column_headers);
@@ -243,9 +207,23 @@ class Functions extends CI_Controller
         foreach ($foreign_table_data as $foreign_table_datum) {
             $rows = array();
             foreach ($columns as $column_value) {
-                if ($column_value->label == "quantity")
-                    $rows[] = "<select name=\"amount\" class=\"w3-input w3-padding-16\">
-                      <option value='1'>1</option>
+                if ($column_value->label == "quantity") {
+                    $select_info = "";
+                    $select_info .= "<select name=\"amount\" class=\"w3-input w3-padding-16\">";
+                    // we need to see if it is set otherwise quantity starts at 0
+                    if (isset($_SESSION["{$table_name}_add_data"][$multi_related_table_name][$foreign_table])) {
+                        for ($i = 0; $i < 11; $i++) {
+                            $temp_select_info = "<option value='$i'>$i</option>";
+                            foreach ($_SESSION["{$table_name}_add_data"][$multi_related_table_name][$foreign_table] as $multi_basket) {
+                                if ($multi_basket["{$foreign_table}_id"] == $foreign_table_datum["{$foreign_table}_id"] && $i == $multi_basket['quantity']) {
+                                    $temp_select_info = "<option selected='selected' value='$i'>$i</option>";
+                                    break;
+                                }
+                            }
+                            $select_info .= $temp_select_info;
+                        }
+                    } else {
+                        $select_info .= "<option value='1'>1</option>
                       <option value='2'>2</option>
                       <option value='3'>3</option>
                       <option value='4'>4</option>
@@ -254,16 +232,18 @@ class Functions extends CI_Controller
                       <option value='7'>7</option>
                       <option value='8'>8</option>
                       <option value='9'>9</option>
-                      <option value='10'>10</option>
-                      </select>";
-                else if ($column_value->label == "Name") {
+                      <option value='10'>10</option>";
+                    }
+                    $select_info .= "</select>";
+                    $rows[] = $select_info;
+                } else if ($column_value->label == "Name") {
                     $rows [] = $this->Generic_model->get_account_name_by_account_id($foreign_table, $foreign_table_datum['account_id']);
                 } else {
                     $rows[] = $foreign_table_datum[$column_value->label];
                 }
             }
             $add_button = site_url("/functions/add/{$table_name}/{$rows[0]}");
-            if ($multi_related_tables) {
+            if ($multi_related_table_name) {
                 $multi_table_params = ($column_class->label == "quantity") ? "$rows[0]/1" : "$rows[0]";
                 //if quantity is set, then an extra param will be set
                 $rows[] = "<p><a href='$multi_table_params'><div class='button'>Add</div></a></p>";
@@ -277,6 +257,8 @@ class Functions extends CI_Controller
         );
         $this->table->set_template($table_template);
         $data['table'] = $this->table->generate();
+        $data['table_name'] = $table_name;
+        $data['foreign_table'] = $foreign_table;
         // if the user selected something from the multi table its added to a session
         initialize_header();
         $this->load->view("generic/select_form", $data);
@@ -405,9 +387,42 @@ class Functions extends CI_Controller
 
     }
 
-    public function get_sanatized_session_basket()
+    public function get_multi_table_basket_info($table_name, $foreign_table, $multi_related_table_name)
     {
-
+        $selected_data_rows = $_SESSION["{$table_name}_add_data"]["$multi_related_table_name"] ?? array(
+                "$multi_related_table_name" => array(
+                    "$foreign_table" => array(),
+                ),
+            );
+        $selected_basket_details = array();
+        foreach ($selected_data_rows as $selected_data_row_index => $selected_data_row) {
+            foreach ($selected_data_row as $row_col => $row_value) {
+                //if it is equal to id, then we get its all the id's info
+                if (substr($row_col, -2) == "id") {
+                    $selected_basket_details = array();
+                    $basket_table_name = substr($row_col, 0, -3);
+                    $selected_basket_details['table_name'] = $basket_table_name;
+                    $all_table_basket_details = $this->Generic_model->get_table_row_by_primary_key($basket_table_name, $row_value);
+                    if ($basket_table_name == "product" || $basket_table_name == "customer_quote") {
+                        $selected_basket_details['Name'] = $all_table_basket_details['name'];
+                        $selected_basket_details['Price'] = $all_table_basket_details['price'];
+                    } else if ($basket_table_name == "customer" || "staff") {
+                        $selected_basket_details['Name'] = $this->Generic_model->get_account_name_by_foreign_account_id($basket_table_name, $all_table_basket_details["{$basket_table_name}_id"]);
+                    } else {
+                        foreach ($all_table_basket_details as $basket_col => $basket_value) {
+                            if (substr($basket_col, -2) == "id") {
+                                unset($all_table_basket_details[$basket_col]);
+                            } else
+                                break;
+                        }
+                        $all_table_basket_details = array_slice($all_table_basket_details, 0, 2);
+                        $selected_basket_details = $all_table_basket_details;
+                    }
+                }
+            }
+            $selected_data_rows[$selected_data_row_index] = array_merge($selected_data_rows[$selected_data_row_index], $selected_basket_details);
+        }
+        return $selected_data_rows;
     }
 
     public function upload_image()
@@ -426,7 +441,8 @@ class Functions extends CI_Controller
         }
     }
 
-    public function manage_permissions()
+    public
+    function manage_permissions()
     {
 
     }
