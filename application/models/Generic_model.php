@@ -12,7 +12,9 @@ class Generic_model extends CI_Model
     {
         parent::__construct();
     }
-
+    public function get_table($table_name){
+        return $this->db->get($table_name)->result();
+    }
     public function get_select_info($table_name)
     {
         $this->db->select('COLUMN_NAME as name');
@@ -109,7 +111,9 @@ class Generic_model extends CI_Model
             return $value['name'];
         }, $result);
     }
-    public function inner_join_tables_by_foreign_pk($table_name, $foreign_table, $join_id){
+
+    public function inner_join_tables_by_foreign_pk($table_name, $foreign_table, $join_id)
+    {
         $this->db->from("$table_name");
         $this->db->join("$foreign_table", "{$foreign_table}.{$foreign_table}_id = $table_name.{$foreign_table}_id", 'inner');
         $this->db->where("{$table_name}.{$foreign_table}_id", $join_id);
@@ -117,6 +121,7 @@ class Generic_model extends CI_Model
         $dd = $this->db->last_query();
         return $result;
     }
+
     public function get_multi_foreign_key_table_names($table_name)
     {
         $this->db->select("TABLE_NAME as table");
@@ -173,7 +178,8 @@ class Generic_model extends CI_Model
         return ($result[0]->name == "{$table_name}_id") ? true : false;
     }
 
-    public function get_account_name_by_account_id($account, $account_id){
+    public function get_account_name_by_account_id($account, $account_id)
+    {
         $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name'");
         $this->db->from("$account");
         $this->db->join('account', "{$account}.account_id = account.account_id", 'inner');
@@ -182,7 +188,9 @@ class Generic_model extends CI_Model
         $dd = $this->db->last_query();
         return $result;
     }
-    public function get_account_name_by_foreign_account_id($account, $account_id){
+
+    public function get_account_name_by_foreign_account_id($account, $account_id)
+    {
         $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name'");
         $this->db->from("$account");
         $this->db->join('account', "{$account}.account_id = account.account_id", 'inner');
@@ -191,6 +199,7 @@ class Generic_model extends CI_Model
         $dd = $this->db->last_query();
         return $result;
     }
+
     public function get_table_row_by_primary_key($table_name, $primary_key_id = "0")
     {
         $this->db->where("{$table_name}_id", $primary_key_id);
@@ -200,15 +209,18 @@ class Generic_model extends CI_Model
         }
         return $result;
     }
-
+    public function get_multi_table_rows_by_col($table_name, $col_name, $col_value){
+        $this->db->where("$col_name", $col_value);
+        return $this->db->get($table_name)->result();
+    }
     public function add_data($table_name)
     {
         // form field names is array with form
         $table_post_data = $this->input->post($table_name);
         if ($table_name == "staff" || $table_name == "customer") {
             $this->add_account($table_post_data, $table_name);
-        } else{
-            if(isset($_FILES['image_path'])){
+        } else {
+            if (isset($_FILES['image_path'])) {
                 // getting absolute path, replacing backslashes with forward slashes due to full_path data is forward slash
                 $absolute_path = str_replace('\\', '/', FCPATH);
                 //finding absolute path in full_path and reverting it to project path to be used as image
@@ -216,6 +228,18 @@ class Generic_model extends CI_Model
                 $table_post_data['image_path'] = $image_path;
             }
             $this->db->insert($table_name, $table_post_data);
+            $insert_id = $this->db->insert_id();
+            $multi_tables = $this->get_multi_foreign_key_table_names($table_name);
+            foreach ($multi_tables as $multi_table) {
+                $multi_table_add_data = $_SESSION["{$table_name}_add_data"][$multi_table] ?? array();
+                foreach ($multi_table_add_data as $multi_table_cols) {
+                    foreach ($multi_table_cols as $multi_tables_value) {
+                        $multi_tables_value["{$table_name}_id"] = $insert_id;
+                        $this->db->insert($multi_table, $multi_tables_value);
+                    }
+                }
+                unset($_SESSION["{$table_name}_add_data"][$multi_table]);
+            }
         }
     }
 

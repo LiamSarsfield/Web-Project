@@ -52,7 +52,7 @@ class Functions extends CI_Controller
                         }
                         $column = new stdClass();
                         $column->label = $table_column;
-                        $column->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $table_column)));;
+                        $column->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $table_column)));
                         $column->value = $table_value;
                         $columns[] = $column;
                         unset($view_data[$view_info_key][$table_column]);
@@ -112,7 +112,7 @@ class Functions extends CI_Controller
         $model = strtolower($model);
         $model_formatted = $model . "_model";
         $this->load->model(array($model_formatted, "Generic_model", "Sidebar_model"));
-        $this->load->library(array('form_validation'));
+        $this->load->library(array('form_validation', 'table'));
         $foreign_form_field_data = array();
         $form_field_data = array();
         // if your adding staff or customer, account table cols need to be displayed
@@ -125,6 +125,37 @@ class Functions extends CI_Controller
         } else {
 //      returns foreign field data in array within array of id and name or else button
             $foreign_form_field_data = $this->initialize_foreign_data($model);
+        }
+        foreach ($foreign_form_field_data as $foreign_form_field_data_index => $table) {
+            $multi_basket_info = array();
+            if ($table->is_multi_table) {
+                foreach ($table->multi_table_cols as $multi_class_index => $multi_class) {
+                    $basket_info = $this->get_multi_table_basket_info($model, $multi_class->name, $table->name);
+                    $table_info = "";
+                    if (!empty($basket_info)) {
+                        $columns = array();
+                        foreach ($basket_info[0] as $column => $row) {
+                            if (substr($column, 0, 5) != "meta_") {
+                                $columns[] = str_replace("Id", "ID", ucwords(str_replace("_", " ", $column)));
+                            }
+                        }
+                        $this->table->set_heading($columns);
+                        foreach ($basket_info as $row) {
+                            $table_row = array();
+                            foreach ($row as $row_col => $row_value) {
+                                if (substr($row_col, 0, 5) != "meta_") {
+                                    $table_row[] = $row_value;
+                                }
+                            }
+                            $this->table->add_row($table_row);
+                        }
+                        $table_info = $this->table->generate();
+                    }
+                    $foreign_form_field_data[$foreign_form_field_data_index]->multi_table_cols[$multi_class_index]->basket_values = $basket_info;
+                    $foreign_form_field_data[$foreign_form_field_data_index]->multi_table_cols[$multi_class_index]->table = $table_info;
+                }
+                $foreign_form_field_data[$foreign_form_field_data_index]->multi_table_values = $multi_basket_info;
+            }
         }
         $form_field_data = array_merge($form_field_data, $this->Generic_model->get_col_names($model));
         $this->initialize_form_validation($model, $form_field_data);
@@ -164,7 +195,23 @@ class Functions extends CI_Controller
                 if (isset($quantity)) {
                     $multi_table_row_info['quantity'] = $quantity;
                 }
-                $multi_add_data["$multi_related_table_name"][$foreign_table][] = $multi_table_row_info;
+                $already_added = false;
+                if (isset($multi_add_data["$multi_related_table_name"][$foreign_table])) {
+                    foreach ($multi_add_data["$multi_related_table_name"][$foreign_table] as $multi_add_index => $multi_add_datum) {
+                        if ($multi_table_row_info["{$foreign_table}_id"] == $multi_add_datum["{$foreign_table}_id"]) {
+                            if (isset($quantity) && $quantity == "0") {
+                                unset($multi_add_data["$multi_related_table_name"][$foreign_table][$multi_add_index]);
+                            } else {
+                                $multi_add_data["$multi_related_table_name"][$foreign_table][$multi_add_index] = $multi_table_row_info;
+                            }
+                            $already_added = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$already_added) {
+                    $multi_add_data["$multi_related_table_name"][$foreign_table][] = $multi_table_row_info;
+                }
                 $this->session->set_userdata("{$table_name}_add_data", $multi_add_data);
                 redirect(site_url("functions/select/{$table_name}/{$foreign_table}/"));
             }
@@ -180,7 +227,7 @@ class Functions extends CI_Controller
                 if ($foreign_table_column == "account_id")
                     $foreign_table_column = "Name";
                 $column_class->label = $foreign_table_column;
-                $column_class->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table_column)));;
+                $column_class->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table_column)));
                 $columns[] = $column_class;
                 $column_headers[] = $column_class->field;
             }
@@ -188,7 +235,6 @@ class Functions extends CI_Controller
         // if you're selecting many from a multi table (productS for customer_order)
         if ($multi_related_table_name) {
             $data['multi_related_table_name'] = $multi_related_table_name;
-            $test = $this->get_multi_table_basket_info($table_name, $foreign_table, $multi_related_table_name);
             $multi_columns = $this->Generic_model->get_non_primary_and_non_foreign_key_columns($multi_related_table_name);
             foreach ($multi_columns as $multi_column) {
                 $column_class = new stdClass();
@@ -250,7 +296,19 @@ class Functions extends CI_Controller
             } else {
                 $rows[] = "<p><a href='{$add_button}'><div class='button'>Select</div></a></p>";
             }
-            $this->table->add_row($rows);
+            if ($table_name == "credit_note" && $foreign_table != "customer_order") {
+                if (!isset($_SESSION["{$table_name}_add_uris"][0]))
+                    break;
+                $customer_order_rows = $this->Generic_model->get_table("multi_customers_order_items");
+                foreach ($customer_order_rows as $row) {
+                    if (isset($row->product_id) && $row->product_id == $_SESSION["{$table_name}_add_uris"][0]) {
+                        $this->table->add_row($rows);
+                        continue;
+                    }
+                }
+            } else {
+                $this->table->add_row($rows);
+            }
         }
         $table_template = array(
             'table_open' => "<table style='width:60%; margin-left:20%;'>"
@@ -308,7 +366,6 @@ class Functions extends CI_Controller
             $foreign_table->can_be_null = FALSE;
             $foreign_table->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table->name)));
             $foreign_table_id = $uri_strings[$i] ?? NULL;
-
             // if uri has an id in it, find the needed info for it to display what the user selected
             $foreign_table_row_result = $this->Generic_model->get_table_row_by_primary_key($foreign_tables[$i], $foreign_table_id);
             // if info was found... will return 1d array with pk first and a human readable name second (e.g. name)
@@ -349,17 +406,24 @@ class Functions extends CI_Controller
                 // getting specific multi info
                 $foreign_multi_table_data = $this->Generic_model->get_multi_foreign_table_info($foreign_multi_table);
                 if ($foreign_multi_table_data) {
+                    $foreign_table = new stdClass();
+                    $foreign_table->exists = TRUE;
+                    $foreign_table->name = $foreign_multi_table;
+                    $foreign_table->field = ucwords(str_replace("_", " ", str_replace("multi_", "", $foreign_multi_table)));
+                    $foreign_table->is_multi_table = TRUE;
+                    $foreign_table->can_be_null = TRUE;
+                    $foreign_table->multi_table_cols = array();
                     foreach ($foreign_multi_table_data as $foreign_multi_table_column) {
-                        $foreign_table = new stdClass();
-                        $foreign_table->exists = TRUE;
-                        $foreign_table->name = $foreign_multi_table_column->name;
-                        $foreign_table->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_multi_table_column->name)));
-                        $foreign_table->is_multi_table = TRUE;
-                        $foreign_table->can_be_null = ($foreign_multi_table_column->can_be_null == "YES") ? TRUE : FALSE;
-                        //multi column values will come true as session data as there can be many of them
-                        $foreign_table->columns = (isset($_SESSION[$foreign_multi_table])) ? $this->session->userdata($foreign_multi_table) : array();
-                        $foreign_form_field_data[] = $foreign_table;
+                        $foreign_table_multi_col = new stdClass();
+                        $foreign_table_multi_col->exists = TRUE;
+                        $foreign_table_multi_col->is_multi_table = TRUE;
+                        $foreign_table_multi_col->name = $foreign_multi_table_column->name;
+                        $foreign_table_multi_col->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_multi_table_column->name)));
+                        $foreign_table_multi_col->multi_table_name = $foreign_multi_table;
+                        $foreign_table_multi_col->can_be_null = ($foreign_multi_table_column->can_be_null == "YES") ? TRUE : FALSE;
+                        $foreign_table->multi_table_cols[] = $foreign_table_multi_col;
                     }
+                    $foreign_form_field_data[] = $foreign_table;
                 }
             }
 
@@ -389,19 +453,17 @@ class Functions extends CI_Controller
 
     public function get_multi_table_basket_info($table_name, $foreign_table, $multi_related_table_name)
     {
-        $selected_data_rows = $_SESSION["{$table_name}_add_data"]["$multi_related_table_name"] ?? array(
-                "$multi_related_table_name" => array(
-                    "$foreign_table" => array(),
-                ),
-            );
+        $selected_data_rows = $_SESSION["{$table_name}_add_data"]["$multi_related_table_name"][$foreign_table] ?? array();
         $selected_basket_details = array();
+        // foreach sub table col
         foreach ($selected_data_rows as $selected_data_row_index => $selected_data_row) {
             foreach ($selected_data_row as $row_col => $row_value) {
                 //if it is equal to id, then we get its all the id's info
                 if (substr($row_col, -2) == "id") {
                     $selected_basket_details = array();
                     $basket_table_name = substr($row_col, 0, -3);
-                    $selected_basket_details['table_name'] = $basket_table_name;
+                    $selected_basket_details['meta_table_name'] = $basket_table_name;
+                    $selected_basket_details['meta_multi_table_name'] = $multi_related_table_name;
                     $all_table_basket_details = $this->Generic_model->get_table_row_by_primary_key($basket_table_name, $row_value);
                     if ($basket_table_name == "product" || $basket_table_name == "customer_quote") {
                         $selected_basket_details['Name'] = $all_table_basket_details['name'];
