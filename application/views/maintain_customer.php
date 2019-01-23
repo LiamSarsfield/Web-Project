@@ -43,18 +43,19 @@ and open the template in the editor.
             <a href="<?php echo site_url()?>/Staff_controller/view_customers"><div class="button">Back to View All Customers</div></a>
             <section class="generic_section generic_item_information">
                 <h2 class="generic_item_header">Customer Information</h2>
-                <p><span class="generic_item_label">Customer ID: </span>101</p>
-                <p><span class="generic_item_label">Customer Name: </span>Keith Clifford</p>
-                <p><span class="generic_item_label">Customer Email: </span>keithclifford500@gmail.com</p>
-                <p><span class="generic_item_label">Address 1: </span>16 Upper St</p>
-                <p><span class="generic_item_label">Address 2: </span>lower center</p>
-                <p><span class="generic_item_label">Town: </span>Limerick</p>
-                 <p><span class="generic_item_label">Country: </span>Ireland</p>
+                <p><span class="generic_item_label">Customer ID: </span><?php echo $query->customer_id ?></p>
+                <p><span class="generic_item_label">Customer Name: </span><?php echo $query->first_name . " " . $query->last_name ?></p>
+                <p><span class="generic_item_label">Customer Email: </span><?php echo $query->email ?></p>
+                <p><span class="generic_item_label">Phone Number: </span><?php echo $query->phone ?></p>
+                <p><span class="generic_item_label">Address 1: </span><?php echo $query->first_name ?></p>
+                <p><span class="generic_item_label">Address 2: </span><?php echo $query->first_name ?></p>
+                <p><span class="generic_item_label">Town: </span><?php echo $query->town ?></p>
+                <p><span class="generic_item_label">City: </span><?php echo $query->city ?></p>
             </section>
             <section class="generic_section generic_item_information">
                 <h2 class="generic_item_header">Available Functions</h2>
                 <div class="generic_item_content">
-                    <a href="<?php echo site_url()?>/Staff_controller/editCustomer"><div class="button">Edit Customer</div></a>
+                    <a href="<?php echo site_url()?>/Staff_controller/edit_customer/<?php echo $query->customer_id ?>"><div class="button">Edit Customer</div></a>
                 </div>
             </section>
         </main>

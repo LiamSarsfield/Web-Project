@@ -124,7 +124,7 @@ and open the template in the editor.
         echo '<td>'.$row->town.'</td>';
         echo '<td>'.$row->city.'</td>';
 //        echo '<td><a href="'.site_url('Staff_controller/update_room/'.$row->customer_id.'').'"><button>UPDATE</button></a></td>';
-        echo '<td><a href="'.site_url('Staff_controller/maintain_customer').'"><button>View</button></a></td>';
+        echo '<td><a href="'.site_url('Staff_controller/view_selected_customer/'.$row->customer_id.'').'"><button>View</button></a></td>';
         echo '</tr>';
         
         }
@@ -132,6 +132,8 @@ and open the template in the editor.
         echo "</table>";
     }
 ?>
+    <br>
+    <center><a href="<?php echo site_url('Staff_controller/add_customer'); ?>"><button>Add Customer</button></a></center>
 </main>
 </body>
 </html>

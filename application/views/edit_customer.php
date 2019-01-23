@@ -65,9 +65,9 @@
     
   </header>
 <main style="margin-left:35%; margin-right:35%;">
-            <a href="<?php echo site_url()?>/Staff/viewCustomers"><div class="button">Back to View Customer</div></a>
+            <a href="<?php echo site_url()?>/Staff_controller/view_customers"><div class="button">Back to View Customer</div></a>
 
-            <form action="<?php echo site_url()?>/Staff/viewCustomers">
+            <form action="<?php echo site_url()?>/Staff_controller/update_customer">
                 <fieldset class="generic_edit_item_form">
                     <legend>Edit Customer</legend>
                     <p>

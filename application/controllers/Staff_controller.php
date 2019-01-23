@@ -18,15 +18,19 @@ class Staff_controller extends CI_Controller {
         
     }
     
-    public function view_selected_customer() {
+    public function view_selected_customer($id) {
         
-        $this->load->view('maintaincustomer');
+        $this->load->model("Staff_model");       
+        $data['query'] = $this->Staff_model->get_customer_by_id($id);
+        $this->load->view('maintain_customer', $data);
         
     }
     
     public function search_customer_by_id() {
         
-        $this->load->view('customersearch');
+        $this->load->model("Staff_model");       
+        $data['query'] = $this->Staff_model->get_customer_by_id();
+        $this->load->view('view_customers', $data);
         
     }
     
@@ -56,15 +60,12 @@ class Staff_controller extends CI_Controller {
         }
     }
     
-    public function maintain_customer() {
-        
-        $this->load->view('maintaincustomer');
-        
-    }
     
-    public function editCustomer() {
+    public function edit_customer($id) {
         
-        $this->load->view('editcustomer');
+        $this->load->model("Staff_model");       
+        $data['query'] = $this->Staff_model->get_customer_by_id($id);
+        $this->load->view('edit_customer', $data);
         
     }
 
