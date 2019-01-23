@@ -40,7 +40,7 @@ and open the template in the editor.
   </header>
 <main style="margin-left:10%; margin-right:10%;">
        
-            <a href="<?php echo site_url()?>/Staff/viewCustomers"><div class="button">Back to View All Customers</div></a>
+            <a href="<?php echo site_url()?>/Staff_controller/view_customers"><div class="button">Back to View All Customers</div></a>
             <section class="generic_section generic_item_information">
                 <h2 class="generic_item_header">Customer Information</h2>
                 <p><span class="generic_item_label">Customer ID: </span>101</p>
@@ -54,7 +54,7 @@ and open the template in the editor.
             <section class="generic_section generic_item_information">
                 <h2 class="generic_item_header">Available Functions</h2>
                 <div class="generic_item_content">
-                    <a href="<?php echo site_url()?>/Staff/editCustomer"><div class="button">Edit Customer</div></a>
+                    <a href="<?php echo site_url()?>/Staff_controller/editCustomer"><div class="button">Edit Customer</div></a>
                 </div>
             </section>
         </main>
