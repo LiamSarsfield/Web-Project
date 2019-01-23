@@ -1,6 +1,6 @@
 <?php
 
-class Staff extends CI_Model{
+class Staff_model extends CI_Model{
     
     function get_all_staff() { 
           
@@ -59,6 +59,31 @@ class Staff extends CI_Model{
        
        $this->db->where('id', $id);
        $this->db->update('staff', $data); 
-   } 
+   }
+   
+   function get_all_customers() { 
+          
+      $this->db->select("customer_id, first_name, last_name, email, phone, address1, address2, town, city");        
+      $query = $this->db->get('customer');        
+      
+      if ($query->num_rows() > 0) {
+             
+            return $query;
+            
+         } else {
+            return FALSE;
+         }
+}
+   
+   function add_customer($data)
+    {
+        if ($this->db->insert("customer", $data)) {
+            return TRUE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
 }
 

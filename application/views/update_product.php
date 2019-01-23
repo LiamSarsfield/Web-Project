@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Add Product</title>
+<title>Update Product</title>
 <link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -38,10 +38,11 @@ require_once('adminmenu.php');
 
                           <div >
                              
-                          <?php echo form_open_multipart('Product/update_product');?>        
+                          <?php echo form_open_multipart('Product_controller/update_product/'.$query->product_id.'');?>        
                           
                           <h1>UPDATE  PRODUCT</h1>
                           <?php if(isset($error)){echo '<center><span style="color:red" >'.$error.'</span></center>';}?>
+                          
                             <p>
                               <label for="category_id">Product Category:*</label>
                               <select name="category_id" type="text" required id="">
@@ -76,11 +77,11 @@ require_once('adminmenu.php');
                               <label for="quantity">Quantity</label>
                               <input name="quantity" type="text" value="<?php echo $query->quantity;?>" required id="">
                             </p>
-                            <p>
+<!--                            <p>
                             <label for="picture">Product Picture:*</label>
-                            <input type="file" name="picture" required>
-                            
-                            </p>
+                            <img src="<?php echo base_url().$query->image_path;?>" alt="" class="w3-image" width="50" height="50">
+                            <input type="file" name="picture">                           
+                            </p>-->
                             <p>
                               <input type="submit" name="submit" id="submit" value="Update">
                             </p>

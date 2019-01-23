@@ -43,7 +43,7 @@ class Product_model extends CI_Model{
         }
         else
         {
-            return TRUE;
+            return FALSE;
         }
     }
     
@@ -56,9 +56,9 @@ class Product_model extends CI_Model{
               
 }
 
-    function update_product_details($data){
-       
-       $this->db->where('id', $id);
+    function update_product($id, $data){
+              
+       $this->db->where('product_id', $id);
        $this->db->update('product', $data); 
    } 
     

@@ -1,6 +1,14 @@
 <?php
 
-class Product extends CI_Controller {
+class Product_controller extends CI_Controller {
+    
+    public function view_products() {
+        
+        $this->load->model("Product_model");       
+        $data['query'] = $this->Product_model->get_all_products();
+        $this->load->view('list_of_products', $data);
+        
+    }
     
     public function add_product() {
         
@@ -42,7 +50,6 @@ class Product extends CI_Controller {
                         $this->load->model("Product_model");
                         $this->Product_model->add_product($data);
                         
-//                      $this->load->view('success');
                         
                         $this->load->model("Product_model");       
                         $data['query'] = $this->Product_model->get_all_products();
@@ -71,7 +78,7 @@ class Product extends CI_Controller {
         
         
         if($this->input->post('product_name')){
-                   
+        
         $data['category_id'] = $this->input->post("category_id");
         $data['product_name'] = $this->input->post("product_name");
         $data['product_desc'] = $this->input->post("product_desc");
@@ -82,7 +89,9 @@ class Product extends CI_Controller {
            
         $this->load->model("Product_model");
         
-        $this->Product_model->update_product($data);
+        $this->Product_model->update_product($id, $data);
+        
+        redirect(site_url('/Product_controller/view_products'));
         
         }
         

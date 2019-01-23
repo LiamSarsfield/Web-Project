@@ -77,6 +77,8 @@ fa fa-shopping-basket w3-xxlarge"></i>
 		<div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
                     
                     <h1>List of Products</h1>
+                    <br>
+                    
                     
                     <table style="padding: 1%; margin-bottom: 1%;">
                         <th></th>
@@ -108,16 +110,19 @@ fa fa-shopping-basket w3-xxlarge"></i>
                             echo '<td><center>€'.$row->product_price.'</center></td>';
                             echo '<td><center>'.$row->quantity.'</center></td>';
                             echo '<td>';   
-                            echo '<a href="'.base_url().'index.php/Product/delete_product/'.$row->product_id.'"><button>Delete&nbsp;</button></a>';
+                            echo '<a href="'.base_url().'index.php/Product_controller/delete_product/'.$row->product_id.'"><button>Delete&nbsp;</button></a>';
                             echo '<br><br>';
-                            echo '<a href="'.base_url().'index.php/Product/update_product/'.$row->product_id.'"><button>Update</button></a>';
+                            echo '<a href="'.base_url().'index.php/Product_controller/update_product/'.$row->product_id.'"><button>Update</button></a>';
                             echo '</td>';                               
                                                         
                                
                         }
     }        
                         ?>    
-                        
+                    </table>
+                    <br>
+                    <center><a href="<?php echo site_url('Product_controller/add_product'); ?>"><button>Add Product</button></a></center>
+                    
 				<!-- End About Section -->
 			</div>
 		</div>
@@ -130,19 +135,7 @@ fa fa-shopping-basket w3-xxlarge"></i>
 
 
 	<!-- Footer -->
-	<footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
-		<a href="maintenance.html">
-			<i class="fa fa-facebook-official w3-hover-opacity"></i>
-		</a>
-		<a href="maintenance.html"></a>
-		<i class="fa fa-instagram w3-hover-opacity"></i>
-		</a>
-		<a href="maintenance.html">
-			<i class="fa fa-snapchat w3-hover-opacity"></i>
-		</a>
-		<p class="w3-medium">Midwest Electronics </p>
-		<!-- End footer -->
-	</footer>
+	
 
 	<!-- END PAGE CONTENT -->
 	</div>

@@ -38,7 +38,7 @@ require_once('adminmenu.php');
 
                           <div >
                              
-                          <?php echo form_open_multipart('Product/add_product');?>        
+                          <?php echo form_open_multipart('Product_controller/add_product');?>        
                           
                           <h1>ADD PRODUCT</h1>
                           <?php if(isset($error)){echo '<center><span style="color:red" >'.$error.'</span></center>';}?>
