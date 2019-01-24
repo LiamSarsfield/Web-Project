@@ -288,7 +288,8 @@ class Functions extends CI_Controller
                     $rows[] = $foreign_table_datum[$column_value->label];
                 }
             }
-            $add_button = site_url("/functions/add/{$table_name}/{$rows[0]}");
+            $add_uris = (!empty($_SESSION["{$table_name}_add_uris"])) ? implode("/", $_SESSION["{$table_name}_add_uris"]) . "/" : "";
+            $add_button = site_url("/functions/add/{$table_name}/$add_uris{$rows[0]}");
             if ($multi_related_table_name) {
                 $multi_table_params = ($column_class->label == "quantity") ? "$rows[0]/1" : "$rows[0]";
                 //if quantity is set, then an extra param will be set
@@ -363,7 +364,7 @@ class Functions extends CI_Controller
             $foreign_table->name = $foreign_tables[$i];
             $foreign_table->exists = FALSE;
             $foreign_table->is_multi_table = FALSE;
-            $foreign_table->can_be_null = FALSE;
+            $foreign_table->can_be_null = $this->Generic_model->col_can_be_null($table_name, $foreign_table->name, TRUE);
             $foreign_table->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $foreign_table->name)));
             $foreign_table_id = $uri_strings[$i] ?? NULL;
             // if uri has an id in it, find the needed info for it to display what the user selected
@@ -437,7 +438,11 @@ class Functions extends CI_Controller
         $table_row = $this->Generic_model->get_table_row_by_primary_key($table_name, $primary_id);
         $result_table_row = array();
         foreach ($foreign_tables as $foreign_table) {
-            $result_table_row = $this->get_all_table_details_by_pk($foreign_table->name, $table_row["{$foreign_table->name}_id"]);
+            $test = substr($foreign_table->name, 0, 5);
+            if (substr($foreign_table->name, 0, 6) !== "multi_") {
+                $result_table_row = $this->get_all_table_details_by_pk($foreign_table->name, $table_row["{$foreign_table->name}_id"]);
+            }
+
         }
         foreach ($table_row as $table_column => $table_value) {
             if (substr($table_column, -2) == "id")
@@ -450,7 +455,23 @@ class Functions extends CI_Controller
         // recursive function returns ALL data related to a table
 
     }
+    public function get_all_edit_table_details_by_pk($table_name, $primary_id)
+    {
+        $foreign_tables = $this->initialize_foreign_data($table_name);
+        $table_row = $this->Generic_model->get_table_row_by_primary_key($table_name, $primary_id);
+        $result_table_row = array();
+        foreach ($foreign_tables as $foreign_table) {
+            $test = substr($foreign_table->name, 0, 5);
+            if (substr($foreign_table->name, 0, 6) !== "multi_") {
+                $result_table_row = $this->get_all_table_details_by_pk($foreign_table->name, $table_row["{$foreign_table->name}_id"]);
+            }
 
+        }
+        $result_table_row["$table_name"] = $table_row;
+        return $result_table_row;
+        // recursive function returns ALL data related to a table
+
+    }
     public function get_multi_table_basket_info($table_name, $foreign_table, $multi_related_table_name)
     {
         $selected_data_rows = $_SESSION["{$table_name}_add_data"]["$multi_related_table_name"][$foreign_table] ?? array();
@@ -468,7 +489,7 @@ class Functions extends CI_Controller
                     if ($basket_table_name == "product" || $basket_table_name == "customer_quote") {
                         $selected_basket_details['Name'] = $all_table_basket_details['name'];
                         $selected_basket_details['Price'] = $all_table_basket_details['price'];
-                    } else if ($basket_table_name == "customer" || "staff") {
+                    } else if ($basket_table_name == "customer" || $basket_table_name == "staff") {
                         $selected_basket_details['Name'] = $this->Generic_model->get_account_name_by_foreign_account_id($basket_table_name, $all_table_basket_details["{$basket_table_name}_id"]);
                     } else {
                         foreach ($all_table_basket_details as $basket_col => $basket_value) {
@@ -485,6 +506,21 @@ class Functions extends CI_Controller
             $selected_data_rows[$selected_data_row_index] = array_merge($selected_data_rows[$selected_data_row_index], $selected_basket_details);
         }
         return $selected_data_rows;
+    }
+
+    public function edit($table_name = NULL, $search_id = NULL, $multi_table = NULL)
+    {
+        if (!isset($table_name)) {
+            redirect(site_url('dashboard/home'));
+        } else if (!isset($search_id)) {
+            redirect(site_url("functions/view/{$search_id}/"));
+        } else if (isset($multi_table)) {
+
+        } else {
+            $this->load->model("Generic_model");
+            $table_info = $this->get_all_edit_table_details_by_pk($table_name, $search_id);
+            $sss = 2;
+        }
     }
 
     public function upload_image()

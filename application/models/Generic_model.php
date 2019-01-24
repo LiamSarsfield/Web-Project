@@ -12,9 +12,12 @@ class Generic_model extends CI_Model
     {
         parent::__construct();
     }
-    public function get_table($table_name){
+
+    public function get_table($table_name)
+    {
         return $this->db->get($table_name)->result();
     }
+
     public function get_select_info($table_name)
     {
         $this->db->select('COLUMN_NAME as name');
@@ -175,7 +178,29 @@ class Generic_model extends CI_Model
         $this->db->where("TABLE_SCHEMA", $this->db->database);
         $this->db->where("TABLE_NAME", $multi_table);
         $result = $this->db->get()->result();
+        // only return check first result otherwise it'll check other tables not needed
         return ($result[0]->name == "{$table_name}_id") ? true : false;
+    }
+
+    public function col_can_be_null($table_name, $col_name, $is_fk = FALSE)
+    {
+        if($is_fk){
+            $col_name .= "_id";
+        }
+        $this->db->select("IS_NULLABLE as can_be_null");
+        $this->db->where("COLUMN_NAME", $col_name);
+        $this->db->where("TABLE_NAME", $table_name);
+        $this->db->from("INFORMATION_SCHEMA`.`COLUMNS");
+        $result = $this->db->get();
+        $res = $this->db->last_query();
+        $dds = $result->row();
+        if ($result->num_rows() > 0) {
+            if ($result->row()->can_be_null == "NO")
+                return false;
+            else return true;
+        } else {
+            return false;
+        }
     }
 
     public function get_account_name_by_account_id($account, $account_id)
@@ -209,10 +234,13 @@ class Generic_model extends CI_Model
         }
         return $result;
     }
-    public function get_multi_table_rows_by_col($table_name, $col_name, $col_value){
+
+    public function get_multi_table_rows_by_col($table_name, $col_name, $col_value)
+    {
         $this->db->where("$col_name", $col_value);
         return $this->db->get($table_name)->result();
     }
+
     public function add_data($table_name)
     {
         // form field names is array with form

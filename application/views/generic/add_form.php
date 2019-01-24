@@ -1,5 +1,5 @@
 <a href='<?php echo site_url("dashboard/home"); ?>'>
-<div class='button'>Back to Dashboard</div>
+    <div class='button'>Back to Dashboard</div>
 </a>
 <section>
     <fieldset style="width:60%; margin-left:20%;">
@@ -13,9 +13,11 @@
             $foreign_form_field_data ?? array();
             $form_labels = $form_labels ?? array();
             $table_name = $table_name ?? "";
+            $all_required_foreign_fields_present = TRUE;
             foreach ($foreign_form_field_data as $foreign_form_field) {
                 if ($foreign_form_field->is_multi_table == FALSE) { ?>
-                    <?php if (!$foreign_form_field->exists) { ?>
+                    <?php if (!$foreign_form_field->exists) {
+                        if (!$foreign_form_field->can_be_null) $all_required_foreign_fields_present = FALSE; ?>
                         <p>
                             <a href='<?php echo site_url("/functions/select/{$table_name}/{$foreign_form_field->name}/"); ?>'>
                                 <div class='button'>Select <?php echo $foreign_form_field->field;
@@ -59,36 +61,39 @@
                     </div>
                 <?php }
             }
-            foreach ($form_field_data as $form_field) { ?>
-                <?php echo form_error("{$table_name}[{$form_field->label}]"); ?>
-                <p>
-                <?php if ($form_field->label == "image_path") { ?>
-                    <label for="<?php echo $form_field->label; ?>">Picture:</label>
-                    <input type="file" name="<?php echo $form_field->label; ?>">
-                <?php } else {
-                    $data_type = "";
-                    if ($form_field->label == "password") {
-                        $data_type = "password";
-                    } else if ($form_field->data_type == "date") {
-                        $data_type = "date";
-                    } else if ($form_field->data_type == "text") {
-                        $data_type = "text";
-                    } ?>
-                    <label for='<?php echo "{$table_name}[{$form_field->label}]" ?>'><?php echo $form_field->field;
-                        echo ($form_field->is_required) ? "*" : ""; ?></label>
-                    <input autocomplete="false" name='<?php echo "{$table_name}[{$form_field->label}]"; ?>'
-                           type='<?php echo $data_type; ?>' <?php if ($form_field->is_required) echo "required"; ?>
-                           id='<?php echo $form_field->label; ?>'
-                           value='<?php echo ($form_field->data_type == "date") ? date("Y-m-d") : set_value("{$table_name}[{$form_field->label}]"); ?>'>
-                    </p>
+            if ($all_required_foreign_fields_present) {
+                foreach ($form_field_data as $form_field) { ?>
+                    <?php echo form_error("{$table_name}[{$form_field->label}]"); ?>
+                    <p>
+                    <?php if ($form_field->label == "image_path") { ?>
+                        <label for="<?php echo $form_field->label; ?>">Picture:</label>
+                        <input type="file" name="<?php echo $form_field->label; ?>">
+                    <?php } else {
+                        $data_type = "";
+                        if ($form_field->label == "password") {
+                            $data_type = "password";
+                        } else if ($form_field->data_type == "date") {
+                            $data_type = "date";
+                        } else if ($form_field->data_type == "text") {
+                            $data_type = "text";
+                        } ?>
+                        <label for='<?php echo "{$table_name}[{$form_field->label}]" ?>'><?php echo $form_field->field;
+                            echo ($form_field->is_required) ? "*" : ""; ?></label>
+                        <input autocomplete="false" name='<?php echo "{$table_name}[{$form_field->label}]"; ?>'
+                               type='<?php echo $data_type; ?>' <?php if ($form_field->is_required) echo "required"; ?>
+                               id='<?php echo $form_field->label; ?>'
+                               value='<?php echo ($form_field->data_type == "date") ? date("Y-m-d") : set_value("{$table_name}[{$form_field->label}]"); ?>'>
+                        </p>
+                    <?php } ?>
                 <?php } ?>
+                <p>
+                    <button id="submit" class="w3-button w3-light-grey w3-padding-large" type="submit">
+                        <i class="fa fa-paper-plane"></i> Submit
+                    </button>
+                </p>
             <?php }
             ?>
-            <p>
-                <button id="submit" class="w3-button w3-light-grey w3-padding-large" type="submit">
-                    <i class="fa fa-paper-plane"></i> Submit
-                </button>
-            </p>
+
             </form>
         </div>
     </fieldset>

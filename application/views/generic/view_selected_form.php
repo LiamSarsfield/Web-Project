@@ -1,4 +1,4 @@
-<main style="margin-left:10%; margin-right:10%;">
+<main>
     <a href="<?php echo site_url(substr(uri_string(), 0, -2)); ?>">
         <div class="button">Back</div>
     </a>
@@ -18,8 +18,8 @@
         <section class="generic_section generic_item_information">
             <h2 class="generic_item_header">Available Functions</h2>
             <div class="generic_item_content">
-                <a href="<?php echo site_url() ?>/Customer/payQuote">
-                    <div class="button">Pay Quote</div>
+                <a href="<?php echo site_url("/edit/category/1") ?>">
+                    <div class="button">Edit</div>
                 </a>
                 <a href="<?php echo site_url() ?>/Customer/declineQuote">
                     <div class="button">Decline Quote</div>
