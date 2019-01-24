@@ -28,8 +28,9 @@ class Staff_controller extends CI_Controller {
     
     public function search_customer_by_id() {
         
+        $id = $this->input->post("customer_id");
         $this->load->model("Staff_model");       
-        $data['query'] = $this->Staff_model->get_customer_by_id();
+        $data['query'] = $this->Staff_model->get_customer_by_id($id);
         $this->load->view('view_customers', $data);
         
     }
