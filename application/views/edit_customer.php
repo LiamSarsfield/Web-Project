@@ -67,37 +67,41 @@
 <main style="margin-left:35%; margin-right:35%;">
             <a href="<?php echo site_url()?>/Staff_controller/view_customers"><div class="button">Back to View Customer</div></a>
 
-            <form action="<?php echo site_url()?>/Staff_controller/update_customer">
+            <form action="<?php echo site_url()?>/Staff_controller/edit_customer">
                 <fieldset class="generic_edit_item_form">
                     <legend>Edit Customer</legend>
                     <p>
                         <label class="generic_label generic_item_edit_label">Customer ID: </label>
-                        <input class="generic_input" type="text" value="101" disabled>
+                        <input class="generic_input" type="text" value="<?php echo $query->customer_id ?>" disabled>
                     </p>
                     <p>
-                        <label class="generic_label generic_item_edit_label">Customer Name: </label>
-                        <input class="generic_input" type="text" value="Keith Clifford">
+                        <label class="generic_label generic_item_edit_label">First Name: </label>
+                        <input class="generic_input" type="text" value="<?php echo $query->first_name ?>">
+                    </p>
+                    <p>
+                        <label class="generic_label generic_item_edit_label">Last Name: </label>
+                        <input class="generic_input" type="text" value="<?php echo $query->last_name ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Customer Email:</label>
-                        <input class="generic_input" type="text" value="keithclifford500@gmail.com">
+                        <input class="generic_input" type="text" value="<?php echo $query->email ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Address 1:</label>
-                        <input class="generic_input" type="text" value="16 Upper St" disabled>
+                        <input class="generic_input" type="text" value="<?php echo $query->address1 ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Address 2:</label>
-                        <input class="generic_input" type="text" value="lower center">
+                        <input class="generic_input" type="text" value="<?php echo $query->address2 ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Town:</label>
-                        <input class="generic_input" type="text" value="Limerick">
+                        <input class="generic_input" type="text" value="<?php echo $query->town ?>">
                     </p>
 
                     <p>
                         <label class="generic_label generic_item_edit_label">Country: </label>
-                        <input class="generic_input" type="text" value="Ireland">
+                        <input class="generic_input" type="text" value="<?php echo $query->city ?>">
                     </p>
                     <input class="button submit_button" type="submit">
                 </fieldset>

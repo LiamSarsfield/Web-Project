@@ -47,8 +47,8 @@ and open the template in the editor.
                 <p><span class="generic_item_label">Customer Name: </span><?php echo $query->first_name . " " . $query->last_name ?></p>
                 <p><span class="generic_item_label">Customer Email: </span><?php echo $query->email ?></p>
                 <p><span class="generic_item_label">Phone Number: </span><?php echo $query->phone ?></p>
-                <p><span class="generic_item_label">Address 1: </span><?php echo $query->first_name ?></p>
-                <p><span class="generic_item_label">Address 2: </span><?php echo $query->first_name ?></p>
+                <p><span class="generic_item_label">Address 1: </span><?php echo $query->address1 ?></p>
+                <p><span class="generic_item_label">Address 2: </span><?php echo $query->address2 ?></p>
                 <p><span class="generic_item_label">Town: </span><?php echo $query->town ?></p>
                 <p><span class="generic_item_label">City: </span><?php echo $query->city ?></p>
             </section>
