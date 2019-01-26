@@ -64,6 +64,41 @@ class Shopping_cart_controller extends CI_Controller {
         
         $this->load->view('shopping_cart', $data);
     }
+    
+    public function checkout(){
+        
+        $this->load->model("Shopping_cart_model");
+        
+        $data['query'] = $this->Shopping_cart_model->select_from_cart();
+        
+//        $data['total'] = $data['query']->price;
+        
+        $this->load->view('payment', $data);
+    }
+    
+    public function payment_authorisation() {
+        
+//        $this->load->model("Shopping_cart_model");
+//        
+//        $data['query'] = $this->Shopping_cart_model->select_from_cart();
+        
+        $data['customer_id'] = 101; //future customer ID
+        $data['order_date'] = date('Y-m-d H:i:s');
+        $data['total_price'] = $this->input->post('total');
+        
+        
+        
+//        $this->load->model("Customer_order_model");
+//        
+//        $this->Customer_order_model->add_customer_order($data);
+        
+        $this->load->model("Shopping_cart_model");
+        
+        // Calls  model to remove an item from the shopping cart.
+        $this->Shopping_cart_model->clear_shopping_cart();
+        
+        $this->load->view('payment_successful');
+    }
         
     }
 

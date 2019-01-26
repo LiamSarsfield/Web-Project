@@ -1,6 +1,6 @@
 <?php
 
-class Customer_order extends CI_Model{
+class Customer_order_model extends CI_Model{
     
     function get_all_orders() { 
           

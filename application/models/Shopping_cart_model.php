@@ -38,6 +38,13 @@ class Shopping_cart_model extends CI_Model{
        $this->db->delete('shopping_cart');
 
    }
+   
+   public function clear_shopping_cart(){
+       
+       $session_id = $this->session->session_id;
+       $this->db->where('session_id', $session_id);
+       $this->db->delete('shopping_cart');
+   }
     
 }
 

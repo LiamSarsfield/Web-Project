@@ -159,11 +159,11 @@
         </table>
 
         <button class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-          <a href="#" class="w3-bar-item w3-button w3-hover-black">
+          <a href="<?php echo base_url()?>index.php/Shopping_cart_controller/checkout" class="w3-bar-item w3-button w3-hover-black">
             <i class="
               fa fa-credit-card w3-xxlarge"></i>
             <p>
-              <strong>CHECKOUT</strong>
+              <strong>CHECKOUTT</strong>
             </p>
           </a>
         </button>
