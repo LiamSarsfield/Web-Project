@@ -114,6 +114,15 @@ class Generic_model extends CI_Model
             return $value['name'];
         }, $result);
     }
+    public function inner_join_multi_tables_by_foreign_pk($multi_table_name, $table_name, $foreign_table, $join_id)
+    {
+        $this->db->from("$multi_table_name");
+        $this->db->join("$foreign_table", "{$foreign_table}.{$foreign_table}_id = $multi_table_name.{$foreign_table}_id", 'inner');
+        $this->db->where("{$multi_table_name}.{$table_name}_id", $join_id);
+        $result = $this->db->get()->result_array();
+        $dd = $this->db->last_query();
+        return $result;
+    }
 
     public function inner_join_tables_by_foreign_pk($table_name, $foreign_table, $join_id)
     {

@@ -19,7 +19,7 @@ class Functions extends CI_Controller
         }
     }
 
-    public function view($table_name = NULL, $search_id = NULL, $multi_foreign_table = NULL)
+    public function view($table_name = NULL, $search_id = NULL)
     {
         if (!isset($table_name)) {
             redirect(site_url("dashboard/home"));
@@ -30,43 +30,80 @@ class Functions extends CI_Controller
         // if matches foreign table, display info from its primary keys
         // if it isn't set AND foreign table is a multi table, display button to select all
         if (isset($search_id)) {
-            if (isset($multi_foreign_table)) {
-                $tables_multi_related_info = $this->Generic_model->tables_are_multi_related($table_name, $multi_foreign_table);
-                if ($tables_multi_related_info) {
-
-                } else {
-                    // tables aren't multi related...
-                    redirect("functions/view/$table_name/$search_id");
-                }
-            } else {
-                $view_data = $this->get_all_table_details_by_pk($table_name, $search_id);
-                foreach ($view_data as $view_info_key => $view_table) {
-                    $columns = array();
-                    foreach ($view_table as $table_column => $table_value) {
-                        if ($table_column == "password")
-                            continue;
-                        if ($table_column == "image_path") {
-                            $table_column = "Image";
-                            $table_value = base_url($table_value);
-                            $table_value = "<img class = 'view_image' src='$table_value' alt='Image'>";
+            $view_data = $this->get_all_table_details_by_pk($table_name, $search_id);
+            $multi_foreign_table_names = $this->Generic_model->get_multi_foreign_key_table_names($table_name);
+            $multi_table_info = array();
+            foreach ($multi_foreign_table_names as $multi_foreign_table_name) {
+                // this specific multi table
+                $meta_multi_foreign_table_rows = $this->Generic_model->get_multi_foreign_table_info($multi_foreign_table_name);
+                foreach ($meta_multi_foreign_table_rows as $meta_multi_foreign_table_row) {
+                    $skimmed_multi_foreign_table_rows = array();
+                    // multi table cols/table name
+                    $multi_foreign_table_rows = $this->Generic_model->inner_join_multi_tables_by_foreign_pk($multi_foreign_table_name, $table_name, $meta_multi_foreign_table_row->name, $search_id);
+                    foreach ($multi_foreign_table_rows as $multi_foreign_table_row) {
+                        $skimmed_multi_foreign_table_row = array();
+                        $col_counter = 0;
+                        foreach ($multi_foreign_table_row as $multi_foreign_table_col => $multi_foreign_table_value) {
+                            if (substr($multi_foreign_table_col, -2) !== "id") {
+                                $skimmed_multi_foreign_table_row[$multi_foreign_table_col] = $multi_foreign_table_value;
+                                $col_counter++;
+                            }
+                            if ($col_counter == 2) {
+                                break;
+                            }
                         }
-                        $column = new stdClass();
-                        $column->label = $table_column;
-                        $column->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $table_column)));
-                        $column->value = $table_value;
-                        $columns[] = $column;
-                        unset($view_data[$view_info_key][$table_column]);
+                        $skimmed_multi_foreign_table_rows[] = $skimmed_multi_foreign_table_row;
                     }
-                    $view_data[$view_info_key] = new stdClass();
-                    $view_data[$view_info_key]->columns = $columns;
-//                    $view_data[$view_info_key] = $columns;
+                    $multi_table_info[$meta_multi_foreign_table_row->name] = $skimmed_multi_foreign_table_rows;
                 }
-                $data['table_name'] = ucwords(str_replace("_", " ", $table_name));
-                $data['view_data'] = $view_data;
-                initialize_header();
-                $this->load->view("generic/view_selected_form", $data);
-                //customer table will have account table, inner join every foreign table with main table
             }
+            $multi_tables = array();
+            foreach ($multi_table_info as $multi_table_name => $multi_table_array) {
+                $table = "";
+                $table .= "<h3>" . ucwords(str_replace("_", " ", $multi_table_name)) . "s</h3>";
+                if (!empty($multi_table_array)) {
+                    $column_headers = array();
+                    foreach ($multi_table_array[0] as $multi_table_column => $multi_table_value) {
+                        $column_headers[] = str_replace("Id", "ID", ucwords(str_replace("_", " ", $multi_table_column)));
+                    }
+                    $this->table->set_heading($column_headers);
+                }
+                foreach ($multi_table_array as $multi_table_row) {
+                    $this->table->add_row($multi_table_row);
+                }
+                if (!empty($multi_table_array)) {
+                    $table .= $this->table->generate();
+                    $multi_tables[] = $table;
+                }
+            }
+            foreach ($view_data as $view_info_key => $view_table) {
+                $columns = array();
+                foreach ($view_table as $table_column => $table_value) {
+                    if ($table_column == "password")
+                        continue;
+                    if ($table_column == "image_path") {
+                        $table_column = "Image";
+                        $table_value = base_url($table_value);
+                        $table_value = "<img class = 'view_image' src='$table_value' alt='Image'>";
+                    }
+                    $column = new stdClass();
+                    $column->label = $table_column;
+                    $column->field = str_replace("Id", "ID", ucwords(str_replace("_", " ", $table_column)));
+                    $column->value = $table_value;
+                    $columns[] = $column;
+                    unset($view_data[$view_info_key][$table_column]);
+                }
+                $view_data[$view_info_key] = new stdClass();
+                $view_data[$view_info_key]->columns = $columns;
+//                    $view_data[$view_info_key] = $columns;
+            }
+            $data['table_name'] = ucwords(str_replace("_", " ", $table_name));
+            $data['view_data'] = $view_data;
+            $data['multi_tables'] = $multi_tables;
+            initialize_header();
+            $this->load->view("generic/view_selected_form", $data);
+            //customer table will have account table, inner join every foreign table with main table
+
         } else {
             $column_headers = array();
             $table_rows = $this->Generic_model->get_select_info($table_name);
@@ -427,7 +464,6 @@ class Functions extends CI_Controller
                     $foreign_form_field_data[] = $foreign_table;
                 }
             }
-
         }
         return $foreign_form_field_data;
     }
@@ -436,16 +472,18 @@ class Functions extends CI_Controller
     {
         $foreign_tables = $this->initialize_foreign_data($table_name);
         $table_row = $this->Generic_model->get_table_row_by_primary_key($table_name, $primary_id);
+        if ($table_row == false) {
+            return array();
+        }
         $result_table_row = array();
         foreach ($foreign_tables as $foreign_table) {
-            $test = substr($foreign_table->name, 0, 5);
             if (substr($foreign_table->name, 0, 6) !== "multi_") {
                 $result_table_row = $this->get_all_table_details_by_pk($foreign_table->name, $table_row["{$foreign_table->name}_id"]);
             }
 
         }
         foreach ($table_row as $table_column => $table_value) {
-            if (substr($table_column, -2) == "id")
+            if (substr($table_column, -2) == "id" && $table_column != NULL)
                 unset($table_row[$table_column]);
             else
                 break;
@@ -455,6 +493,7 @@ class Functions extends CI_Controller
         // recursive function returns ALL data related to a table
 
     }
+
     public function get_all_edit_table_details_by_pk($table_name, $primary_id)
     {
         $foreign_tables = $this->initialize_foreign_data($table_name);
@@ -472,6 +511,7 @@ class Functions extends CI_Controller
         // recursive function returns ALL data related to a table
 
     }
+
     public function get_multi_table_basket_info($table_name, $foreign_table, $multi_related_table_name)
     {
         $selected_data_rows = $_SESSION["{$table_name}_add_data"]["$multi_related_table_name"][$foreign_table] ?? array();
