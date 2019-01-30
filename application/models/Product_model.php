@@ -116,5 +116,32 @@ class Product_model extends CI_Model
         $this->db->select("product_id, name");
     }
 
+    public function edit_product()
+    {
+        $product_data = array(
+            "category_id" => $this->input->post('category_id'),
+            "name" => $this->input->post("name"),
+            "description" => $this->input->post("description"),
+            "specs" => $this->input->post("specs"),
+            "price" => $this->input->post("price"),
+            "stock_quantity" => $this->input->post("stock_quantity"),
+        );
+        if (!empty($_FILES['image_path']['name'])) {
+            // getting absolute path, replacing backslashes with forward slashes due to full_path data is forward slash
+            $absolute_path = str_replace('\\', '/', FCPATH);
+            //finding absolute path in full_path and reverting it to project path to be used as image
+            $image_path = "/" . str_replace($absolute_path, "", $this->upload->data('full_path'));
+            $product_data['image_path'] = $image_path;
+        }
+        $this->db->where('product_id', $this->input->post('product_id'));
+        $this->db->update('product', $product_data);
+    }
+
+    public function get_product_edit_info($product_id)
+    {
+        $this->db->from("product");
+        $this->db->where("product_id", $product_id);
+        return $this->db->get()->row();
+    }
 }
 

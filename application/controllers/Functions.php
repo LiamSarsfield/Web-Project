@@ -548,19 +548,125 @@ class Functions extends CI_Controller
         return $selected_data_rows;
     }
 
-    public function edit($table_name = NULL, $search_id = NULL, $multi_table = NULL)
+    public function edit($table_name = NULL, $search_id = NULL)
     {
         if (!isset($table_name)) {
-            redirect(site_url('dashboard/home'));
-        } else if (!isset($search_id)) {
-            redirect(site_url("functions/view/{$search_id}/"));
-        } else if (isset($multi_table)) {
+            redirect(site_url("dashboard/home"));
+        }
+        $this->load->library('table');
+        $this->load->model(array("Generic_model"));
+        //if uri after search id is set, engage in a foreach to search if it matches a foreign table
+        // if matches foreign table, display info from its primary keys
+        // if it isn't set AND foreign table is a multi table, display button to select all
+        if (isset($search_id)) {
+            $multi_foreign_table_names = $this->Generic_model->get_multi_foreign_key_table_names($table_name);
+            $multi_table_info = array();
+            foreach ($multi_foreign_table_names as $multi_foreign_table_name) {
+                // this specific multi table
+                $meta_multi_foreign_table_rows = $this->Generic_model->get_multi_foreign_table_info($multi_foreign_table_name);
+                foreach ($meta_multi_foreign_table_rows as $meta_multi_foreign_table_row) {
+                    $skimmed_multi_foreign_table_rows = array();
+                    // multi table cols/table name
+                    $multi_foreign_table_rows = $this->Generic_model->inner_join_multi_tables_by_foreign_pk($multi_foreign_table_name, $table_name, $meta_multi_foreign_table_row->name, $search_id);
+                    foreach ($multi_foreign_table_rows as $multi_foreign_table_row) {
+                        $skimmed_multi_foreign_table_row = array();
+                        $col_counter = 0;
+                        foreach ($multi_foreign_table_row as $multi_foreign_table_col => $multi_foreign_table_value) {
+                            if (substr($multi_foreign_table_col, -2) !== "id") {
+                                $skimmed_multi_foreign_table_row[$multi_foreign_table_col] = $multi_foreign_table_value;
+                                $col_counter++;
+                            }
+                            if ($col_counter == 2) {
+                                break;
+                            }
+                        }
+                        $skimmed_multi_foreign_table_rows[] = $skimmed_multi_foreign_table_row;
+                    }
+                    $multi_table_info[$meta_multi_foreign_table_row->name] = $skimmed_multi_foreign_table_rows;
+                }
+            }
+            $multi_tables = array();
+            foreach ($multi_table_info as $multi_table_name => $multi_table_array) {
+                $table = "";
+                $table .= "<h3>" . ucwords(str_replace("_", " ", $multi_table_name)) . "s</h3>";
+                if (!empty($multi_table_array)) {
+                    $column_headers = array();
+                    foreach ($multi_table_array[0] as $multi_table_column => $multi_table_value) {
+                        $column_headers[] = str_replace("Id", "ID", ucwords(str_replace("_", " ", $multi_table_column)));
+                    }
+                    $this->table->set_heading($column_headers);
+                }
+                foreach ($multi_table_array as $multi_table_row) {
+                    $this->table->add_row($multi_table_row);
+                }
+                if (!empty($multi_table_array)) {
+                    $table .= $this->table->generate();
+                    $table .= "<div class=\"button\"><a href='" . site_url("edit/$search_id/{$multi_table_name}") . "'>Edit " . ucwords(str_replace("_", " ", $multi_table_name)) . "s</a></div>";
+                    $multi_tables[] = $table;
+                }
+            }
+            $table_cols = $this->Generic_model->get_table_row_by_primary_key($table_name, $search_id);
+            foreach ($table_cols as $table_col_name => $table_col_value) {
+                if (substr($table_col_name, 0, -3) == $table_name) {
+                    continue;
+                }
+                if (substr($table_col_name, -2) == "id") {
+                    // this is a foreign key, the user should be able to change this col to another foreign key...
+                    $foreign_table_info = $this->Generic_model->get_table_row_by_primary_key(substr($table_col_name, 0, -3), $table_col_value);
+                    foreach ($foreign_table_info as $foreign_table_col_name => $foreign_table_value) {
+                        if ($table_col_name == $foreign_table_col_name) {
+                            continue;
+                        }
+                        if(substr($foreign_table_col_name, 0, -3) == "account"){
+                            $dds = 2;
+                        }
+                    }
+                }
+            }
+            $data['table_name'] = ucwords(str_replace("_", " ", $table_name));
+            $data['view_data'] = array();
+            $data['multi_tables'] = $multi_tables;
+
+
+            initialize_header();
+            $this->load->view("generic/view_selected_form", $data);
+            //customer table will have account table, inner join every foreign table with main table
 
         } else {
-            $this->load->model("Generic_model");
-            $table_info = $this->get_all_edit_table_details_by_pk($table_name, $search_id);
-            $sss = 2;
+            $column_headers = array();
+            $table_rows = $this->Generic_model->get_select_info($table_name);
+            foreach ($table_rows as $table_row) {
+                foreach ($table_row as $table_column_key => $table_column_value) {
+                    if ($table_column_key != "{$table_name}_id" && substr($table_column_key, -2) == "id") {
+                        if ($table_column_key == "account_id") {
+                            $this->load->model("Account_model");
+                            $account_info = $this->Account_model->get_account_view_info_from_account_id($table_column_value);
+                            $table_row = array_merge($table_row, $account_info);
+                        }
+                        //unsets foreign key from table view
+                        unset($table_row[$table_column_key]);
+                    }
+                }
+                $table_row_primary_key = "{$table_name}_id";
+                $add_button = site_url("/functions/view/{$table_name}/$table_row[$table_row_primary_key]");
+                $table_row['View'] = "<p><a href='{$add_button}'><div class='button'>View</div></a></p>";
+                $this->table->add_row($table_row);
+                // if table_row has a foreign key in it, remove it
+            }
+            if (!empty($table_rows)) {
+                foreach ($table_row as $column => $value) {
+                    $column_headers[] = str_replace("Id", "ID", ucwords(str_replace("_", " ", $column)));
+                }
+                $this->table->set_heading($column_headers);
+                $data['table'] = $this->table->generate();
+            } else {
+                redirect(site_url(('dashboard/home')));
+            }
+            initialize_header();
+            $this->load->view("generic/view_form", $data);
         }
+
+
     }
 
     public function upload_image()

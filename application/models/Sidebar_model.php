@@ -92,7 +92,7 @@ class Sidebar_model extends CI_Model
         $this->db->select("permission_id, sidebar_id, sub_sidebar_id");
         $this->db->where('permission_id', $permission_id);
         $this->db->where('sidebar_id', $sidebar_id);
-        $this->db->from('multi_sub_multi_sidebar_permissions');
+        $this->db->from('multi_sub_sidebar_permissions');
         $query = $this->db->get();
         $sub_sidebar_ids = array();
         foreach ($query->result() as $row) {
@@ -106,7 +106,7 @@ class Sidebar_model extends CI_Model
         $this->db->select("permission_id, sidebar_id, sub_sidebar_id");
         $this->db->where('permission_id', $permission_id);
         $this->db->where('sub_sidebar_id', $sub_sidebar_name);
-        $this->db->from('multi_sub_multi_sidebar_permissions');
+        $this->db->from('multi_sub_sidebar_permissions');
         return $this->db->get()->row();
     }
 
@@ -146,7 +146,7 @@ class Sidebar_model extends CI_Model
     {
         $this->db->where("sub_sidebar_id", $sub_sidebar_id);
         $this->db->where("permission_id", $permission_id);
-        $this->db->from("multi_sub_multi_sidebar_permissions");
+        $this->db->from("multi_sub_sidebar_permissions");
         if ($this->db->get()->num_rows() === 1) {
             return true;
         };

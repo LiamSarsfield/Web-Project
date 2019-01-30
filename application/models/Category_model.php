@@ -24,21 +24,40 @@ class Category_model extends CI_Model
 
     public function get_all_categories()
     {
-        $this->db->select("name");
-        $this->db->from("category");
-        return $this->db->get()->result();
+        $this->db->select('category_id, name');
+        return $this->db->get('category')->result();
     }
 
-    public function get_category_by_id($category_id){
+    public function get_category_by_id($category_id)
+    {
         $this->db->select("category_id, name");
         $this->db->where("category_id", $category_id);
         $this->db->from("category");
-        $query_result =  $this->db->get();
-        if($query_result->num_rows() > 0){
-            return $query_result->row_array();
+        $query_result = $this->db->get();
+        if ($query_result->num_rows() > 0) {
+            return $query_result->row();
         }
         return false;
     }
+
+    public function edit_category()
+    {
+
+        $category_info = array(
+            'name' => $this->input->post("name")
+        );
+        $this->db->where('category_id', $this->input->post('category_id'));
+        $this->db->update('category', $category_info);
+    }
+
+    public function get_category_display_info_by_id($category_id)
+    {
+        $this->db->select("name");
+        $this->db->from("category");
+        $this->db->where("category_id", $category_id);
+        return $this->db->get()->row()->name;
+    }
+
     public function get_all_add_info()
     {
         return NULL;

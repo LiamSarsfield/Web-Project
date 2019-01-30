@@ -1870,6 +1870,7 @@ label {
     float: left;
     width: 250px;
     font-weight: bold;
+    font-size: 1.2em;
 }
 
 #submit {
@@ -2137,7 +2138,7 @@ tbody tr td {
     padding-left: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
-    width: 180px;
+    width: 400px;
 }
 
 .generic_label_select {
@@ -2186,4 +2187,12 @@ input:read-only {
 .select_back_button .button {
     margin-left: 20%;
     margin-bottom: 15px;
+}
+.view_image {
+    height: 100%;
+    width: 100%;
+}
+.view_edit_image {
+    height: 100%;
+    width: 85%;
 }

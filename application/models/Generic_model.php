@@ -129,7 +129,8 @@ class Generic_model extends CI_Model
         $this->db->from("$table_name");
         $this->db->join("$foreign_table", "{$foreign_table}.{$foreign_table}_id = $table_name.{$foreign_table}_id", 'inner');
         $this->db->where("{$table_name}.{$foreign_table}_id", $join_id);
-        $result = $this->db->get()->row();
+        // changed this for edit
+        $result = $this->db->get()->row_array();
         $dd = $this->db->last_query();
         return $result;
     }

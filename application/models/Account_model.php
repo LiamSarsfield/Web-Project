@@ -25,19 +25,38 @@ class Account_model extends CI_Model
             return $query->row();
         }
     }
-    function add_account($data){
+
+    function add_account($data)
+    {
         if ($this->db->insert("account", $data)) {
             return $this->db->insert_id();
         }
         return false;
     }
-    function last_insert_id(){
+
+    function last_insert_id()
+    {
         $this->db->select("LAST_INSERT_ID()");
     }
-    public function get_account_view_info_from_account_id($account_id){
+
+    public function get_account_view_info_from_account_id($account_id)
+    {
         $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name', `email");
         $this->db->where("account_id", $account_id);
         $this->db->from("account");
         return $this->db->get()->row_array();
+    }
+
+    public function check_if_email_is_unique($email)
+    {
+        $this->db->select("email");
+        $this->db->from("account");
+        $this->db->where("email", $email);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

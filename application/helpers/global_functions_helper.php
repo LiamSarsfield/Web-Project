@@ -14,6 +14,19 @@ function initialize_header($header_title = "MWE", $css_data = array("global.css_
     $ci->load->view("template/header", $header_data);
 }
 
+function is_restricted($uri = NULL)
+{
+    $ci =& get_instance();
+    if (!isset($uri)) {
+        $uri = uri_string();
+    }
+    $ci->load->model("Permission_model");
+    $has_permission = $ci->Permission_model->user_has_access_to_function($uri);
+    if (!$has_permission) {
+        redirect("home/dashboard");
+    }
+}
+
 function get_additional_table_cols($table_name)
 {
     return "";

@@ -51,6 +51,19 @@ class Customer_model extends CI_Model
         return false;
     }
 
+    public function get_customer_edit_info($customer_id = "0")
+    {
+        $this->db->join('account', 'account.account_id = customer.account_id', 'inner');
+        $this->db->from("customer");
+        $this->db->where("customer.customer_id", $customer_id);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return $result->row();
+        } else {
+            return false;
+        }
+    }
+
     function add_customer($data)
     {
         if ($this->db->insert("customer", $data)) {
@@ -58,6 +71,46 @@ class Customer_model extends CI_Model
         }
         return false;
     }
+
+    public function edit_customer()
+    {
+        $account_data = array(
+            'first_name' => $this->input->post('first_name'),
+            'last_name' => $this->input->post('last_name'),
+            'email' => $this->input->post('email'),
+            'phone' => $this->input->post('phone'),
+            'address_one' => $this->input->post('address_one'),
+            'address_two' => $this->input->post('address_two'),
+            'city' => $this->input->post('city'),
+            'province' => $this->input->post('province'),
+            'postal_code' => $this->input->post('postal_code'),
+            'country' => $this->input->post('country')
+        );
+        $account_id = $this->get_account_id_from_customer_id($this->input->post('customer_id'));
+        $this->db->where('account_id', $account_id);
+        $this->db->update('account', $account_data);
+        $customer_data = array(
+            'company' => $this->input->post('company')
+        );
+        $this->db->where('customer_id', $this->input->post('customer_id'));
+        $this->db->update('customer', $customer_data);
+    }
+    public function get_account_id_from_customer_id($customer_id){
+        $this->db->select('account_id');
+        $this->db->from('customer');
+        $this->db->where('customer_id', $customer_id);
+        return $this->db->get()->row()->account_id;
+    }
+    public function get_customer_email_by_customer_id($customer_id)
+    {
+        $this->db->select("account.email as email");
+        $this->db->from("customer");
+        $this->db->join('account', 'account.account_id = customer.account_id', 'inner');
+        $this->db->where("customer.customer_id", $customer_id);
+        $result = $this->db->get()->row();
+        return $result->email;
+    }
+
 
     function delete_customer($id)
     {
@@ -122,7 +175,9 @@ class Customer_model extends CI_Model
         return $this->db->get()->result();
 
     }
-    public function get_customer_account_name_by_customer_id($customer_id){
+
+    public function get_customer_account_name_by_customer_id($customer_id)
+    {
         $this->db->select("CONCAT(`first_name`, ' ', `last_name`) AS 'name'");
         $this->db->from("customer");
         $this->db->join('account', 'customer.account_id = account.account_id', 'inner');
