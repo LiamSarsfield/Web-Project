@@ -21,14 +21,14 @@
     <p>HOME</p>
   </a>
   
-  <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-    <i class="fa fa-user w3-xxlarge"></i>
-    <p>ABOUT</p>
+  <a href="<?php echo site_url()?>/Store/view_store" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <i class="fa fa-shopping-basket w3-xxlarge"></i>
+    <p>STORE</p>
   </a>
   
-  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-    <i class="fa fa-envelope w3-xxlarge"></i>
-    <p>CONTACT</p>
+  <a href="<?php echo site_url()?>/Shopping_cart_controller/view_shopping_cart" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <i class="fa fa-shopping-cart w3-xxlarge"></i>
+    <p>SHOPPING CART</p>
 
     <a href="<?php echo site_url()?>/Customer/login" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
             <i class="fa fa-pencil w3-xxlarge"></i>
@@ -39,6 +39,11 @@
         <i class="fa fa-user-plus w3-xxlarge"></i>
         <p>Sign Up</p>
 </a>
+    
+    <a href="<?php echo site_url()?>/Staff_controller/staffLogin" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="fa fa-key w3-xxlarge"></i>
+            <p>STAFF</p>
+  </a>
 </div>
 </nav>
 

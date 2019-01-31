@@ -9,8 +9,7 @@ class Home extends CI_Controller {
         
     }
     
-    
- 
+     
     public function maintain_supplier() {
         
         $this->load->view('maintain_supplier');

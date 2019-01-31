@@ -35,18 +35,22 @@
 </button>
 
 <div  class="dropdown-container">
-    <a href="<?php echo site_url()?>/Staff/viewCustomers" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>VIEW</p></a>
+    <a href="<?php echo site_url()?>/Customer_controller/view_customers" class="fa fa-male  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>View Customers</p></a>
+    <a href="#contact" class="fa fa-plus w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Add Customer</p></a>
+    <a href="#contact" class="fa fa-refresh w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Update Customer</p></a>
+    <a href="#contact" class="fa fa-minus w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Delete Customer</p></a>
     </div>
   
     <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-shopping-bag w3-xxlarge"></i>
-    <p>PAYMENTS</p>
+    <p>PRODUCTS</p>
     </button>
 
     <div  class="dropdown-container">
-    <a href="#about" class="fa fa-puzzle-piece  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>CUSTOM ORDER</p></a>
-    <a href="#contact" class="fa fa-microchip w3-bar-item w3-button w3-padding-large w3-hover-black"><p>PARTS</p></a>
-    <a href="#contact" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>CART</p></a>
+    <a href="#about" class="fa fa-puzzle-piece  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>View Products</p></a>
+    <a href="#contact" class="fa fa-microchip w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Add Product</p></a>
+    <a href="#contact" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Update Product</p></a>
+    <a href="#contact" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Delete Product</p></a>
     </div>
 
     <a href="<?php echo site_url()?>/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
