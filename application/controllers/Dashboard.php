@@ -28,6 +28,7 @@ class Dashboard extends CI_Controller
         $sidebars = $this->sidebar_model->get_sidebars_by_permission_id($account_info['permission_id']);
         $header_data['sidebars'] = $sidebars;
         $data['sidebars'] = $sidebars;
+        $data['temp_info'] = $this->session->userdata('temp_info') ?? "";
         $this->load->view("template/header", $header_data);
         // this will return a side_bar object with the side_bar name, with an associative array of sub side bar icons
         // with side_bars associated with account info

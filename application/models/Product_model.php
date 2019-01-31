@@ -16,11 +16,11 @@ class Product_model extends CI_Model
 
     function get_product_by_id($product_id)
     {
-        $this->db->select("product_id, name, description, price, specs, stock_quantity, image_path");
+        $this->db->from("product");
         $this->db->where("product_id", $product_id);
-        $query = $this->db->get('product');
+        $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->row_array();
+            return $query->row();
         }
         return false;
     }
@@ -135,13 +135,6 @@ class Product_model extends CI_Model
         }
         $this->db->where('product_id', $this->input->post('product_id'));
         $this->db->update('product', $product_data);
-    }
-
-    public function get_product_edit_info($product_id)
-    {
-        $this->db->from("product");
-        $this->db->where("product_id", $product_id);
-        return $this->db->get()->row();
     }
 }
 

@@ -132,6 +132,7 @@ class Functions extends CI_Controller
                 $this->table->set_heading($column_headers);
                 $data['table'] = $this->table->generate();
             } else {
+                $this->session->set_flashdata('temp_info', ucwords($table_name) . " has no info in it.");
                 redirect(site_url(('dashboard/home')));
             }
             initialize_header();
@@ -617,7 +618,7 @@ class Functions extends CI_Controller
                         if ($table_col_name == $foreign_table_col_name) {
                             continue;
                         }
-                        if(substr($foreign_table_col_name, 0, -3) == "account"){
+                        if (substr($foreign_table_col_name, 0, -3) == "account") {
                             $dds = 2;
                         }
                     }

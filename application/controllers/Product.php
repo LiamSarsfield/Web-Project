@@ -23,7 +23,7 @@ class Product extends CI_Controller
             $this->session->set_flashdata('temp_info', 'You did not Enter a Product ID!');
             redirect(site_url("/functions/view/product/"));
         }
-        $product_info = $this->Product_model->get_product_edit_info($product_id);
+        $product_info = $this->Product_model->get_product_by_id($product_id);
         $product_info->category_name = $this->Category_model->get_category_display_info_by_id($product_info->category_id);
         $categories = $this->Category_model->get_all_categories();
         $config = array(

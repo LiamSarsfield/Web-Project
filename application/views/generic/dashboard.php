@@ -3,6 +3,7 @@
     <h3 class="w3-text-light-grey"><strong>Admin Dashboard</strong></h3>
     <hr style="width:200px" class="w3-opacity">
     <p>
+        <?php echo $temp_info; ?>
     </p>
     <?php
     $sidebars = $sidebars ?? array();

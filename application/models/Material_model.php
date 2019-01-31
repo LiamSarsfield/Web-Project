@@ -13,10 +13,9 @@ class Material_model extends CI_Model
         }
     }
 
-    function get_material_by_id($id)
+    function get_material_by_id($material_id)
     {
-        $this->db->select("material_id, supplier_id, material_name, description, material_price");
-        $this->db->where("material_id", $id);
+        $this->db->where("material_id", $material_id);
         $query = $this->db->get('material');
         if ($query->num_rows() > 0) {
             return $query->row(0);
@@ -35,19 +34,21 @@ class Material_model extends CI_Model
 
     function delete_material($id)
     {
-
-//        $id = $this->input->post('id');
-
         $this->db->where('material_id', $id);
         $this->db->delete('material');
-
     }
 
-    function update_material($product_data)
+    public function edit_material()
     {
-
-        $this->db->where('id', $id);
-        $this->db->update('material', $product_data);
+        $material_data = array(
+            'supplier_id' => $this->input->post('supplier_id'),
+            'name' => $this->input->post('name'),
+            'description' => $this->input->post('description'),
+            'price' => $this->input->post('price'),
+            'stock_quantity' => $this->input->post('stock_quantity')
+        );
+        $this->db->where('material_id', $this->input->post('material_id'));
+        $this->db->update('material', $material_data);
     }
 
     function get_all_add_info($info)

@@ -66,11 +66,13 @@ class Staff_model extends CI_Model
             return TRUE;
         }
     }
-    public function add_staff_by_post($model_data){
+
+    public function add_staff_by_post($model_data)
+    {
         $this->load->model("Generic_model");
         $columns_class = $this->Generic_model->get_non_primary_and_non_foreign_key_columns("staff");
         $staff_data = array();
-        foreach($columns_class as $column_class){
+        foreach ($columns_class as $column_class) {
             $staff_data[$column_class->name] = $model_data[$column_class->name];
             unset($model_data[$column_class->name]);
         }
@@ -81,6 +83,7 @@ class Staff_model extends CI_Model
         $this->db->insert('staff', $staff_data);
         $ss = 2;
     }
+
     function delete_staff_by_id($id)
     {
 //        $id = $this->input->post('id');
@@ -88,17 +91,62 @@ class Staff_model extends CI_Model
         $this->db->delete('staff');
     }
 
-    function update_staff($id)
+    public function get_staff_edit_info($staff_id)
     {
-        $this->db->where('id', $id);
-        $this->db->update('staff', $data);
+        $this->db->join('account', 'account.account_id = staff.account_id', 'inner');
+        $this->db->from("staff");
+        $this->db->where("staff.staff_id", $staff_id);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return $result->row();
+        } else {
+            return false;
+        }
     }
 
-    public function get_staff_by_email($email)
+    public function edit_staff()
     {
-        $this->db->where("email", $email);
+        $account_data = array(
+            'first_name' => $this->input->post('first_name'),
+            'last_name' => $this->input->post('last_name'),
+            'email' => $this->input->post('email'),
+            'phone' => $this->input->post('phone'),
+            'address_one' => $this->input->post('address_one'),
+            'address_two' => $this->input->post('address_two'),
+            'city' => $this->input->post('city'),
+            'province' => $this->input->post('province'),
+            'postal_code' => $this->input->post('postal_code'),
+            'country' => $this->input->post('country')
+        );
+        $account_id = $this->get_account_id_by_staff_id($this->input->post('staff_id'));
+        $this->db->where('account_id', $account_id);
+        $this->db->update('account', $account_data);
+        $staff_data = array(
+            'dob' => $this->input->post('dob'),
+            'hired_date' => $this->input->post('hired_date'),
+            'left_date' => $this->input->post('left_date'),
+            'position' => $this->input->post('position'),
+        );
+        $this->db->where('staff_id', $this->input->post('staff_id'));
+        $this->db->update('staff', $staff_data);
+    }
+
+    public function get_account_id_by_staff_id($staff_id)
+    {
+        $this->db->select('account_id');
+        $this->db->from('staff');
+        $this->db->where('staff_id', $staff_id);
+        return $this->db->get()->row()->account_id;
+    }
+
+    public function get_staff_email_by_staff_id($staff_id)
+    {
+        $this->db->select("account.email as email");
         $this->db->from("staff");
-        return $this->db->get()->result();
+        $this->db->join('account', 'account.account_id = staff.account_id', 'inner');
+        $this->db->where("staff.staff_id", $staff_id);
+        $result = $this->db->get()->row();
+        return $result->email;
     }
 
     function get_all_add_info($info = 0)
