@@ -9,13 +9,11 @@ class Customer_model extends CI_Model
 
     function get_all_customers()
     {
-        $this->db->select("customer_id, first_name, last_name, email, phone, address1, address2, town, city, country");
-        $query = $this->db->get('customer');
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        } else {
-            return FALSE;
-        }
+        $this->db->select("customer.customer_id, CONCAT(account.first_name, ' ', account.last_name) AS name, 
+        account.email, account.phone, account.address_one, account.address_two, account.city, account.province, account.postal_code, account.country, customer.company,");
+        $this->db->join('account', 'account.account_id = customer.account_id', 'inner');
+        $this->db->from('customer');
+        return $this->db->get()->result();
     }
 
     public function get_rows_by_limit($limit, $start)
@@ -95,12 +93,15 @@ class Customer_model extends CI_Model
         $this->db->where('customer_id', $this->input->post('customer_id'));
         $this->db->update('customer', $customer_data);
     }
-    public function get_account_id_from_customer_id($customer_id){
+
+    public function get_account_id_from_customer_id($customer_id)
+    {
         $this->db->select('account_id');
         $this->db->from('customer');
         $this->db->where('customer_id', $customer_id);
         return $this->db->get()->row()->account_id;
     }
+
     public function get_customer_email_by_customer_id($customer_id)
     {
         $this->db->select("account.email as email");

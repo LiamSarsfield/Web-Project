@@ -17,11 +17,10 @@ class Customer_order_model extends CI_Model
     // just returns table data with fks
     function get_customer_order_by_id($customer_order)
     {
-        $this->db->select("customer_order_id, customer_id, date_ordered");
         $this->db->where("customer_order_id", $customer_order);
         $query = $this->db->get('customer_order');
         if ($query->num_rows() > 0) {
-            return $query->row(0);
+            return $query->row();
         }
         return false;
     }
@@ -29,9 +28,9 @@ class Customer_order_model extends CI_Model
     //will inner join fks
     function get_customer_order_info_by_id($customer_order_id)
     {
-        $concat_name = "CONCAT(account.first_name, ' ', account.last_name) AS name";
-        $concat_address = "CONCAT (account.address_one, account.address_two, account.city, account.country) AS address";
-        $this->db->select("customer_order.customer_order_id, customer_order.date_ordered, $concat_name, $concat_address");
+        $concat_name = "CONCAT(account.first_name, ' ', account.last_name) AS customer_name";
+        $concat_address = "CONCAT (account.address_one,', ', account.address_two, ', ', account.city, ', ', account.country) AS address";
+        $this->db->select("customer_order.customer_id, customer_order.customer_order_id, customer_order.date_ordered, $concat_name, $concat_address");
         $this->db->join('customer', 'customer.customer_id = customer_order.customer_id', 'inner');
         $this->db->join('account', 'account.account_id = account.account_id', 'inner');
         $this->db->where('customer_order_id', $customer_order_id);
@@ -40,6 +39,24 @@ class Customer_order_model extends CI_Model
             return $query->row(0);
         }
         return false;
+    }
+
+    public function get_customer_order_products_by_customer_order_id($customer_order_id)
+    {
+        $this->db->select("product.product_id, product.name, product.price, multi_customers_order_items.quantity");
+        $this->db->join('product', 'multi_customers_order_items.product_id = product.product_id', 'inner');
+        $this->db->where('customer_order_id', $customer_order_id);
+        $this->db->from("multi_customers_order_items");
+        return $this->db->get()->result();
+    }
+
+    public function get_customer_order_customer_quotes_by_customer_order_id($customer_order_id)
+    {
+        $this->db->select("customer_quote.customer_quote_id, customer_quote.name, customer_quote.price, multi_customers_order_items.quantity");
+        $this->db->join('customer_quote', 'multi_customers_order_items.product_id = customer_quote.customer_quote_id', 'inner');
+        $this->db->where('customer_order_id', $customer_order_id);
+        $this->db->from("multi_customers_order_items");
+        return $this->db->get()->result();
     }
 
     function add_customer_order($data)
@@ -102,7 +119,7 @@ class Customer_order_model extends CI_Model
                 <input name='name' type='text' readonly required id='' value='{$customer->name}'></p>
                 <a href='materials.html'><div class='button'>Select Materials</div></a>";
             $model_info['supplier_id'] = "0";
-        }else {
+        } else {
             $model_info['labels_info'] =
                 "<p><label for='customer_id'>Customer ID:</label>
                 <input name='customer_id' type='text' readonly required id='' value='{$customer->customer_id}'></p>
