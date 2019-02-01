@@ -1,6 +1,6 @@
 <?php
 
-class Customer extends CI_Controller {
+class Customer_controller extends CI_Controller {
     
 
     public function login() {

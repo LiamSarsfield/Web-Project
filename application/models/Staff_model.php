@@ -102,5 +102,21 @@ class Staff_model extends CI_Model{
             return TRUE;
         }
     }
+    
+    
+
+    function update_customer($customer_id, $data){
+              
+       $this->db->where('customer_id', $customer_id);
+       $this->db->update('customer', $data); 
+   }
+   
+   
+   function delete_customer($id) { 
+                                       
+        $this->db->where('customer_id', $id); 
+        $this->db->delete('customer'); 
+              
+}
 }
 

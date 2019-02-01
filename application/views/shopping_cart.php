@@ -18,24 +18,22 @@
 
 		<span style="font-size:30px;cursor:pointer" onclick="openNav()" class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
 		<div id="mySidenav" class="sidenav">
-			<button class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
-				<a href="#" class="w3-bar-item w3-button w3-hover-black">
-					<i class="fa fa-shopping-basket w3-xxlarge"></i>
-					<p>
-						<strong>CART</strong>
-					</p>
-				</a>
-			</button>
+                        <a href="<?php echo site_url()?>/Home/index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+                            <i class="
+                            fa fa-home w3-xxlarge"></i>
+                            <p>HOME</p>
+                          </a>
+			<a href="<?php echo site_url()?>/Store_controller/view_store" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+                            <i class="fa fa-shopping-basket w3-xxlarge"></i>
+                            <p>STORE</p>
+                          </a>
 
 			<div class="dropdown-container" style="color: violet">
 				<a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">VIEW</a>
 				<a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">UPDATE</a>
 				<a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">DELETE</a>
 			</div>
-			<a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-				<i class="fa fa-user w3-xxlarge"></i>
-				<p>ABOUT</p>
-			</a>
+
 
 			<a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
 				<i class="fa fa-envelope w3-xxlarge"></i>
@@ -97,8 +95,9 @@
            //If no details found 
         if ($query == false ) { 
                echo "<p><em>You have no items in your basket.</em></p>";
-               echo '<a href="'.base_url().'index.php/Store/view_store"><button>Continue shopping</button></a><br><br>';
-        } else { 
+               echo '<a href="'.base_url().'index.php/Store_controller/view_store"><button>Continue shopping</button></a><br><br>';
+        } else {
+        echo '<a href="'.base_url().'index.php/Store/view_store"><button>Continue shopping</button></a><br><br>';    
         foreach ($query->result() as $row)
         {
          echo '<tr>';

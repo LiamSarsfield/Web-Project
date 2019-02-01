@@ -17,17 +17,17 @@
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"  class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
         <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
-  <a href="#" class="w3-bar-item w3-button w3-hover-black" >
+  <a href="<?php echo site_url()?>/Home/index" class="w3-bar-item w3-button w3-hover-black" >
     <i class="
     fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
 </button>
 
-  <div  class="dropdown-container">
+<!--  <div  class="dropdown-container">
     <a href="#about" class="fa fa-user w3-bar-item w3-button w3-padding-large w3-hover-black"><p>ABOUT</p></a>
     <a href="#contact" class="fa fa-envelope w3-bar-item w3-button w3-padding-large w3-hover-black"><p>CONTACT</p></a>
-    </div>
+    </div>-->
   
     <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-drivers-license-o w3-xxlarge"></i>
@@ -35,10 +35,10 @@
 </button>
 
 <div  class="dropdown-container">
-    <a href="<?php echo site_url()?>/Customer_controller/view_customers" class="fa fa-male  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>View Customers</p></a>
-    <a href="#contact" class="fa fa-plus w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Add Customer</p></a>
-    <a href="#contact" class="fa fa-refresh w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Update Customer</p></a>
-    <a href="#contact" class="fa fa-minus w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Delete Customer</p></a>
+    <a href="<?php echo site_url()?>/Staff_controller/view_customers" class="fa fa-male  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>View Customers</p></a>
+    <a href="<?php echo site_url()?>/Staff_controller/add_customer" class="fa fa-plus w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Add Customer</p></a>
+    <a href="<?php echo site_url()?>/Staff_controller/edit_customer" class="fa fa-refresh w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Update Customer</p></a>
+    <a href="<?php echo site_url()?>/Staff_controller/delete_customers" class="fa fa-minus w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Delete Customer</p></a>
     </div>
   
     <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">

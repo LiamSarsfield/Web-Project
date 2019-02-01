@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Search Product</title>
+        <title>Edit Customer</title>
         <link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -66,42 +66,43 @@
   </header>
 <main style="margin-left:35%; margin-right:35%;">
             <a href="<?php echo site_url()?>/Staff_controller/view_customers"><div class="button">Back to View Customer</div></a>
+                 
+            <?php echo form_open('Staff_controller/update_customer/'.$query->customer_id.'');?>  
 
-            <form action="<?php echo site_url()?>/Staff_controller/edit_customer">
                 <fieldset class="generic_edit_item_form">
                     <legend>Edit Customer</legend>
                     <p>
                         <label class="generic_label generic_item_edit_label">Customer ID: </label>
-                        <input class="generic_input" type="text" value="<?php echo $query->customer_id ?>" disabled>
+                        <input class="generic_input" name="customer_id" type="text" value="<?php echo $query->customer_id ?>" disabled>
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">First Name: </label>
-                        <input class="generic_input" type="text" value="<?php echo $query->first_name ?>">
+                        <input class="generic_input"  name="first_name" type="text" value="<?php echo $query->first_name ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Last Name: </label>
-                        <input class="generic_input" type="text" value="<?php echo $query->last_name ?>">
+                        <input class="generic_input" name="last_name" type="text" value="<?php echo $query->last_name ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Customer Email:</label>
-                        <input class="generic_input" type="text" value="<?php echo $query->email ?>">
+                        <input class="generic_input" name="email" type="text" value="<?php echo $query->email ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Address 1:</label>
-                        <input class="generic_input" type="text" value="<?php echo $query->address1 ?>">
+                        <input class="generic_input" name="address1" type="text" value="<?php echo $query->address1 ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Address 2:</label>
-                        <input class="generic_input" type="text" value="<?php echo $query->address2 ?>">
+                        <input class="generic_input" name="address2" type="text" value="<?php echo $query->address2 ?>">
                     </p>
                     <p>
                         <label class="generic_label generic_item_edit_label">Town:</label>
-                        <input class="generic_input" type="text" value="<?php echo $query->town ?>">
+                        <input class="generic_input" name="town" type="text" value="<?php echo $query->town ?>">
                     </p>
 
                     <p>
-                        <label class="generic_label generic_item_edit_label">Country: </label>
-                        <input class="generic_input" type="text" value="<?php echo $query->city ?>">
+                        <label class="generic_label generic_item_edit_label">City: </label>
+                        <input class="generic_input" name="city" type="text" value="<?php echo $query->city ?>">
                     </p>
                     <input class="button submit_button" type="submit">
                 </fieldset>

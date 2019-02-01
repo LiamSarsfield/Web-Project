@@ -17,6 +17,11 @@
 
 		<span style="font-size:30px;cursor:pointer" onclick="openNav()" class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
 		<div id="mySidenav" class="sidenav">
+                        <a href="<?php echo site_url()?>/Home/index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+                            <i class="
+                            fa fa-home w3-xxlarge"></i>
+                            <p>HOME</p>
+                          </a>
 			<button class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
 				<a href="#" class="w3-bar-item w3-button w3-hover-black">
                                     <a href="<?php echo site_url()?>/Shopping_cart_controller/view_shopping_cart"><i class="fa fa-shopping-basket w3-xxlarge"></i></a>
@@ -31,10 +36,7 @@
 				<a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">UPDATE</a>
 				<a href="#" class=" w3-bar-item w3-button w3-padding-large w3-hover-black">DELETE</a>
 			</div>
-			<a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-				<i class="fa fa-user w3-xxlarge"></i>
-				<p>ABOUT</p>
-			</a>
+			
 
 			<a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
 				<i class="fa fa-envelope w3-xxlarge"></i>
@@ -95,7 +97,7 @@
                                 echo "<strong>$row->product_name</strong><hr>";
                                 echo "<em>$row->product_desc</em><hr>";
                                 echo "<strong>€$row->product_price</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ";
-                                echo "<a href=".'/Web-Project/index.php/Store/view_selected_product/'.$row->product_id."><button>View</button></a>";                             
+                                echo "<a href=".'/Web-Project/index.php/Store_controller/view_selected_product/'.$row->product_id."><button>View</button></a>";                             
                                 echo '</div>';
                                
                         }

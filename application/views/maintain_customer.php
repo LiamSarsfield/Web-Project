@@ -56,6 +56,7 @@ and open the template in the editor.
                 <h2 class="generic_item_header">Available Functions</h2>
                 <div class="generic_item_content">
                     <a href="<?php echo site_url()?>/Staff_controller/edit_customer/<?php echo $query->customer_id ?>"><div class="button">Edit Customer</div></a>
+                    <a href="<?php echo site_url()?>/Staff_controller/delete_customer/<?php echo $query->customer_id ?>"><div class="button">Delete Customer</div></a>
                 </div>
             </section>
         </main>

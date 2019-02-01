@@ -1,6 +1,6 @@
 <?php
 
-class Store extends CI_Controller {
+class Store_controller extends CI_Controller {
     
 
     public function view_store() {
