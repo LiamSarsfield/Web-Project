@@ -1,6 +1,6 @@
 <!DOCTYPE php>
 <php>
-<title>W3.CSS Template</title>
+<title>Staff Menu</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
@@ -47,10 +47,24 @@
     </button>
 
     <div  class="dropdown-container">
-    <a href="#about" class="fa fa-puzzle-piece  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>View Products</p></a>
-    <a href="#contact" class="fa fa-microchip w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Add Product</p></a>
-    <a href="#contact" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Update Product</p></a>
-    <a href="#contact" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Delete Product</p></a>
+    <a href="<?php echo site_url()?>/Product_controller/view_products" class="fa fa-puzzle-piece  w3-bar-item w3-button w3-padding-large w3-hover-black"><p>View Products</p></a>
+    <a href="<?php echo site_url()?>/Product_controller/add_product" class="fa fa-microchip w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Add Product</p></a>
+    <a href="<?php echo site_url()?>/Product_controller/update_product" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Update Product</p></a>
+    <a href="<?php echo site_url()?>/Product_controller/delete_product" class="fa fa-shopping-cart w3-bar-item w3-button w3-padding-large w3-hover-black"><p>Delete Product</p></a>
+    </div>
+
+    <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <i class="fa fa-ship w3-xxlarge"></i>
+    <p>SUPPLIER</p>
+    </button>
+
+    <div  class="dropdown-container">
+    <a href="<?php echo site_url()?>/Supplier/maintain" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>MAINTAIN</p></a>
+    <a href="<?php echo site_url()?>/Supplier/materialReq" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>MATERIAL REQ</p></a>
+    <a href="<?php echo site_url()?>/Supplier/deliveries" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>DELIVERIES</p></a>
+    <a href="<?php echo site_url()?>/Supplier/materialDetails" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>MAINTAIN MATERIALS</p></a>
+    <a href="<?php echo site_url()?>/Supplier/orderReq" class="fa fa-edit w3-bar-item w3-button w3-padding-large w3-hover-black"><p>ORDER REQUESTS</p></a>
+    <a href="<?php echo site_url()?>/Supplier/payment" class="fa fa-money w3-bar-item w3-button w3-padding-large w3-hover-black"><p>PAYMENT</p></a>
     </div>
 
     <a href="<?php echo site_url()?>/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">

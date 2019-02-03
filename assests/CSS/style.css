@@ -245,7 +245,7 @@ li a:hover {background-color: #111;}
 li {width: 420px;}
 label {float: left;width: 200px;font-weight: bold;}
 #submit {margin-left: 200px;margin-top: 5px;width: 120px;}
-fieldset {background-color: #E6E6FA;border: 1px solid #332e2e;    }
+fieldset {background-color: white;border: 1px solid #332e2e;    }
 body {font-family: calibri,sans-serif;font-size: medium;}
 #rightCol #legend p {text-align: justify;}
 #leftCol #about p {text-align: justify;}
@@ -277,7 +277,7 @@ label {
 }
                                   
 fieldset{
-	background-color: #E6E6FA;
+/*	background-color: #E6E6FA;*/
 	margin-top: 10px;
 }
 legend{

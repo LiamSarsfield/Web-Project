@@ -91,6 +91,23 @@ class Staff_model extends CI_Model{
         
         } 
     }
+    
+    public function search_customer_by_id($id) {
+        
+      $this->db->select("customer_id, first_name, last_name, email, phone, address1, address2, town, city");
+      $this->db->where("customer_id", $id);
+      $query = $this->db->get('customer'); 
+      
+      if ($query->num_rows() > 0) {
+            return $query;
+            
+        } 
+        else{
+            
+            return false;
+        
+        } 
+    }
    
    function add_customer($data)
     {

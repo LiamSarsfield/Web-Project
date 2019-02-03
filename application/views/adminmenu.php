@@ -6,7 +6,7 @@
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"  class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
         <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
-  <a href="<?php echo site_url()?>/Staff/staffLogin" class="w3-bar-item w3-button w3-hover-black" >
+  <a href="<?php echo site_url()?>/Staff_controller/staffLogin" class="w3-bar-item w3-button w3-hover-black" >
     <i class="
     fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
@@ -32,7 +32,7 @@
   
     <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-ship w3-xxlarge"></i>
-    <p>SUPPLIER</p>
+    <p>SUPPLIERS</p>
     </button>
 
     <div  class="dropdown-container">

@@ -25,7 +25,7 @@ and open the template in the editor.
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"  class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
         <button onclick="dropdown()" class="dropdown-btn w3-bar-item w3-button w3-padding-large w3-hover-black">
-  <a href="#" class="w3-bar-item w3-button w3-hover-black" >
+  <a href="<?php echo site_url()?>/Home/index" class="w3-bar-item w3-button w3-hover-black" >
     <i class="
     fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
@@ -81,9 +81,10 @@ and open the template in the editor.
       </div>
     </fieldset>
   </form>-->
-    <h1>Customers</h1>  
-    
-  <form action="<?php echo site_url()?>/Staff_controller/search_customer_by_id" class="search_product_id generic_search">
+    <h1>Customers</h1> 
+    <a href="<?php echo site_url()?>/Staff_controller/view_customers"><div class="button">View All Customers</div></a>
+   <?php echo form_open('Staff_controller/search_customer_by_id');?>   
+  <div class="search_product_id generic_search">
     <fieldset>
       <legend>Search Customer ID</legend>
       <div class="flex_container">
@@ -91,7 +92,8 @@ and open the template in the editor.
         <input type="image" src="<?php echo base_url(); ?>/assests/Images/search-image-icon.png" alt="Submit" class="generic_search_submit"/>
       </div>
     </fieldset>
-  </form>
+  </div>
+</form>
     
     <?php
     //if no details found
@@ -101,6 +103,7 @@ and open the template in the editor.
     else{
         echo '<table class="table_generic">';
         echo "<tr>";
+        echo '<th scope="col">Cust ID</th>';
         echo '<th scope="col">First Name</th>';
         echo '<th scope="col">Last Name</th>';          
         echo '<th scope="col">Email</th>';
@@ -115,6 +118,7 @@ and open the template in the editor.
         foreach($query->result() as $row){
             
         echo '<tr>';
+        echo '<td>'.$row->customer_id.'</td>';
         echo '<td>'.$row->first_name.'</td>';
         echo '<td>'.$row->last_name.'</td>'; 
         echo '<td>'.$row->email.'</td>';

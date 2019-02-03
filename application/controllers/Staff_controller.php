@@ -30,7 +30,7 @@ class Staff_controller extends CI_Controller {
         
         $id = $this->input->post("customer_id");
         $this->load->model("Staff_model");       
-        $data['query'] = $this->Staff_model->get_customer_by_id($id);
+        $data['query'] = $this->Staff_model->search_customer_by_id($id);
         $this->load->view('view_customers', $data);
         
     }
