@@ -9,7 +9,7 @@ and open the template in the editor.
 <html>
 <head>
 <meta charset="utf-8">
-<title>Search Product</title>
+<title>Customers</title>
 <link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

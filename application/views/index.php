@@ -35,7 +35,7 @@
             <p>Login</p>
   </a>
 
-  <a href="<?php echo site_url()?>/Customer/signUp" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="<?php echo site_url()?>/Customer_controller/sign_up" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
         <i class="fa fa-user-plus w3-xxlarge"></i>
         <p>Sign Up</p>
 </a>

@@ -42,6 +42,7 @@ class Staff_controller extends CI_Controller {
             $data['first_name'] = $this->input->post('first_name');
             $data['last_name'] = $this->input->post('last_name');
             $data['email'] = $this->input->post('email');
+            $data['password'] = $this->input->post('password');
             $data['phone'] = $this->input->post('phone');
             $data['address1'] = $this->input->post('address1');
             $data['address2'] = $this->input->post('address2');

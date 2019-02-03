@@ -36,11 +36,12 @@ require_once('adminmenu.php');
 <section>
         <fieldset>
 
-          <div >
+          <div id="addCustomer">
 
           <?php echo form_open('Staff_controller/add_customer');?>        
 
           <h1>ADD CUSTOMER</h1>
+          <br>
           <?php if(isset($error)){echo '<center><span style="color:red" >'.$error.'</span></center>';}?>
             <p>
                     <label for="first_name">First Name:*</label>
@@ -52,6 +53,10 @@ require_once('adminmenu.php');
                   <p>
                     <label for="email">Email:*</label>
                     <input name="email" type="email" required id="">
+                  </p>
+                  <p>
+                    <label for="password">Password:*</label>
+                    <input name="password" type="password" required id="">
                   </p>
                   <p>
                     <label for="phone">Phone No:*</label>

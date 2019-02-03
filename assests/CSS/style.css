@@ -279,6 +279,8 @@ label {
 fieldset{
 /*	background-color: #E6E6FA;*/
 	margin-top: 10px;
+        width: 900px;
+        margin: auto;
 }
 legend{
 	text-align: center;
@@ -512,6 +514,13 @@ tbody tr td {
 }
 .work_order_label {
 	width: 295px;
+}
+
+#addCustomer {
+	
+        width:600px;
+	margin: auto;
+	
 }
 
 

@@ -1,6 +1,6 @@
 <!DOCTYPE php>
 <php>
-<title>W3.CSS Template</title>
+<title>Sign Up</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
@@ -53,16 +53,17 @@
     <hr style="width:200px" class="w3-opacity">
 
 
-    <form action="/action_page.php" target="_blank">
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="First Name" required name="f_name"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Last Name" required name="l_name"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" required name="email"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Company Name" required name="cNane"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Address 1" required name="addressOne"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Address 2" required name="addressTwo"></p>
+    <?php echo form_open('Customer_controller/sign_up');?>  
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="First Name" required name="first_name"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Last Name" required name="last_name"></p>
+      <p><input class="w3-input w3-padding-16" type="email" placeholder="Email" required name="email"></p>
+      <p><input class="w3-input w3-padding-16" type="password" placeholder="Password" required name="password"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Phone" required name="phone"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Address 1" required name="address1"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Address 2" required name="address2"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Town" required name="town"></p>
       <p><input class="w3-input w3-padding-16" type="text" placeholder="City" required name="city"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="State/Province" required name="state"></p>
-      <p><input class="w3-input w3-padding-16" type="text" placeholder="Country" required name="country"></p>
+      
         <button class="w3-button w3-light-grey w3-padding-large" type="submit">
           <i class="fa fa-paper-plane"></i> Sign Up
         </button>
