@@ -4,7 +4,6 @@ class Product_model extends CI_Model
 {
     function get_all_products()
     {
-        $this->db->select("product_id, name, description, specs, price, stock_quantity");
         $query = $this->db->get('product');
         if ($query->num_rows() > 0) {
             return $query->result();
