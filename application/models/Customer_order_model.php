@@ -145,4 +145,29 @@ class Customer_order_model extends CI_Model
             return TRUE;
         }
     }
+
+    public function add_customer_order_by_checkout($session_items)
+    {
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        $basket_total = 0;
+        foreach ($session_items as $session_item) {
+            $basket_total += $session_item->total;
+        }
+        $customer_order_info = array(
+            'customer_id' => $account_info['customer_id'],
+            'date_ordered' => date("Y-m-d H:i:s"),
+            'total_price' => $basket_total
+        );
+        $this->db->insert('customer_order', $customer_order_info);
+        $inserted_customer_order_id = $this->db->insert_id();
+        foreach($session_items as $session_item){
+            $multi_info = array(
+                'customer_order_id' => $inserted_customer_order_id,
+                'product_id' => $session_item->product_id,
+                'quantity' => $session_item->quantity
+            );
+            $this->db->insert('multi_customers_order_items', $multi_info);
+        }
+        return $inserted_customer_order_id;
+    }
 }

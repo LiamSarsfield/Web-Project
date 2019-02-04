@@ -17,6 +17,23 @@ class Customer extends CI_Controller
 //        }
     }
 
+    public function view_my_orders($order_id)
+    {
+        $this->load->model("Customer_model");
+        $this->load->library('table');
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        if (!isset($account_info['customer_id'])) {
+            redirect(site_url('dashboard/home'));
+        }
+        if (isset($order_id)) {
+            $order_info = $this->Customer_order->get_customer_order_infoby_order_id($order_id);
+            $customer_order_items = $this->Customer_order->get_customer_order_items_by_order_id($order_id);
+
+        } else {
+
+        }
+    }
+
     public function edit_customer($customer_id = NULL)
     {
         $this->load->model("Customer_model");

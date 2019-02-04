@@ -2196,3 +2196,17 @@ input:read-only {
     height: 100%;
     width: 85%;
 }
+.confirmation-box {
+    width: 450px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #dddddd;
+}
+.confirmation-box h4 {
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 20px;
+}
+.confirmation-box p {
+    margin: 7px 0;
+}

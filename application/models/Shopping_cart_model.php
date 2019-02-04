@@ -40,7 +40,6 @@ class Shopping_cart_model extends CI_Model
         $this->db->join('product', 'product.product_id = multi_shopping_cart_items.product_id ', 'inner');
         $this->db->where('session_id =', $this->session->session_id);
         $query = $this->db->get();
-
         if ($query->num_rows() > 0) {
 
             return $query->result();
@@ -50,10 +49,11 @@ class Shopping_cart_model extends CI_Model
         }
     }
 
-    public function remove_from_cart($id)
+    public function remove_from_cart($shopping_cart_id, $product_id)
     {
-        $this->db->where('id', $id);
-        $this->db->delete('shopping_cart');
+        $this->db->where('shopping_cart_id', $shopping_cart_id);
+        $this->db->where('product_id', $product_id);
+        $this->db->delete('multi_shopping_cart_items');
     }
 
     public function clear_shopping_cart()
@@ -77,7 +77,17 @@ class Shopping_cart_model extends CI_Model
             return false;
         }
     }
-
+    public function get_shopping_cart_id_by_session_id($session_id){
+        $this->db->select("shopping_cart_id");
+        $this->db->from("shopping_cart");
+        $this->db->where("session_id", $session_id);
+        $query = $this->db->get();
+        if($query->num_rows() > 0){
+            return $query->row()->shopping_cart_id;
+        } else{
+            return false;
+        }
+    }
     public function product_already_in_cart($shopping_cart_id, $product_id, $quantity)
     {
         $this->db->from("multi_shopping_cart_items");
