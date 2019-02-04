@@ -27,13 +27,13 @@ class permission_model extends CI_Model
         return $this->db->get()->row()->permission_id ?? "0";
     }
 
-    public function get_permission_function_by_id($permission_id)
+    public function get_permission_name_by_permission_id($permission_id)
     {
         $this->db->where("permission_id", $permission_id);
-        $this->db->from("permission_functions");
-        $query = $this->db->get()->result();
+        $this->db->from("permission");
+        $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return $query->first_row();
+            return $query->row()->name;
         }
         return false;
     }
