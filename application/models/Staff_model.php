@@ -37,7 +37,7 @@ class Staff_model extends CI_Model
         if ($query->num_rows() === 0) {
             return false;
         }
-        return $query->row()->customer_id;
+        return $query->row()->staff_id;
     }
 
     function login_staff($data)

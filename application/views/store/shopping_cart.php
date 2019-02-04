@@ -96,12 +96,12 @@
 
                 <?php
                 //If no details found
-                if ($query == false) {
+                if ($shopping_cart_items == false) {
                     echo "<p><em>You have no items in your basket.</em></p>";
                     echo '<a href="' . base_url() . 'index.php/Store_controller/view_store"><button>Continue shopping</button></a><br><br>';
                 } else {
                     echo '<a href="' . base_url() . 'index.php/Store/view_store"><button>Continue shopping</button></a><br><br>';
-                    foreach ($query->result() as $row) {
+                    foreach ($shopping_cart_items as $row) {
                         echo '<tr>';
                         echo '<td style="">';
 //         echo '<img src="'.base_url().'/assets/images/cb.jpg" alt="product picture"'.$row->product_name.'" width="100px">';
@@ -165,7 +165,7 @@
                     <i class="
               fa fa-credit-card w3-xxlarge"></i>
                     <p>
-                        <strong>CHECKOUTT</strong>
+                        <strong>CHECKOUT</strong>
                     </p>
                 </a>
             </button>

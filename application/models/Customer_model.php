@@ -34,6 +34,18 @@ class Customer_model extends CI_Model
         return false;
     }
 
+    public function get_customer_info_by_id($customer_id)
+    {
+        $this->db->select("CONCAT(account.first_name, ' ', account.last_name) AS name, account.email, account.phone, account.address_one, account.address_two, account.city, account.province, account.postal_code, account.city, customer.company");
+        $this->db->join('account', 'account.account_id = customer.account_id', 'inner');
+        $this->db->where("customer.customer_id", $customer_id);
+        $query = $this->db->get('customer');
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        }
+        return false;
+    }
+
     function get_info_for_display_by_id($id)
     {
         $this->db->select("customer_id AS Customer ID, 

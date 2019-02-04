@@ -23,7 +23,7 @@ class Customer extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-        is_restricted($uri);
+//        is_restricted($uri);
         if (!isset($customer_id)) {
             $this->session->set_flashdata('temp_info', 'You did not Enter a Customer ID!');
             redirect(site_url("/functions/view/customer/"));
