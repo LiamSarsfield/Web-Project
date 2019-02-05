@@ -225,7 +225,7 @@ class Functions extends CI_Controller
         $this->load->library('table');
         $this->load->model("Generic_model");
         if (!isset($table_name) || !isset($foreign_table)) {
-            redirect(site_url("home/dashboard"));
+            redirect(site_url("dashboard/home"));
         }
         $multi_related_table_name = $this->Generic_model->tables_are_multi_related($table_name, $foreign_table);
         $foreign_table_data = $this->Generic_model->get_select_info($foreign_table);

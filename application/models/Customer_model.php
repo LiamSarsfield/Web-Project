@@ -82,8 +82,9 @@ class Customer_model extends CI_Model
         return false;
     }
 
-    public function edit_customer()
+    public function edit_customer($customer_id = NULL)
     {
+        $customer_id = $customer_id ?? $this->input->post('customer_id');
         $account_data = array(
             'first_name' => $this->input->post('first_name'),
             'last_name' => $this->input->post('last_name'),
@@ -96,7 +97,7 @@ class Customer_model extends CI_Model
             'postal_code' => $this->input->post('postal_code'),
             'country' => $this->input->post('country')
         );
-        $account_id = $this->get_account_id_from_customer_id($this->input->post('customer_id'));
+        $account_id = $this->get_account_id_from_customer_id($customer_id);
         $this->db->where('account_id', $account_id);
         $this->db->update('account', $account_data);
         $customer_data = array(
@@ -197,5 +198,7 @@ class Customer_model extends CI_Model
         $this->db->where("customer_id", $customer_id);
         return $this->db->get()->row()->name;
     }
+
+
 }
 

@@ -44,6 +44,7 @@ class Sidebar_model extends CI_Model
 
     public function get_sidebars_by_permission_id($permission_id = "0")
     {
+        $permission_id = $permission_id ?? '4';
         //get permission id for the name
         $this->load->model("permission_model");
         $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id_order_priority($permission_id);

@@ -170,4 +170,46 @@ class Customer_order_model extends CI_Model
         }
         return $inserted_customer_order_id;
     }
+
+    public function confirm_customer_owns_order($customer_id, $order_id)
+    {
+        $this->db->select('customer_order_id');
+        $this->db->from('customer_order');
+        $this->db->where('customer_id', $customer_id);
+        $this->db->where('customer_order_id', $order_id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function confirm_customer_paid_for_order($order_id)
+    {
+        $this->db->select('`customer_order`.`customer_order_id`');
+        $this->db->from('customer_invoice');
+        $this->db->join('customer_order', "customer_invoice.customer_order_id = customer_order.customer_order_id", "inner");
+        $this->db->where('`customer_invoice.`customer_order_id`', $order_id);
+        $this->db->where('`customer_order.`customer_order_id`', $order_id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function confirm_customer_order_has_customer_quote($order_id){
+        $this->db->select('`multi_customers_order_items`.`customer_order_id`');#
+        $this->db->from('customer_order');
+        $this->db->join('multi_customers_order_items', 'customer_order.customer_order_id = multi_customers_order_items.customer_order_id', 'inner');
+        $this->db->where('multi_customers_order_items.customer_quote_id IS NOT NULL');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
