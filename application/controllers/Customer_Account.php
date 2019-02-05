@@ -13,7 +13,7 @@ class Customer_Account extends CI_Controller
         parent::__construct();
         $account_info = $this->session->userdata('account_info') ?? NULL;
         // if not signed in
-        if (!isset($account_info) || $account_info['permission_id'] == "1") {
+        if (!isset($account_info) || $account_info['permission_id'] != "1") {
             redirect(site_url() . "/home");
         }
     }

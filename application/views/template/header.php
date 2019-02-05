@@ -20,37 +20,29 @@
         foreach ($sidebars as $sidebar) {
             //if the side bar has no sub side bars, style is different
             if (count($sidebar->sub_sidebar_array) == 0) { ?>
-                <div id="mySidenav" class="sidenav" style="display: none;">
-                    <a href="<?php echo site_url() . $sidebar->anchor_tag; ?>"
-                       class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-                        <i class="<?php echo $sidebar->class ?>"></i>
-                        <p><?php echo $sidebar->name; ?></p>
-                    </a>
-                </div>
+                <a href="<?php echo site_url("/{$sidebar->anchor_tag}"); ?>"
+                   class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+                    <i class="fa <?php echo $sidebar->class ?> w3-xxlarge"></i>
+                    <p><?php echo $sidebar->name; ?></p>
+                </a>
             <?php } else { ?>
                 <button onclick="dropdown()"
                         class="dropdown-btn w3-bar-item w3-button w3-hover-black w3-bar-item w3-button w3-padding-large w3-hover-black">
-                    <i class="<?php echo $sidebar->class ?>"></i>
+                    <i class="fa <?php echo $sidebar->class ?> w3-xxlarge"></i>
                     <p><?php echo $sidebar->name; ?></p>
                 </button>
                 <div class="dropdown-container">
                     <?php foreach ($sidebar->sub_sidebar_array as $sub_sidebar) { ?>
-                        <a href="<?php echo site_url() . "/$sub_sidebar->anchor_tag/"?>" class="<?php echo $sub_sidebar->class; ?>" >
+                        <a href="<?php echo site_url() . "/$sub_sidebar->anchor_tag/" ?>"
+                           class="w3-bar-item w3-hover-black">
+                            <i class="fa <?php echo $sidebar->class ?> w3-xxlarge"></i>
                             <p><?php echo $sub_sidebar->name; ?></p>
                         </a>
                     <?php } ?>
                 </div>
             <?php }
-            ?>
-
-
-        <?php } ?>
-        <a href="<?php echo site_url() ?>/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-            <i class="fa fa-rotate-left w3-xxlarge"></i>
-            <p>Logout</p>
-        </a>
+        } ?>
     </div>
-
 </nav>
 
 

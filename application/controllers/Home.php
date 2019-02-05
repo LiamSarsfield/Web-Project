@@ -48,9 +48,7 @@ class home extends CI_Controller
         $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
-            $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission($account_info['permission_status']);
-            $header_data['title'] = "MWE - Login";
-            $this->load->view("template/header", $header_data);
+           initialize_header();
             $this->load->view("generic/login");
         } else {
             redirect(site_url() . "/dashboard");
@@ -157,7 +155,7 @@ class home extends CI_Controller
             $account_info = $this->session->userdata("account_info");
             $header_data['sidebars'] = $this->sidebar_model->get_sidebars_by_permission($account_info['permission_status']);
             $header_data['title'] = "Register";
-            $this->load->view("template/header");
+            $this->load->view("template/header", $header_data);
             $this->load->view("generic/sign_up");
         } else {
             $this->load->model("Customer_model");

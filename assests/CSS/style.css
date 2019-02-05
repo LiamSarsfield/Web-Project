@@ -2112,6 +2112,9 @@ tbody tr td {
 .generic_item_content {
     display: flex;
     align-content: space-between;
+    border: 1px solid #b2b2b2;
+    box-sizing: border-box;
+    padding: 10px;
     justify-content: space-between;
 }
 
@@ -2188,14 +2191,17 @@ input:read-only {
     margin-left: 20%;
     margin-bottom: 15px;
 }
+
 .view_image {
     height: 100%;
     width: 100%;
 }
+
 .view_edit_image {
     height: 100%;
     width: 85%;
 }
+
 .confirmation-box {
     width: 450px;
     margin: 10px 0;
@@ -2203,10 +2209,27 @@ input:read-only {
     padding: 10px;
     border: 1px solid #dddddd;
 }
+
 .confirmation-box h4 {
     border-bottom: 1px solid #dddddd;
     margin-bottom: 20px;
 }
+
 .confirmation-box p {
     margin: 7px 0;
+}
+
+.dropdown-container p {
+    color: white;
+    margin: 0px;
+    padding: 30px 0;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: whitesmoke;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #909090;
 }

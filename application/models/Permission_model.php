@@ -20,7 +20,7 @@ class permission_model extends CI_Model
         return $query->result();
     }
 
-    public function get_permission_id_by_permission_name($name = "unregistered")
+    public function get_permission_id_by_permission_name($name = "Unregistered")
     {
         $this->db->from('permission');
         $this->db->where("name", $name);
@@ -99,16 +99,6 @@ class permission_model extends CI_Model
         if ($account_info == FALSE) {
             return false;
         }
-        // if the sub side bar has the permission ...
-        $this->db->select("multi_sub_sidebar_permissions.permission_id");
-        $this->db->from('sub_sidebar');
-        $this->db->join("multi_sub_sidebar_permissions", "sub_sidebar.sub_sidebar_id = multi_sub_sidebar_permissions.sub_sidebar_id", 'inner');
-        $this->db->where("sub_sidebar.anchor_tag", $url);
-        $this->db->where("multi_sub_sidebar_permissions.permission_id", $account_info['permission_id']);
-        $result = $this->db->get();
-        if ($result->num_rows() > 0) {
-            return true;
-        }
         // if the side bar has permissions...
         $this->db->select("multi_sidebar_permissions.permission_id");
         $this->db->from('sidebar');
@@ -119,6 +109,41 @@ class permission_model extends CI_Model
         if ($result->num_rows() > 0) {
             return true;
         }
+        // if the sub side bar has the permission ...
+        $this->db->select("multi_sub_sidebar_permissions.permission_id");
+        $this->db->from('sub_sidebar');
+        $this->db->join("multi_sub_sidebar_permissions", "sub_sidebar.sub_sidebar_id = multi_sub_sidebar_permissions.sub_sidebar_id", 'inner');
+        $this->db->where("sub_sidebar.anchor_tag", $url);
+        $this->db->where("multi_sub_sidebar_permissions.permission_id", $account_info['permission_id']);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return true;
+        }
+        // if the sub side bar function has the permission..
+        $this->db->select("`multi_sub_sidebar_function_permissions`.`permission_id`");
+        $this->db->from('multi_sub_sidebar_function_permissions');
+        $this->db->join("sub_sidebar_functions", "`multi_sub_sidebar_function_permissions`.`sub_sidebar_functions_id` = `sub_sidebar_functions`.`sub_sidebar_functions_id`", "inner");
+        $this->db->where("`multi_sub_sidebar_function_permissions`.`permission_id`", $account_info['permission_id']);
+        $this->db->where("`sub_sidebar_functions`.`anchor_tag`", $url);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return true;
+        }
         return false;
+    }
+
+    public function get_available_functions($sub_sidebar_anchor_tag, $permission_id)
+    {
+        $this->db->select("`sub_sidebar_functions`.`name`, `sub_sidebar_functions`.`anchor_tag`");
+        $this->db->from("multi_sub_sidebar_function_permissions");
+        $this->db->join("sub_sidebar", "`multi_sub_sidebar_function_permissions`.`sub_sidebar_id` = `sub_sidebar`.`sub_sidebar_id`", "inner");
+        $this->db->join("sub_sidebar_functions", "`multi_sub_sidebar_function_permissions`.`sub_sidebar_functions_id` = `sub_sidebar_functions`.`sub_sidebar_functions_id`", "inner");
+        $this->db->where("`multi_sub_sidebar_function_permissions`.`permission_id`", $permission_id);
+        $this->db->where("`sub_sidebar`.`anchor_tag`", $sub_sidebar_anchor_tag);
+        $result = $this->db->get()->result();
+        return $result;
+        // select all functions where permission id is $permission id and sub sidebar = sub sidebar
+        //Permission ID, sub sidebar ID
+
     }
 }

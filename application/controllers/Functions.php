@@ -21,9 +21,11 @@ class Functions extends CI_Controller
 
     public function view($table_name = NULL, $search_id = NULL)
     {
+        is_restricted("functions/view/{$table_name}");
         if (!isset($table_name)) {
             redirect(site_url("dashboard/home"));
         }
+        $account_info = $this->session->userdata('account_info') ?? NULL;
         $this->load->library('table');
         $this->load->model(array("Generic_model"));
         //if uri after search id is set, engage in a foreach to search if it matches a foreign table
@@ -97,6 +99,9 @@ class Functions extends CI_Controller
                 $view_data[$view_info_key]->columns = $columns;
 //                    $view_data[$view_info_key] = $columns;
             }
+            $available_functions = $this->Permission_model->get_available_functions("functions/view/{$table_name}", $account_info['permission_id']);
+            $data['table_id'] = $search_id;
+            $data['available_functions'] = $available_functions;
             $data['table_name'] = ucwords(str_replace("_", " ", $table_name));
             $data['view_data'] = $view_data;
             $data['multi_tables'] = $multi_tables;

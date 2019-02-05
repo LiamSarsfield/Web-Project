@@ -13,12 +13,13 @@ class Sidebar_model extends CI_Model
         parent::__construct();
     }
 
-    public function get_sidebars_by_permission($name = "unregistered")
+    public function get_sidebars_by_permission($name = "Unregistered")
     {
         //get permission id for the name
         $this->load->model("permission_model");
+        $name = $name ?? "Unregistered";
         $permission_id = $this->permission_model->get_permission_id_by_permission_name($name);
-        $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id($permission_id);
+        $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id_order_priority($permission_id);
         $sidebar_mains = array();
         foreach ($sidebar_ids as $sidebar_id) {
             $sidebar_main = $this->get_sidebar_info_by_sidebar_id($sidebar_id);
@@ -45,7 +46,7 @@ class Sidebar_model extends CI_Model
     {
         //get permission id for the name
         $this->load->model("permission_model");
-        $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id($permission_id);
+        $sidebar_ids = $this->get_permitted_sidebar_ids_by_permission_id_order_priority($permission_id);
         $sidebar_mains = array();
         foreach ($sidebar_ids as $sidebar_id) {
             $sidebar_main = $this->get_sidebar_info_by_sidebar_id($sidebar_id);
@@ -73,11 +74,12 @@ class Sidebar_model extends CI_Model
     }
 
     //getting sidebar ids and sub_side_bar_ids related to it
-    public function get_permitted_sidebar_ids_by_permission_id($permission_id = "1")
+    public function get_permitted_sidebar_ids_by_permission_id_order_priority($permission_id = "1")
     {
-        $this->db->select("sidebar_id", "permission_id");
-        $this->db->where('permission_id', $permission_id);
-        $this->db->order_by("sidebar_id", "asc");
+        $this->db->select("multi_sidebar_permissions.sidebar_id", "multi_sidebar_permissions.permission_id");
+        $this->db->where('multi_sidebar_permissions.permission_id', $permission_id);
+        $this->db->join("sidebar", "sidebar.sidebar_id = multi_sidebar_permissions.sidebar_id", "inner");
+        $this->db->order_by("sidebar.order_priority", "asc");
         $this->db->from('multi_sidebar_permissions');
         $query = $this->db->get();
         $sidebar_ids = array();
@@ -89,10 +91,11 @@ class Sidebar_model extends CI_Model
 
     public function get_permitted_sub_sidebar_ids_by_sidebar_id($permission_id = "0", $sidebar_id = "0")
     {
-        $this->db->select("permission_id, sidebar_id, sub_sidebar_id");
-        $this->db->where('permission_id', $permission_id);
-        $this->db->where('sidebar_id', $sidebar_id);
-        $this->db->from('multi_sub_sidebar_permissions');
+        $this->db->select("multi_sub_sidebar_permissions.permission_id, sub_sidebar.sidebar_id, multi_sub_sidebar_permissions.sub_sidebar_id");
+        $this->db->where('multi_sub_sidebar_permissions.permission_id', $permission_id);
+        $this->db->where('sub_sidebar.sidebar_id', $sidebar_id);
+        $this->db->join('multi_sub_sidebar_permissions', 'multi_sub_sidebar_permissions.sub_sidebar_id = sub_sidebar.sub_sidebar_id', 'join');
+        $this->db->from('sub_sidebar');
         $query = $this->db->get();
         $sub_sidebar_ids = array();
         foreach ($query->result() as $row) {

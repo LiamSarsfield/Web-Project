@@ -23,7 +23,7 @@ function is_restricted($uri = NULL)
     $ci->load->model("Permission_model");
     $has_permission = $ci->Permission_model->user_has_access_to_function($uri);
     if (!$has_permission) {
-        redirect("home/dashboard");
+        redirect("dashboard/home");
     }
 }
 

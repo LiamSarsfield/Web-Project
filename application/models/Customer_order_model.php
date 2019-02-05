@@ -160,7 +160,7 @@ class Customer_order_model extends CI_Model
         );
         $this->db->insert('customer_order', $customer_order_info);
         $inserted_customer_order_id = $this->db->insert_id();
-        foreach($session_items as $session_item){
+        foreach ($session_items as $session_item) {
             $multi_info = array(
                 'customer_order_id' => $inserted_customer_order_id,
                 'product_id' => $session_item->product_id,

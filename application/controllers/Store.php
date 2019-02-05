@@ -8,6 +8,7 @@ class Store extends CI_Controller
     {
         $this->load->model("Product_model");
         $data['query'] = $this->Product_model->get_all_products();
+        initialize_header();
         $this->load->view('store/store', $data);
     }
 

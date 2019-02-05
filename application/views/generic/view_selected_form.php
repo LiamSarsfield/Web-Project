@@ -20,15 +20,14 @@
             </div>
         <?php } ?>
         </section>
-        <section class="generic_section generic_item_information">
+        <section>
             <h2 class="generic_item_header">Available Functions</h2>
             <div class="generic_item_content">
-                <a href="<?php echo site_url("/edit/category/1") ?>">
-                    <div class="button">Edit</div>
-                </a>
-                <a href="<?php echo site_url() ?>/Customer/declineQuote">
-                    <div class="button">Decline Quote</div>
-                </a>
+                <?php foreach ($available_functions as $available_function) { ?>
+                    <a href="<?php echo site_url("{$available_function->anchor_tag}/{$table_id}") ?>">
+                        <div class="button"><?php echo $available_function->name;?></div>
+                    </a>
+                <?php } ?>
             </div>
         </section>
     </div>
