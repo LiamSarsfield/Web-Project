@@ -9,25 +9,25 @@
         <legend>Edit Your Account</legend>
         <p> <?php echo form_error("first_name"); ?></p>
         <p>
-            <label for="first_name">Customer First Name:*</label>
+            <label for="first_name">First Name:*</label>
             <input name="first_name" class="generic_input" type="text"
                    value="<?php echo (empty(set_value("first_name"))) ? $customer_info->first_name : set_value("first_name"); ?>">
         </p>
         <p> <?php echo form_error("last_name"); ?></p>
         <p>
-            <label for="last_name">Customer Last Name:*</label>
+            <label for="last_name">Last Name:*</label>
             <input name="last_name" class="generic_input" type="text"
                    value="<?php echo (empty(set_value("last_name"))) ? $customer_info->last_name : set_value("last_name"); ?>">
         </p>
         <p> <?php echo form_error("email"); ?></p>
         <p>
-            <label for="email">Customer Email:*</label>
+            <label for="email">Email:*</label>
             <input name="email" class="generic_input" type="text"
                    value="<?php echo (empty(set_value("email"))) ? $customer_info->email : set_value("email"); ?>">
         </p>
         <p> <?php echo form_error("phone"); ?></p>
         <p>
-            <label for="phone">Customer Phone:*</label>
+            <label for="phone">Phone:*</label>
             <input name="phone" class="generic_input" type="text"
                    value="<?php echo (empty(set_value("phone"))) ? $customer_info->phone : set_value("phone"); ?>">
         </p>

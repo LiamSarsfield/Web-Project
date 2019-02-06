@@ -21,7 +21,7 @@ class Functions extends CI_Controller
 
     public function view($table_name = NULL, $search_id = NULL)
     {
-        is_restricted("functions/view/{$table_name}");
+//        is_restricted("functions/view/{$table_name}");
         if (!isset($table_name)) {
             redirect(site_url("dashboard/home"));
         }

@@ -136,8 +136,8 @@ class permission_model extends CI_Model
     {
         $this->db->select("`sub_sidebar_functions`.`name`, `sub_sidebar_functions`.`anchor_tag`");
         $this->db->from("multi_sub_sidebar_function_permissions");
-        $this->db->join("sub_sidebar", "`multi_sub_sidebar_function_permissions`.`sub_sidebar_id` = `sub_sidebar`.`sub_sidebar_id`", "inner");
         $this->db->join("sub_sidebar_functions", "`multi_sub_sidebar_function_permissions`.`sub_sidebar_functions_id` = `sub_sidebar_functions`.`sub_sidebar_functions_id`", "inner");
+        $this->db->join("sub_sidebar", "`sub_sidebar_functions`.`sub_sidebar_id` = `sub_sidebar`.`sub_sidebar_id`", "inner");
         $this->db->where("`multi_sub_sidebar_function_permissions`.`permission_id`", $permission_id);
         $this->db->where("`sub_sidebar`.`anchor_tag`", $sub_sidebar_anchor_tag);
         $result = $this->db->get()->result();

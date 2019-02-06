@@ -59,6 +59,17 @@ class Customer_order_model extends CI_Model
         return $this->db->get()->result();
     }
 
+    public function get_customer_orders_by_customer_id($customer_id)
+    {
+        $this->db->from('customer_order');
+        $this->db->where('customer_id', $customer_id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return false;
+    }
+
     function add_customer_order($data)
     {
         if ($this->db->insert("customer_order", $data)) {
@@ -68,12 +79,6 @@ class Customer_order_model extends CI_Model
         }
     }
 
-    function delete_customer_order($id)
-    {
-//        $id = $this->input->post('id');
-        $this->db->where('order_id', $id);
-        $this->db->delete('customer_order');
-    }
 
     public function get_all_search_info()
     {
@@ -200,7 +205,8 @@ class Customer_order_model extends CI_Model
         }
     }
 
-    public function confirm_customer_order_has_customer_quote($order_id){
+    public function confirm_customer_order_has_customer_quote($order_id)
+    {
         $this->db->select('`multi_customers_order_items`.`customer_order_id`');#
         $this->db->from('customer_order');
         $this->db->join('multi_customers_order_items', 'customer_order.customer_order_id = multi_customers_order_items.customer_order_id', 'inner');
@@ -211,5 +217,13 @@ class Customer_order_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    function delete_customer_order($order_id)
+    {
+        $this->db->where('customer_order_id', $order_id);
+        $this->db->delete('multi_customers_order_items');
+        $this->db->where('customer_order_id', $order_id);
+        $this->db->delete('customer_order');
     }
 }

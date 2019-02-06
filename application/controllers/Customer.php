@@ -17,67 +17,6 @@ class Customer extends CI_Controller
 //        }
     }
 
-    public function view_my_orders($order_id)
-    {
-        $this->load->model("Customer_order_model");
-        $this->load->library('table');
-        $account_info = $this->session->userdata('account_info') ?? NULL;
-        if (!isset($account_info['customer_id'])) {
-            redirect(site_url('dashboard/home'));
-        }
-        if (isset($order_id) && $this->Customer_order_model->confirm_customer_owns_order($account_info['customer_id'], $order_id)) {
-            $order_info = $this->Customer_order_model->get_customer_order_by_id($order_id);
-            $order_info->paid_for_order = "No";
-            $product_items = $this->Customer_order_model->get_customer_order_products_by_customer_order_id($order_id);
-            $quote_items = $this->Customer_order_model->get_customer_order_customer_quotes_by_customer_order_id($order_id);
-            $product_table = "";
-            if (!empty($product_items)) {
-                $this->table->set_heading("Name", "Product Price (€)", "Quantity", "Total Price(€)");
-                foreach ($product_items as $product_item) {
-                    $this->table->add_row($product_item->name, $product_item->price, $product_item->quantity, $product_item->price * $product_item->quantity);
-                }
-                $product_table = $this->table->generate();
-            }
-            $quote_table = "";
-            if (!empty($quote_items)) {
-                $this->table->set_heading("Name", "Quote Price (€)", "Quantity", "Total Price(€)");
-                foreach ($quote_items as $quote_item) {
-                    $this->table->add_row($quote_item->name, $quote_item->price, $quote_item->quantity, $quote_item->price * $quote_item->quantity);
-                }
-                $quote_table = $this->table->generate();
-            }
-
-            $available_functions = array();
-            if($this->Customer_order_model->confirm_customer_paid_for_order($order_id)){
-                $available_function = new stdClass();
-                $available_function->name = "Return Items in Order";
-                $available_function->anchor_tag = "customer/view_my_customer_order_for_returns";
-                $available_functions[] = $available_function;
-                $order_info->paid_for_order = "Yes";
-            } else{
-                $available_function = new stdClass();
-                $available_function->name = "Pay Order";
-                $available_function->anchor_tag = "customer/pay_customer_order";
-                $available_functions[] = $available_function;
-            }
-
-            if($this->Customer_order_model->confirm_customer_order_has_customer_quote($order_id)){
-                $available_function = new stdClass();
-                $available_function->name = "View Customer Quote Work Order";
-                $available_function->anchor_tag = "customer/view_my_customer_order_work_order";
-                $available_functions[] = $available_function;
-            }
-
-            $data['product_table'] = $product_table;
-            $data['quote_table'] = $quote_table;
-            $data['order_info'] = $order_info;
-            initialize_header();
-            $this->load->view('customer/view_my_customer_order', $data);
-        } else {
-            redirect('dashboard/home');
-        }
-    }
-
     public function edit_customer($customer_id = NULL)
     {
         $this->load->model("Customer_model");

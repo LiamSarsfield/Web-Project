@@ -19,6 +19,37 @@ class Store extends CI_Controller
         $this->load->view('store/view_product', $data);
 
     }
+
+    public function customer_quote_form()
+    {
+        $this->load->model("Customer_quote_model");
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+//        is_restricted($uri);
+        $config = array(
+            array(
+                'field' => 'name',
+                'label' => 'Name',
+                'rules' => 'required'
+            ),
+            array(
+                'field' => 'price',
+                'label' => 'Price',
+                'rules' => 'required'
+            )
+        );
+        $this->form_validation->set_rules($config);
+        if ($this->form_validation->run() == FALSE) {
+            initialize_header();
+            $this->load->view("store/add_customer_quote_to_cart");
+        } else {
+            $this->Customer_quote_model->add_customer_quote_model();
+            $this->session->set_flashdata('temp_info', 'Your Quote has been successfully added to your shopping cart. Checkout now to confirm.');
+            redirect(site_url("store/view_store"));
+        }
+    }
+
     public function checkout()
     {
         $account_info = $this->session->userdata('account_info') ?? NULL;
@@ -53,15 +84,17 @@ class Store extends CI_Controller
             $this->load->view('store/checkout_confirmation', $data);
         }
     }
-    public function confirm_checkout(){
+
+    public function confirm_checkout()
+    {
         $account_info = $this->session->userdata('account_info') ?? NULL;
         $this->load->model(array("Shopping_cart_model", "Customer_order_model"));
         $session_customer_items = $this->Shopping_cart_model->select_from_cart();
-        if($session_customer_items == FALSE){
+        if ($session_customer_items == FALSE) {
             redirect(site_url('store/view_store'));
         }
         $customer_order_id = $this->Customer_order_model->add_customer_order_by_checkout($session_customer_items);
-        redirect(site_url("customer/view_my_orders/$customer_order_id"));
+        redirect(site_url("customer_account/view_my_customer_order/$customer_order_id"));
     }
 }
 

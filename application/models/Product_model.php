@@ -12,7 +12,7 @@ class Product_model extends CI_Model
         }
     }
 
-    function get_product_by_id($product_id)
+    function get_product_by_product_id($product_id)
     {
         $this->db->from("product");
         $this->db->where("product_id", $product_id);
