@@ -4,7 +4,7 @@ class Shopping_cart_model extends CI_Model
 {
     public function add_to_cart($data)
     {
-        try{
+        try {
             //returns shopping cart id if session is already in db, otherwise false
             $shopping_cart_id = $this->session_in_db($data['session_id']);
             if (!$shopping_cart_id) {
@@ -18,13 +18,13 @@ class Shopping_cart_model extends CI_Model
                 $multi_data['shopping_cart_id'] = $shopping_cart_id;
                 $multi_data['quantity'] = $data['quantity'];
                 $this->db->replace("shopping_cart_items", $multi_data);
-            } else{
+            } else {
                 $multi_data['shopping_cart_id'] = $shopping_cart_id;
                 $multi_data['product_id'] = $data['product_id'];
                 $multi_data['quantity'] = $data['quantity'];
                 $this->db->insert("shopping_cart_items", $multi_data);
             }
-        } catch(exception $e){
+        } catch (exception $e) {
             return false;
         }
 
@@ -41,11 +41,9 @@ class Shopping_cart_model extends CI_Model
         $this->db->where('session_id =', $this->session->session_id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-
             return $query->result();
-
         } else {
-            return FALSE;
+            return NULL;
         }
     }
 
@@ -77,17 +75,20 @@ class Shopping_cart_model extends CI_Model
             return false;
         }
     }
-    public function get_shopping_cart_id_by_session_id($session_id){
+
+    public function get_shopping_cart_id_by_session_id($session_id)
+    {
         $this->db->select("shopping_cart_id");
         $this->db->from("shopping_cart");
         $this->db->where("session_id", $session_id);
         $query = $this->db->get();
-        if($query->num_rows() > 0){
+        if ($query->num_rows() > 0) {
             return $query->row()->shopping_cart_id;
-        } else{
+        } else {
             return false;
         }
     }
+
     public function product_already_in_cart($shopping_cart_id, $product_id, $quantity)
     {
         $this->db->from("shopping_cart_items");

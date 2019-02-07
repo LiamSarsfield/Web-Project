@@ -99,7 +99,7 @@ class Customer_Account extends CI_Controller
             if ($day_difference < 3) {
                 $this->table->set_heading("Product ID", "Name", "Price", "Quantity", "Remove");
                 foreach ($products as $product) {
-                    $remove_href = site_url("customer_account/edit_customer_order/{$customer_order_id}/product/delete/{$product->product_id}");
+                    $remove_href = site_url("customer_account/edit_my_customer_order/{$customer_order_id}/product/delete/{$product->product_id}");
                     $this->table->add_row($product->product_id, $product->name, $product->price, $product->quantity, "<a href='{$remove_href}'><div class='button'>Remove</div></a>");
                 }
                 $product_table = $this->table->generate();
@@ -117,7 +117,7 @@ class Customer_Account extends CI_Controller
             if ($day_difference < 3) {
                 $this->table->set_heading("Customer Quote ID", "Name", "Price", "Quantity", "Remove");
                 foreach ($customer_quotes as $customer_quote) {
-                    $remove_href = site_url("customer_account/edit_customer_order/{$customer_order_id}/customer_quote/delete/{$customer_quote->customer_quote_id}");
+                    $remove_href = site_url("customer_account/edit_my_customer_order/{$customer_order_id}/customer_quote/delete/{$customer_quote->customer_quote_id}");
                     $this->table->add_row($customer_quote->customer_quote_id, $customer_quote->name, $customer_quote->price, $customer_quote->quantity, "<a href='{$remove_href}'><div class='button'>Remove</div></a>");
                 }
                 $customer_quote_table = $this->table->generate();
@@ -154,13 +154,21 @@ class Customer_Account extends CI_Controller
 
     public function edit_my_customer_order($customer_order_id = NULL, $item_name = NULL, $function = NULL, $item_id = NULL)
     {
+        $this->load->model("Customer_order_model");
         // can only change quantity, delete existing products, delete existing customer orders
         if (isset($function) && isset($item_id)) {
+            if ($item_name == 'product') {
+                if($function == 'delete'){
+                    $this->Customer_order_model->remove_product_from_customer_order_by_order_id($customer_order_id, $item_id);
+                    redirect(site_url("customer_account/view_my_customer_order/{$customer_order_id}"));
+                }
+            } else if ($function == 'customer_quote') {
 
-        } else if (isset($item_name)) {
+            } else {
 
+            }
         } else if (isset($customer_order_id)) {
-
+            redirect(site_url('customer_account/view_my_customer_orders'));
         } else {
             $this->session->set_flashdata('temp_info', 'You did not select a Customer Order!');
             redirect(site_url("/customer_account/view_my_customer_orders"));

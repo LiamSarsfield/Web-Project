@@ -207,7 +207,7 @@ class Customer_order_model extends CI_Model
 
     public function confirm_customer_order_has_customer_quote($order_id)
     {
-        $this->db->select('`multi_customers_order_items`.`customer_order_id`');#
+        $this->db->select('`multi_customers_order_items`.`customer_order_id`');
         $this->db->from('customer_order');
         $this->db->join('multi_customers_order_items', 'customer_order.customer_order_id = multi_customers_order_items.customer_order_id', 'inner');
         $this->db->where('multi_customers_order_items.customer_quote_id IS NOT NULL');
@@ -217,6 +217,26 @@ class Customer_order_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    public function remove_product_from_customer_order_by_order_id($order_id, $product_id)
+    {
+        // get total price of product being removed to subtract from total
+        $this->db->select("(product.price * multi_customers_order_items.quantity) as total");
+        $this->db->from('multi_customers_order_items');
+        $this->db->join('product', 'multi_customers_order_items.product_id = product.product_id', 'inner');
+        $this->db->where('multi_customers_order_items.customer_order_id', $order_id);
+        $this->db->where('multi_customers_order_items.product_id', $product_id);
+        $product_total_price = $this->db->get()->row()->total;
+
+        $this->db->where('customer_order_id', $order_id);
+        $this->db->set('total_price', "total_price-{$product_total_price}", FALSE);
+        $this->db->update('customer_order');
+
+        $this->db->where('customer_order_id', $order_id);
+        $this->db->where('product_id', $product_id);
+        $this->db->delete('multi_customers_order_items');
+        return true;
     }
 
     function delete_customer_order($order_id)

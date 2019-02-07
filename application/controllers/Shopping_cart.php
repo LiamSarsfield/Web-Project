@@ -22,7 +22,7 @@ class Shopping_cart extends CI_Controller
         $data['session_id'] = $this->session->session_id; //Current Session Id
         //Get more information about the product
         $this->load->model("Product_model");
-        $product = $this->Product_model->get_product_by_id($product_id);
+        $product = $this->Product_model->get_product_by_product_id($product_id);
         $data['name'] = $product->name;
         $data['description'] = $product->description;
         $data['price'] = $product->price;

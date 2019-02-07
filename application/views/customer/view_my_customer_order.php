@@ -5,8 +5,7 @@
 
     <form>
         <fieldset class="generic_edit_item_form">
-            <p>* is required.</p>
-            <legend>Customer Order Details</legend>
+            <legend>Your Customer Order Details</legend>
             <div class="table_view_info">
                 <h3>Products:</h3>
                 <?php echo $product_table ?>
@@ -17,11 +16,11 @@
             </div>
             <p> <?php echo form_error("date_ordered"); ?></p>
             <p>
-                <label for="date_ordered">Date Ordered:*</label>
+                <label for="date_ordered">Date Ordered:</label>
                 <?php echo $customer_order_info->date_ordered; ?>
             </p>
             <p>
-                <label for="date_ordered">Is Delivered?:*</label>
+                <label for="date_ordered">Is Delivered?:</label>
                 <?php echo $customer_order_info->delivery; ?>
             </p>
             <section>

@@ -12,7 +12,7 @@ class Work_order_model extends CI_Model
         $this->load->model("customer_quote_model");
         $model_info['labels_info'] = "";
         $staff = $this->staff_model->get_staff_by_id($staff_id);
-        $product = $this->product_model->product_model->get_product_by_id($product_id);
+        $product = $this->product_model->product_model->get_product_by_product_id($product_id);
         $customer_quote = $this->customer_quote_model->get_customer_quote_by_id($customer_quote_id);
         // if staff doesn't exist prompt user for staff
         if (!$staff) {

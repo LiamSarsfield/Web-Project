@@ -62,7 +62,7 @@ class Lot_traveller_model extends CI_Model
         // if product has lot traveller already, cannot create a new lot traveller
         $product_id = $info[0];
         $this->load->model("product_model");
-        $product = $this->product_model->get_product_by_id($product_id);
+        $product = $this->product_model->get_product_by_product_id($product_id);
         // if product is false (No product was selected before hand...
         if (!$product) {
             $model_info['labels_info'] = "<a href=\"lot_traveller.html\"><div class=\"button\">You need to select a product first</div></a>";
