@@ -59,4 +59,18 @@ class Account_model extends CI_Model
             return true;
         }
     }
+
+    public function password_matches($password, $account_id)
+    {
+        $this->db->select("email");
+        $this->db->from("account");
+        $this->db->where("password", $password);
+        $this->db->where("account_id", $account_id);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

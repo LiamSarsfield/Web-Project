@@ -11,7 +11,7 @@
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
     <!-- Avatar image in top left corner -->
-    <a href="<?php echo site_url() ?>/Customer/loggedIn"><img
+    <a href="<?php echo site_url() ?>/dashboard/home"><img
                 src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%"></a>
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"
           class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>

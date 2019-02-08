@@ -2,7 +2,7 @@
     <a href="<?php echo site_url() ?>/Customer_account/view_my_customer_orders">
         <div class="button">Back to my Customer Orders</div>
     </a>
-
+    <p><?php echo $temp_info; ?></p>
     <form>
         <fieldset class="generic_edit_item_form">
             <legend>Your Customer Order Details</legend>

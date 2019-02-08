@@ -24,6 +24,8 @@ class Customer_Account extends CI_Controller
         $this->load->model("Customer_order_model");
         $account_info = $this->session->userdata('account_info') ?? NULL;
         $this->load->library("table");
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
         $customer_orders = $this->Customer_order_model->get_customer_orders_by_customer_id($account_info['customer_id']);
         if ($customer_orders == FALSE) {
             $this->session->set_flashdata('temp_info', 'You have no Customer Orders.');
@@ -42,12 +44,13 @@ class Customer_Account extends CI_Controller
 
     public function view_my_customer_order($customer_order_id = NULL)
     {
-        $account_info = $this->session->userdata('account_info') ?? NULL;
         $this->load->model(array("Customer_order_model", "Customer_model", "Product_model"));
         $this->load->helper(array('form'));
         $this->load->library(array('form_validation', 'table'));
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        $customer_paid_order = $this->Customer_order_model->confirm_customer_paid_for_order($customer_order_id);
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-//        is_restricted($uri);
+        is_restricted($uri);
         if (!isset($customer_order_id)) {
             $this->session->set_flashdata('temp_info', 'You did not select a Customer Order!');
             redirect(site_url("/customer_account/view_my_customer_orders"));
@@ -57,6 +60,7 @@ class Customer_Account extends CI_Controller
             redirect(site_url("/customer_account/view_my_customer_orders"));
         }
         $customer_order_info = $this->Customer_order_model->get_customer_order_info_by_id($customer_order_id);
+        $customer_quotes = $this->Customer_order_model->get_customer_order_customer_quotes_by_customer_order_id($customer_order_id);
         $current_date = new DateTime(date("Y-m-d"));
         $date_ordered = new DateTime($customer_order_info->date_ordered);
         $day_difference = (int)$current_date->diff($date_ordered)->format("%a");
@@ -73,7 +77,7 @@ class Customer_Account extends CI_Controller
         } else {
             $customer_quotes_are_finished = true;
             foreach ($customer_quotes as $customer_quote) {
-                if ($customer_quote->is_completed == FALSE) {
+                if ($customer_quote->is_completed == '0') {
                     $customer_quotes_are_finished = FALSE;
                     break;
                 }
@@ -111,14 +115,12 @@ class Customer_Account extends CI_Controller
                 $product_table = $this->table->generate();
             }
         }
-        $customer_quotes = $this->Customer_order_model->get_customer_order_customer_quotes_by_customer_order_id($customer_order_id);
         $customer_quote_table = "No Customer Quotes in Customer Order";
         if (!empty($customer_quotes)) {
             if ($day_difference < 3) {
-                $this->table->set_heading("Customer Quote ID", "Name", "Price", "Quantity", "Remove");
+                $this->table->set_heading("Customer Quote ID", "Name", "Price", "Quantity");
                 foreach ($customer_quotes as $customer_quote) {
-                    $remove_href = site_url("customer_account/edit_my_customer_order/{$customer_order_id}/customer_quote/delete/{$customer_quote->customer_quote_id}");
-                    $this->table->add_row($customer_quote->customer_quote_id, $customer_quote->name, $customer_quote->price, $customer_quote->quantity, "<a href='{$remove_href}'><div class='button'>Remove</div></a>");
+                    $this->table->add_row($customer_quote->customer_quote_id, $customer_quote->name, $customer_quote->price, $customer_quote->quantity);
                 }
                 $customer_quote_table = $this->table->generate();
             } else {
@@ -132,6 +134,13 @@ class Customer_Account extends CI_Controller
         // delivery info
         //available functions
         $available_functions = array();
+        if (!$customer_paid_order) {
+            $customer_order_info->delivery = "Awaiting Payment";
+            $available_function = new stdClass();
+            $available_function->name = "Pay for Order";
+            $available_function->anchor_tag = site_url("customer_account/pay_my_order/{$customer_order_id}");
+            $available_functions[] = $available_function;
+        }
         if ($day_difference < 3) {
             $available_function = new stdClass();
             $available_function->name = "Cancel Order";
@@ -143,13 +152,32 @@ class Customer_Account extends CI_Controller
             $available_function->anchor_tag = site_url("customer_account/request_credit_note/{$customer_order_id}");
             $available_functions[] = $available_function;
         }
+
+
         $data['customer_order_id'] = $customer_order_id;
         $data['customer_order_info'] = $customer_order_info;
         $data['product_table'] = $product_table;
         $data['customer_quote_table'] = $customer_quote_table;
         $data['available_functions'] = $available_functions;
+        $data['temp_info'] = $_SESSION['temp_info'] ?? "";
         initialize_header();
         $this->load->view("customer/view_my_customer_order", $data);
+    }
+
+    public function view_my_customer_invoices()
+    {
+        $this->load->model(array("Customer_invoice_model"));
+        $this->load->library("table");
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        $customer_invoices = $this->Customer_invoice_model->get_customer_invoices_by_customer_id($account_info['customer_id']);
+        $this->table->set_heading("Total Price", "Date Ordered");
+        foreach ($customer_invoices as $customer_invoice) {
+            $this->table->add_row($customer_invoice->total_price, $customer_invoice->date_ordered);
+        }
+        $customer_invoice_table = $this->table->generate();
+        initialize_header();
+        $data['customer_invoice_table'] = $customer_invoice_table;
+        $this->load->view("customer/view_my_customer_invoices", $data);
     }
 
     public function edit_my_customer_order($customer_order_id = NULL, $item_name = NULL, $function = NULL, $item_id = NULL)
@@ -158,12 +186,17 @@ class Customer_Account extends CI_Controller
         // can only change quantity, delete existing products, delete existing customer orders
         if (isset($function) && isset($item_id)) {
             if ($item_name == 'product') {
-                if($function == 'delete'){
+                if ($function == 'delete') {
+                    $products = $this->Customer_order_model->get_customer_order_products_by_customer_order_id($customer_order_id);
+                    if (count($products > 2)) {
+                        $this->session->set_flashdata('temp_info', 'You cannot delete the last product in a customer order!');
+                        redirect(site_url("customer_account/view_my_customer_order/{$customer_order_id}"));
+                    }
                     $this->Customer_order_model->remove_product_from_customer_order_by_order_id($customer_order_id, $item_id);
                     redirect(site_url("customer_account/view_my_customer_order/{$customer_order_id}"));
                 }
             } else if ($function == 'customer_quote') {
-
+                redirect(site_url("customer_account/view_my_customer_order/{$customer_order_id}"));
             } else {
 
             }
@@ -175,12 +208,69 @@ class Customer_Account extends CI_Controller
         }
     }
 
+    public function pay_my_order($customer_order_id = NULL)
+    {
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        $this->load->model(array("Customer_order_model", "Customer_model"));
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
+        if (!isset($customer_order_id)) {
+            $this->session->set_flashdata('temp_info', 'You did not select a Customer Order!');
+            redirect(site_url("/customer_account/view_my_customer_orders"));
+        }
+        if ($this->Customer_order_model->confirm_customer_owns_order($account_info['customer_id'], $customer_order_id) == FALSE) {
+            $this->session->set_flashdata('temp_info', 'That is not your Customer Order!');
+            redirect(site_url("/customer_account/view_my_customer_orders"));
+        }
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $config = array(
+            array(
+                'field' => 'card_number',
+                'label' => 'Card Number',
+                'rules' => 'required'
+            ),
+            array(
+                'field' => 'expiry',
+                'label' => 'Expiry',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => '{field} is required.',
+                ),
+            ),
+            array(
+                'field' => 'cvv',
+                'label' => 'CVV',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => '{field} is required.',
+                ),
+            )
+        );
+        $this->form_validation->set_rules($config);
+        $customer_order_info = $this->Customer_order_model->get_customer_order_by_id($customer_order_id);
+        if ($this->form_validation->run() == FALSE) {
+            $data['customer_order_info'] = $customer_order_info;
+            initialize_header();
+            $this->load->view("customer/pay_for_my_order", $data);
+        } else {
+            $this->load->model("Customer_invoice_model");
+            $customer_invoice_data = array(
+                'customer_order_id' => $customer_order_id,
+                'total_price' => $customer_order_info->total_price
+            );
+            $this->Customer_invoice_model->add_customer_invoice($customer_invoice_data);
+            $this->session->set_flashdata('temp_info', 'Payment Successful');
+            redirect(site_url("/customer_account/view_my_customer_order/$customer_order_id"));
+        }
+    }
+
     public function cancel_my_customer_order($customer_order_id = NULL)
     {
         $account_info = $this->session->userdata('account_info') ?? NULL;
         $this->load->model(array("Customer_order_model", "Customer_model"));
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-//        is_restricted($uri);
+        is_restricted($uri);
         if (!isset($customer_order_id)) {
             $this->session->set_flashdata('temp_info', 'You did not select a Customer Order!');
             redirect(site_url("/customer_account/view_my_customer_orders"));
@@ -228,6 +318,19 @@ class Customer_Account extends CI_Controller
                 'errors' => array(
                     'validate_edit_customer_email' => '{field} already exists in DB.',
                 )
+            ),
+            array(
+                'field' => 'old_password',
+                'label' => 'Old Password',
+                'rules' => "required|callback_validate_old_password[{$account_info['account_id']}]",
+                'errors' => array(
+                    'validate_old_password' => '{field} is incorrect.',
+                )
+            ),
+            array(
+                'field' => 'password',
+                'label' => 'Password',
+                'rules' => 'required|min_length[6]'
             ),
             array(
                 'field' => 'phone',
@@ -294,5 +397,12 @@ class Customer_Account extends CI_Controller
         } else {
             return false;
         }
+    }
+
+    public function validate_old_password($old_password, $account_id)
+    {
+        $this->load->model("Account_model");
+        $encrypted_password = hash("sha256", $old_password);
+        return $this->Account_model->password_matches($encrypted_password, $account_id);
     }
 }

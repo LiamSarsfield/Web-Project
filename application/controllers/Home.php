@@ -48,7 +48,7 @@ class home extends CI_Controller
         $this->form_validation->set_rules($config);
         if ($this->form_validation->run() == FALSE) {
             $account_info = $this->session->userdata("account_info");
-           initialize_header();
+            initialize_header();
             $this->load->view("generic/login");
         } else {
             redirect(site_url() . "/dashboard");

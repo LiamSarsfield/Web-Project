@@ -75,4 +75,12 @@ class Customer_invoice_model extends CI_Model
             return TRUE;
         }
     }
+
+    public function get_customer_invoices_by_customer_id($customer_id)
+    {
+        $this->db->from("customer_invoice");
+        $this->db->join("customer_order", "customer_invoice.customer_order_id = customer_order.customer_order_id", "inner");
+        $this->db->where("customer_order.customer_id", $customer_id);
+        return $this->db->get()->result();
+    }
 }

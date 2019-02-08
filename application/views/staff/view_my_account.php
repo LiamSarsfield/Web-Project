@@ -3,7 +3,7 @@
         <div class="button">Back to Dashboard</div>
     </a>
 
-    <?php echo form_open(site_url('Customer_account/edit_my_account')) ?>
+    <?php echo form_open(site_url('Staff_account/edit_my_account')) ?>
     <fieldset class="generic_edit_item_form">
         <p>* is required.</p>
         <legend>Edit Your Account</legend>
@@ -11,25 +11,19 @@
         <p>
             <label for="first_name">First Name:*</label>
             <input name="first_name" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("first_name"))) ? $customer_info->first_name : set_value("first_name"); ?>">
+                   value="<?php echo (empty(set_value("first_name"))) ? $staff_info->first_name : set_value("first_name"); ?>">
         </p>
         <p> <?php echo form_error("last_name"); ?></p>
         <p>
             <label for="last_name">Last Name:*</label>
             <input name="last_name" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("last_name"))) ? $customer_info->last_name : set_value("last_name"); ?>">
+                   value="<?php echo (empty(set_value("last_name"))) ? $staff_info->last_name : set_value("last_name"); ?>">
         </p>
         <p> <?php echo form_error("email"); ?></p>
         <p>
             <label for="email">Email:*</label>
             <input name="email" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("email"))) ? $customer_info->email : set_value("email"); ?>">
-        </p>
-        <p> <?php echo form_error("phone"); ?></p>
-        <p>
-            <label for="phone">Phone:*</label>
-            <input name="phone" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("phone"))) ? $customer_info->phone : set_value("phone"); ?>">
+                   value="<?php echo (empty(set_value("email"))) ? $staff_info->email : set_value("email"); ?>">
         </p>
         <p> <?php echo form_error("old_password"); ?></p>
         <p>
@@ -43,40 +37,41 @@
             <input name="password" class="generic_input" type="password"
                    value="">
         </p>
+        <p> <?php echo form_error("phone"); ?></p>
+        <p>
+            <label for="phone">Phone:*</label>
+            <input name="phone" class="generic_input" type="text"
+                   value="<?php echo (empty(set_value("phone"))) ? $staff_info->phone : set_value("phone"); ?>">
+        </p>
         <p> <?php echo form_error("address_one"); ?></p>
         <p>
             <label for="address_one">Address 1:*</label>
             <input name="address_one" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("address_one"))) ? $customer_info->address_one : set_value("address_one"); ?>">
+                   value="<?php echo (empty(set_value("address_one"))) ? $staff_info->address_one : set_value("address_one"); ?>">
         </p>
         <p> <?php echo form_error("address_two"); ?></p>
         <p>
             <label for="address_two">Address 2:</label>
             <input name="address_two" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("address_two"))) ? $customer_info->address_two : set_value("address_two"); ?>">
+                   value="<?php echo (empty(set_value("address_two"))) ? $staff_info->address_two : set_value("address_two"); ?>">
         </p>
         <p> <?php echo form_error("city"); ?></p>
         <p>
             <label for="city">City:*</label>
             <input name="city" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("city"))) ? $customer_info->city : set_value("city"); ?>">
+                   value="<?php echo (empty(set_value("city"))) ? $staff_info->city : set_value("city"); ?>">
         </p>
         <p> <?php echo form_error("province"); ?></p>
         <p>
             <label for="province">Province:*</label>
             <input name="province" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("province"))) ? $customer_info->province : set_value("province"); ?>">
+                   value="<?php echo (empty(set_value("province"))) ? $staff_info->province : set_value("province"); ?>">
         </p>
         <p> <?php echo form_error("postal_code"); ?></p>
         <p>
             <label for="postal_code">Postal Code:* </label>
             <input name="postal_code" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("postal_code"))) ? $customer_info->postal_code : set_value("postal_code"); ?>">
-        </p>
-        <p>
-            <label for="company">Company:* </label>
-            <input name="company" class="generic_input" type="text"
-                   value="<?php echo (empty(set_value("company"))) ? $customer_info->company : set_value("company"); ?>">
+                   value="<?php echo (empty(set_value("postal_code"))) ? $staff_info->postal_code : set_value("postal_code"); ?>">
         </p>
         <p>
             <label for="country">Country:* </label>

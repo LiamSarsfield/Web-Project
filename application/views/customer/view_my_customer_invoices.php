@@ -3,9 +3,9 @@
         <div class="button">Back to Dashboard</div>
     </a>
     <div class="generic_section generic_item_information">
-        <h2 class="generic_item_header">Your Customer Orders</h2>
+        <h2 class="generic_item_header">Your Customer Invoices</h2>
         <?php
-        echo $table;
+        echo $customer_invoice_table;
         ?>
     </div>
 </main>

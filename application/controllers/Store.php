@@ -26,7 +26,7 @@ class Store extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-//        is_restricted($uri);
+        is_restricted($uri);
         $config = array(
             array(
                 'field' => 'name',
@@ -44,7 +44,7 @@ class Store extends CI_Controller
             array(
                 'field' => 'quantity',
                 'label' => 'Quantity',
-                'rules' => 'required'
+                'rules' => 'required|numeric'
             )
         );
         $this->form_validation->set_rules($config);
@@ -52,8 +52,10 @@ class Store extends CI_Controller
             initialize_header();
             $this->load->view("store/customer_quote_form");
         } else {
+            $account_info = $this->session->userdata('account_info') ?? NULL;
             $customer_quotes = $this->session->userdata('customer_quote_basket') ?? array();
             $customer_quote = array(
+                'customer_id' => $account_info['customer_id'],
                 'name' => $this->input->post('name'),
                 'description' => $this->input->post('description'),
                 'specs' => $this->input->post('specs'),
@@ -74,6 +76,8 @@ class Store extends CI_Controller
         $this->load->library('table');
         $this->table->set_heading('Product', 'Quantity', 'Price');
         $this->load->model(array("Shopping_cart_model", "Customer_model"));
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
         // will return array with customer items, else false
         $session_customer_products = $this->Shopping_cart_model->select_from_cart() ?? array();
         $session_customer_quotes = $this->session->userdata('customer_quote_basket') ?? array();
@@ -124,11 +128,14 @@ class Store extends CI_Controller
     {
         $account_info = $this->session->userdata('account_info') ?? NULL;
         $this->load->model(array("Shopping_cart_model", "Customer_order_model"));
-        $session_customer_items = $this->Shopping_cart_model->select_from_cart();
-        if ($session_customer_items == FALSE) {
+        $session_customer_products = $this->Shopping_cart_model->select_from_cart();
+        $session_customer_quotes = $_SESSION['customer_quote_basket'] ?? array();
+        if ($session_customer_products == FALSE && empty($session_customer_quotes)) {
             redirect(site_url('store/view_store'));
         }
-        $customer_order_id = $this->Customer_order_model->add_customer_order_by_checkout($session_customer_items);
+        $customer_order_id = $this->Customer_order_model->add_customer_order_by_checkout($session_customer_products, $session_customer_quotes);
+        $this->Shopping_cart_model->clear_shopping_cart();
+        unset($_SESSION['customer_quote_basket']);
         redirect(site_url("customer_account/view_my_customer_order/$customer_order_id"));
     }
 

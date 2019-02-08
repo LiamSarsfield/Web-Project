@@ -5,6 +5,8 @@ class Shopping_cart extends CI_Controller
 
     public function view_shopping_cart()
     {
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
         $this->load->model("Shopping_cart_model");
         $data['shopping_cart_items'] = $this->Shopping_cart_model->select_from_cart();
         initialize_header();

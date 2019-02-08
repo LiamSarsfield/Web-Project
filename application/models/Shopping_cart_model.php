@@ -57,6 +57,9 @@ class Shopping_cart_model extends CI_Model
     public function clear_shopping_cart()
     {
         $session_id = $this->session->session_id;
+        $shopping_cart_id = $this->get_shopping_cart_id_by_session_id($session_id);
+        $this->db->where('shopping_cart_id', $shopping_cart_id);
+        $this->db->delete('shopping_cart_items');
         $this->db->where('session_id', $session_id);
         $this->db->delete('shopping_cart');
     }

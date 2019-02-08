@@ -52,9 +52,11 @@ class Customer_order_model extends CI_Model
 
     public function get_customer_order_customer_quotes_by_customer_order_id($customer_order_id)
     {
-        $this->db->select("customer_quote.customer_quote_id, customer_quote.name, customer_quote.price, multi_customers_order_items.quantity");
-        $this->db->join('customer_quote', 'multi_customers_order_items.product_id = customer_quote.customer_quote_id', 'inner');
+        $this->db->select("customer_quote.customer_quote_id, customer_quote.name, customer_quote.price, multi_customers_order_items.quantity,work_order.is_completed");
+        $this->db->join('customer_quote', '`multi_customers_order_items`.`customer_quote_id` = `customer_quote`.`customer_quote_id`', 'inner');
+        $this->db->join('work_order', '`multi_customers_order_items`.`customer_quote_id` = `work_order`.`customer_quote_id`', 'inner');
         $this->db->where('customer_order_id', $customer_order_id);
+        $this->db->where('product_id IS NULL');
         $this->db->from("multi_customers_order_items");
         return $this->db->get()->result();
     }
@@ -151,12 +153,19 @@ class Customer_order_model extends CI_Model
         }
     }
 
-    public function add_customer_order_by_checkout($session_items)
+    public function add_customer_order_by_checkout($session_customer_products, $session_customer_quotes)
     {
         $account_info = $this->session->userdata('account_info') ?? NULL;
         $basket_total = 0;
-        foreach ($session_items as $session_item) {
+        if ($session_customer_products == FALSE) {
+            $session_customer_products = array();
+        }
+
+        foreach ($session_customer_products as $session_item) {
             $basket_total += $session_item->total;
+        }
+        foreach ($session_customer_quotes as $session_item) {
+            $basket_total += $session_item['price'];
         }
         $customer_order_info = array(
             'customer_id' => $account_info['customer_id'],
@@ -165,11 +174,34 @@ class Customer_order_model extends CI_Model
         );
         $this->db->insert('customer_order', $customer_order_info);
         $inserted_customer_order_id = $this->db->insert_id();
-        foreach ($session_items as $session_item) {
+        foreach ($session_customer_products as $session_item) {
             $multi_info = array(
                 'customer_order_id' => $inserted_customer_order_id,
                 'product_id' => $session_item->product_id,
                 'quantity' => $session_item->quantity
+            );
+            $this->db->insert('multi_customers_order_items', $multi_info);
+        }
+        foreach ($session_customer_quotes as $session_item) {
+            $customer_quote_info = array(
+                'customer_id' => $session_item['customer_id'],
+                'name' => $session_item['name'],
+                'description' => $session_item['description'],
+                'specs' => $session_item['specs'],
+                'price' => $session_item['price'],
+                'stock_quantity' => '0'
+            );
+            $this->db->insert('customer_quote', $customer_quote_info);
+            $inserted_customer_quote_id = $this->db->insert_id();
+            $work_order_data = array(
+                'customer_quote_id' => $inserted_customer_quote_id,
+                'status' => 'Unassigned',
+            );
+            $this->db->insert('work_order', $work_order_data);
+            $multi_info = array(
+                'customer_order_id' => $inserted_customer_order_id,
+                'customer_quote_id' => $inserted_customer_quote_id,
+                'quantity' => $session_item['quantity']
             );
             $this->db->insert('multi_customers_order_items', $multi_info);
         }
@@ -241,6 +273,8 @@ class Customer_order_model extends CI_Model
 
     function delete_customer_order($order_id)
     {
+        $this->db->where('customer_order_id', $order_id);
+        $this->db->delete('customer_invoice');
         $this->db->where('customer_order_id', $order_id);
         $this->db->delete('multi_customers_order_items');
         $this->db->where('customer_order_id', $order_id);

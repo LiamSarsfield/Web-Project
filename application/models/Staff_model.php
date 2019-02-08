@@ -104,41 +104,6 @@ class Staff_model extends CI_Model
         }
     }
 
-    public function edit_staff()
-    {
-        $account_data = array(
-            'first_name' => $this->input->post('first_name'),
-            'last_name' => $this->input->post('last_name'),
-            'email' => $this->input->post('email'),
-            'phone' => $this->input->post('phone'),
-            'address_one' => $this->input->post('address_one'),
-            'address_two' => $this->input->post('address_two'),
-            'city' => $this->input->post('city'),
-            'province' => $this->input->post('province'),
-            'postal_code' => $this->input->post('postal_code'),
-            'country' => $this->input->post('country')
-        );
-        $account_id = $this->get_account_id_by_staff_id($this->input->post('staff_id'));
-        $this->db->where('account_id', $account_id);
-        $this->db->update('account', $account_data);
-        $staff_data = array(
-            'dob' => $this->input->post('dob'),
-            'hired_date' => $this->input->post('hired_date'),
-            'left_date' => $this->input->post('left_date'),
-            'position' => $this->input->post('position'),
-        );
-        $this->db->where('staff_id', $this->input->post('staff_id'));
-        $this->db->update('staff', $staff_data);
-    }
-
-    public function get_account_id_by_staff_id($staff_id)
-    {
-        $this->db->select('account_id');
-        $this->db->from('staff');
-        $this->db->where('staff_id', $staff_id);
-        return $this->db->get()->row()->account_id;
-    }
-
     public function get_staff_email_by_staff_id($staff_id)
     {
         $this->db->select("account.email as email");
@@ -147,6 +112,42 @@ class Staff_model extends CI_Model
         $this->db->where("staff.staff_id", $staff_id);
         $result = $this->db->get()->row();
         return $result->email;
+    }
+
+    public function edit_staff($staff_id)
+    {
+        $account_id = $this->get_account_id_by_staff_id($staff_id);
+        $this->db->where('account_id', $account_id);
+        $account_data = array(
+            'first_name' => $this->input->post('first_name'),
+            'last_name' => $this->input->post('last_name'),
+            'email' => $this->input->post('email'),
+            'password' => hash("sha256", $this->input->post('password')),
+            'phone' => $this->input->post('phone'),
+            'address_one' => $this->input->post('address_one'),
+            'address_two' => $this->input->post('address_two'),
+            'city' => $this->input->post('city'),
+            'province' => $this->input->post('province'),
+            'postal_code' => $this->input->post('postal_code'),
+            'country' => $this->input->post('country')
+        );
+        $this->db->update('account', $account_data);
+//        $staff_data = array(
+//            'dob' => $this->input->post('dob'),
+//            'hired_date' => $this->input->post('hired_date'),
+//            'left_date' => $this->input->post('left_date'),
+//            'position' => $this->input->post('position'),
+//        );
+//        $this->db->where('staff_id', $this->input->post('staff_id'));
+//        $this->db->update('staff', $staff_data);
+    }
+
+    public function get_account_id_by_staff_id($staff_id)
+    {
+        $this->db->select('account_id');
+        $this->db->from('staff');
+        $this->db->where('staff_id', $staff_id);
+        return $this->db->get()->row()->account_id;
     }
 
     function get_all_add_info($info = 0)
