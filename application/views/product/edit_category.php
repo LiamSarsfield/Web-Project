@@ -1,5 +1,5 @@
 <main>
-    <a href="<?php echo site_url("category/$category_info->category_id") ?>">
+    <a href="<?php echo site_url("functions/view/category/$category_info->category_id") ?>">
         <div class="button">Back to View Category</div>
     </a>
 

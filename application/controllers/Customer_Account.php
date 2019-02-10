@@ -316,9 +316,10 @@ class Customer_Account extends CI_Controller
             array(
                 'field' => 'email',
                 'label' => 'Email',
-                'rules' => 'required|callback_validate_edit_customer_email[' . $account_info['customer_id'] . ']',
+                'rules' => 'required|callback_validate_edit_customer_email[' . $account_info['customer_id'] . ']|regex_match[/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/]',
                 'errors' => array(
                     'validate_edit_customer_email' => '{field} already exists in DB.',
+                    'regex_match' => 'The {field} you entered is not an {field}.',
                 )
             ),
             array(
