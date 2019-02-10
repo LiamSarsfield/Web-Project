@@ -3,16 +3,15 @@
 <title>W3.CSS Template</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="<?php echo base_url(); ?>/assests/CSS/style.css">
+<link rel="stylesheet" href="http://localhost:8081/mwe/assests/CSS/style.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script type="text/javascript"src="<?php echo base_url(); ?>/assests/script/navs.js"></script>
 <body class="w3-black">
 
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
   <!-- Avatar image in top left corner -->
-  <a href="index.php"><img src="<?php echo base_url(); ?>/assests/Images/MweLogo.png" style="width:100%"></a>
+  <a href="index.php"><img src="http://localhost:8081/mwe/assests/Images/MweLogo.png" style="width:100%"></a>
   
     <span style="font-size:30px;cursor:pointer" onclick="openNav()"  class="w3-bar-item  w3-button w3-padding-large w3-hover-black">&#9776;</span>
     <div id="mySidenav" class="sidenav">
@@ -22,12 +21,12 @@
     <p>HOME</p>
   </a>
 
-    <a href="login.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+    <a href="generic/login.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
             <i class="fa fa-pencil w3-xxlarge"></i>
             <p>Login</p>
   </a>
 
-  <a href="signUp.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+  <a href="generic/sign_up.php" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
         <i class="fa fa-user-plus w3-xxlarge"></i>
         <p>Sign Up</p>
 </a>
@@ -49,7 +48,7 @@
 <div class="w3-padding-large" id="main">
   <!-- Header/Home -->
   <header class="w3-container w3-padding-32 w3-center w3-black" id="home">
-        <img src="<?php echo base_url(); ?>/assests/images/banner2.png" alt="boy" class="w3-image" width="620" height="420">
+        <img src="http://localhost:8081/mwe/assests/images/banner2.png" alt="boy" class="w3-image" width="620" height="420">
    
     
   </header>
@@ -72,5 +71,22 @@
 <!-- END PAGE CONTENT -->
 </div>
 
+
+<script>
+    
+        function openNav() {
+                var x = document.getElementById("mySidenav");
+             if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+            x.style.display = "none";
+     }
+    }
+
+
+
+
+        
+</script>
 </body>
 </php>
