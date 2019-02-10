@@ -4,7 +4,7 @@
             <legend>Search Customer ID</legend>
             <div class="flex_container">
                 <input type="text" class="generic_item_search_input generic_input" placeholder="Customer ID">
-                <input type="image" src="<?php echo base_url(); ?>/assests/Images/search-image-icon.png" alt="Submit" class="generic_search_submit" />
+                <input type="image" src="<?php echo base_url(); ?>/assets/Images/search-image-icon.png" alt="Submit" class="generic_search_submit" />
             </div>
         </fieldset>
     </form>

@@ -1,5 +1,5 @@
 <main>
-    <a href="<?php echo site_url("material/$material_info->material_id") ?>">
+    <a href="<?php echo site_url("functions/view/material/$material_info->material_id") ?>">
         <div class="button">Back to View Material</div>
     </a>
 

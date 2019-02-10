@@ -1,5 +1,5 @@
 <main>
-    <a href="<?php echo site_url() ?>/Supplier/viewSuppliers">
+    <a href="<?php echo site_url("functions/view/supplier/{$supplier_info->supplier_id}") ?>">
         <div class="button">Back to View Supplier</div>
     </a>
 

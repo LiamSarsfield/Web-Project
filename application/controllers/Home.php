@@ -230,17 +230,4 @@ class home extends CI_Controller
         return true;
     }
 
-    // show logged in page
-    public function logged_in()
-    {
-        $this->load->view("logged_in");
-    }
-
-    public function debugger()
-    {
-        $var = "staff";
-        $this->load->model($var);
-        $var_method = "get_all_staff";
-        $this->$var->$var_method();
-    }
 }

@@ -21,7 +21,7 @@ class Functions extends CI_Controller
 
     public function view($table_name = NULL, $search_id = NULL)
     {
-//        is_restricted("functions/view/{$table_name}");
+        is_restricted("functions/view/{$table_name}");
         if (!isset($table_name)) {
             redirect(site_url("dashboard/home"));
         }
@@ -150,6 +150,7 @@ class Functions extends CI_Controller
 
     public function add($model)
     {
+        is_restricted("functions/add/{$model}");
         $uri_strings = explode('/', uri_string());
         $uri_strings = array_splice($uri_strings, "3");
         $this->session->set_userdata("{$model}_add_uris", $uri_strings);
@@ -223,6 +224,7 @@ class Functions extends CI_Controller
 
     public function select($table_name = NULL, $foreign_table = NULL, $id = NULL, $quantity = NULL)
     {
+        is_restricted("functions/add/$table_name");
         $this->load->library('table');
         $this->load->model("Generic_model");
         if (!isset($table_name) || !isset($foreign_table)) {

@@ -184,6 +184,8 @@ class Customer_Account extends CI_Controller
 
     public function edit_my_customer_order($customer_order_id = NULL, $item_name = NULL, $function = NULL, $item_id = NULL)
     {
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
         $this->load->model("Customer_order_model");
         // can only change quantity, delete existing products, delete existing customer orders
         if (isset($function) && isset($item_id)) {

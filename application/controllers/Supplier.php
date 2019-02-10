@@ -23,7 +23,7 @@ class Supplier extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-//      is_restricted($uri);
+        is_restricted($uri);
         $supplier_id = $supplier_id ?? "-1";
         $supplier_info = $this->Supplier_model->get_supplier_edit_info($supplier_id);
         if ($supplier_info == FALSE) {
@@ -39,18 +39,17 @@ class Supplier extends CI_Controller
             array(
                 'field' => 'email',
                 'label' => 'Email',
-                'rules' => 'required',
+                'rules' => 'required|callback_validate_edit_supplier_email[' . $this->input->post('supplier_id') . ']|regex_match[/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/]',
                 'errors' => array(
-                    'required' => 'You must provide a %s.',
+                    'required' => 'You must provide a {field}.',
+                    'validate_edit_supplier_email' => '{field} already exists in DB.',
+                    'regex_match' => 'The {field} you entered is not an {field}.',
                 ),
             ),
             array(
                 'field' => 'phone',
                 'label' => 'Phone',
-                'rules' => 'required|callback_validate_edit_supplier_email[' . $this->input->post('supplier_id') . ']',
-                'errors' => array(
-                    'validate_edit_supplier_email' => '{field} already exists in DB.',
-                )
+                'rules' => 'required'
             ),
             array(
                 'field' => 'address_one',

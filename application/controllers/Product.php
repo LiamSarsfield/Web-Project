@@ -18,7 +18,7 @@ class Product extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-//        is_restricted($uri);
+        is_restricted($uri);
         if (!isset($product_id)) {
             $this->session->set_flashdata('temp_info', 'You did not Enter a Product ID!');
             redirect(site_url("/functions/view/product/"));
@@ -75,22 +75,6 @@ class Product extends CI_Controller
             redirect(site_url("functions/view/product/$product_id"));
         }
     }
-
-    public function view_products()
-    {
-        $this->load->model("Product_model");
-        $data['query'] = $this->Product_model->get_all_products();
-        $this->load->view('list_of_products', $data);
-    }
-
-    public function delete_product($id)
-    {
-        $this->load->model("Product_model");
-        $this->Product_model->delete_product($id);
-        $data['query'] = $this->Product_model->get_all_products();
-        $this->load->view('list_of_products', $data);
-    }
-
 
     public function is_money($price)
     {

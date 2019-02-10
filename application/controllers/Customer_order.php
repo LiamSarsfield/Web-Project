@@ -11,19 +11,16 @@ class Customer_order extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        $account_info = $this->session->userdata('account_info') ?? NULL;
-//        if ($account_info['permission_status'] !== "staff" || $account_info['permission_status'] !== "admin") {
-//            redirect(site_url() . "/home");
-//        }
     }
 
     public function edit_customer_order($customer_order_id = NULL)
     {
+        //unfinished, not ready for testing
         $this->load->model(array("Customer_order_model", "Customer_model"));
         $this->load->helper(array('form'));
         $this->load->library(array('form_validation', 'table'));
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-//        is_restricted($uri);
+        is_restricted($uri);
         if (!isset($customer_order_id)) {
             $this->session->set_flashdata('temp_info', 'You did not Enter a Customer Order ID!');
             redirect(site_url("/functions/view/customer_order/"));
@@ -74,6 +71,8 @@ class Customer_order extends CI_Controller
 
     public function edit_change_customer_order_products($customer_order_id = NULL, $product_id = NULL, $quantity = NULL)
     {
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
         if (!isset($customer_order_id)) {
             $this->session->set_flashdata('temp_info', 'You have not selected a Customer Order ID.');
             redirect(site_url('functions/view/customer_order'));
