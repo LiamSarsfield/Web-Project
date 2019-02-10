@@ -168,6 +168,8 @@ class Customer_Account extends CI_Controller
     {
         $this->load->model(array("Customer_invoice_model"));
         $this->load->library("table");
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
         $account_info = $this->session->userdata('account_info') ?? NULL;
         $customer_invoices = $this->Customer_invoice_model->get_customer_invoices_by_customer_id($account_info['customer_id']);
         $this->table->set_heading("Total Price", "Date Ordered");

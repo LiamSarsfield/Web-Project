@@ -136,6 +136,7 @@ class Functions extends CI_Controller
                 }
                 $this->table->set_heading($column_headers);
                 $data['table'] = $this->table->generate();
+                $data['table_name'] = str_replace("Id", "ID", ucwords(str_replace("_", " ", $table_name))) . "s";
             } else {
                 $this->session->set_flashdata('temp_info', ucwords($table_name) . " has no info in it.");
                 redirect(site_url(('dashboard/home')));
@@ -691,9 +692,4 @@ class Functions extends CI_Controller
         }
     }
 
-    public
-    function manage_permissions()
-    {
-
-    }
 }

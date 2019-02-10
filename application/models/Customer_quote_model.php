@@ -36,6 +36,12 @@ class Customer_quote_model extends CI_Model
         }
     }
 
+    public function edit_customer_quote($customer_quote_id, $customer_quote_data)
+    {
+        $this->db->where('customer_quote_id', $customer_quote_id);
+        $this->db->update('customer_quote', $customer_quote_data);
+    }
+
     function delete_customer_quote($id)
     {
         $this->db->where('customer_quote_id', $id);

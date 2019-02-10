@@ -1,5 +1,5 @@
 <main>
-    <a href="<?php echo site_url() ?>/Staff/viewProducts">
+    <a href="<?php echo site_url() ?>/functions/view/product/<?= $product_info->product_id ?>">
         <div class="button">Back to View Product</div>
     </a>
 
