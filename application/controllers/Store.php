@@ -16,6 +16,7 @@ class Store extends CI_Controller
     {
         $this->load->model("Product_model");
         $data['product'] = $this->Product_model->get_product_by_product_id($id);
+        initialize_header();
         $this->load->view('store/view_product', $data);
 
     }

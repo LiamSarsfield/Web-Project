@@ -14,20 +14,56 @@ class Lot_traveller_model extends CI_Model
         }
     }
 
+    public function get_lot_travellers_by_staff_id($lot_traveller_id)
+    {
+        $this->db->select("product.name as 'product_price' , product.price as 'product_price', lot_traveller.lot_traveller_id, lot_traveller.status, lot_traveller.production_quantity, 
+                lot_traveller.is_completed");
+        $this->db->from('lot_traveller');
+        $this->db->join("product", "lot_traveller.product_id = product.product_id", "inner");
+        $this->db->where('lot_traveller.staff_id', $lot_traveller_id);
+        $this->db->where('lot_traveller.is_completed', '0');
+        return $this->db->get()->result();
+    }
+
+    public function confirm_lot_traveller_ownership_by_staff_id($lot_traveller_id, $staff_id)
+    {
+        $this->db->select('staff_id');
+        $this->db->from('lot_traveller');
+        $this->db->where('lot_traveller_id', $lot_traveller_id);
+        $this->db->where('staff_id', $staff_id);
+        $result = $this->db->get();
+        if ($result->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function get_lot_traveller_by_id($id)
     {
-//        $id = $this->input->post('lot_traveller_id');
-        $this->db->select("lot_traveller_id, product_id, status");
-        $this->db->where("lot_traveller_id", $id);
-        $query = $this->db->get('lot_traveller');
+        $this->db->select("product.name as 'product_name' , product.price as 'product_price', lot_traveller.lot_traveller_id, lot_traveller.status, lot_traveller.production_quantity, 
+                lot_traveller.is_completed");
+        $this->db->from('lot_traveller');
+        $this->db->join("product", "lot_traveller.product_id = product.product_id", "inner");
+        $this->db->where('lot_traveller.lot_traveller_id', $id);
+        return $this->db->get()->row();
+    }
 
+    function edit_lot_traveller($lot_traveller_id, $lot_traveller_data)
+    {
+        $this->db->where('lot_traveller_id', $lot_traveller_id);
+        $this->db->update('lot_traveller', $lot_traveller_data);
+    }
 
-        if ($query->num_rows() > 0) {
-            return $query->row(0);
-        }
-
-        return false;
-
+    public function finish_lot_traveller($lot_traveller_id)
+    {
+        //update lot traveller, get requested stock add it to product stock level
+        $lot_traveller_info = array(
+            'is_completed' => '1',
+            'staff_id' => null
+        );
+        $this->db->where('lot_traveller_id', $lot_traveller_id);
+        $this->db->update('lot_traveller', $lot_traveller_info);
     }
 
     function add_lot_traveller($data)
@@ -38,7 +74,9 @@ class Lot_traveller_model extends CI_Model
             return TRUE;
         }
     }
-    public function initialize_lot_traveller(){
+
+    public function initialize_lot_traveller()
+    {
         $lot_traveller_initialization = array(
             "status" => "Not Produced",
             "production_quantity" => "0"
@@ -49,6 +87,7 @@ class Lot_traveller_model extends CI_Model
             return TRUE;
         }
     }
+
     function delete_lot_traveller($id)
     {
 //      $id = $this->input->post('id');
@@ -76,6 +115,36 @@ class Lot_traveller_model extends CI_Model
             $model_info['product_id'] = $product->product_id;
         }
         return $model_info;
+    }
+
+    public function view_all_unassigned_lot_travellers()
+    {
+        $this->db->select("product.name as 'product_price' , product.price as 'product_price', lot_traveller.lot_traveller_id, lot_traveller.status, lot_traveller.production_quantity, 
+                lot_traveller.is_completed");
+        $this->db->from('lot_traveller');
+        $this->db->join("product", "lot_traveller.product_id = product.product_id", "inner");
+        $this->db->where('lot_traveller.staff_id IS NULL');
+        $this->db->where('lot_traveller.is_completed', '0');
+        return $this->db->get()->result();
+    }
+
+    public function view_lot_traveller($lot_traveller_id)
+    {
+        $this->db->select("lot_traveller.lot_traveller_id, lot_traveller.status, lot_traveller.production_quantity, product.name, product.price");
+        $this->db->from('lot_traveller');
+        $this->db->join('product', 'lot_traveller.product_id = product.product_id', 'inner');
+        $this->db->where('lot_traveller.lot_traveller_id', $lot_traveller_id);
+        return $this->db->get()->row();
+    }
+
+    public function assign_lot_traveller($lot_traveller_id, $staff_id)
+    {
+        $lot_traveller_info = array(
+            'staff_id' => $staff_id,
+            'status' => 'Staff Assigned'
+        );
+        $this->db->where('lot_traveller_id', $lot_traveller_id);
+        $this->db->update('lot_traveller', $lot_traveller_info);
     }
 
     public function add_lot_traveller_by_post()

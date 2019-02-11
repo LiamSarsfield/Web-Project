@@ -201,83 +201,153 @@ class Staff_Account extends CI_Controller
         redirect(site_url('staff_account/view_my_work_orders'));
     }
 
-    public function view_my_lot_travellers()
+    public function view_unassigned_lot_travellers($lot_traveller_id = NULL)
     {
-        $this->load->model("Staff_order_model");
-        $account_info = $this->session->userdata('account_info') ?? NULL;
-        $this->load->library("table");
-        $staff_orders = $this->Staff_order_model->get_staff_orders_by_staff_id($account_info['staff_id']);
-        if ($staff_orders == FALSE) {
-            $this->session->set_flashdata('temp_info', 'You have no Staff Orders.');
-            redirect(site_url('dashboard/home'));
-        }
-        $this->table->set_heading('Date Ordered', 'Total Price', 'View');
-        foreach ($staff_orders as $staff_order) {
-            $view_staff_order_href = site_url("staff_account/view_my_staff_order/{$staff_order->staff_order_id}");
-            $this->table->add_row($staff_order->date_ordered, $staff_order->total_price,
-                "<a href='{$view_staff_order_href}'><div class='button'>View</div></div></a>");
-        }
-        $data['table'] = $this->table->generate();
-        initialize_header();
-        $this->load->view("staff/view_my_staff_orders", $data);
-    }
-
-
-    public function edit_my_lot_traveller($staff_order_id = NULL)
-    {
-        $account_info = $this->session->userdata('account_info') ?? NULL;
-        $this->load->model(array("Staff_order_model", "Staff_model"));
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
         is_restricted($uri);
-        if (!isset($staff_order_id)) {
-            $this->session->set_flashdata('temp_info', 'You did not select a Staff Order!');
-            redirect(site_url("/staff_account/view_my_staff_orders"));
+        $this->load->model(array("Lot_traveller_model", "Permission_model"));
+        $this->load->library("table");
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        if (isset($lot_traveller_id)) {
+            $unassigned_lot_traveller_info = $this->Lot_traveller_model->view_lot_traveller($lot_traveller_id);
+            $available_functions = $this->Permission_model->get_available_functions("{$uri}", $account_info['permission_id']);
+            $data['available_functions'] = $available_functions;
+            $data['temp_info'] = $_SESSION['temp_info'] ?? "";
+            $data['lot_traveller_info'] = $unassigned_lot_traveller_info;
+            initialize_header();
+            $this->load->view('staff/view_unassigned_lot_traveller', $data);
+        } else {
+            $unassigned_lot_travellers = $this->Lot_traveller_model->view_all_unassigned_lot_travellers();
+            $this->table->set_heading("Product Name", "Product Price", "Production Quantity", "Status", "View");
+            foreach ($unassigned_lot_travellers as $unassigned_lot_traveller) {
+                $view_href = site_url("staff_account/view_unassigned_lot_travellers/{$unassigned_lot_traveller->lot_traveller_id}");
+                $this->table->add_row($unassigned_lot_traveller->product_price, "€$unassigned_lot_traveller->product_price",
+                    $unassigned_lot_traveller->production_quantity, $unassigned_lot_traveller->status, "<a href='{$view_href}'><div class='button'>View</div></a>");
+            }
+            $lot_traveller_table = $this->table->generate();
+            $data['lot_traveller_table'] = $lot_traveller_table;
+            initialize_header();
+            $this->load->view('staff/view_unassigned_lot_travellers', $data);
         }
-        if ($this->Staff_order_model->confirm_staff_owns_order($account_info['staff_id'], $staff_order_id) == FALSE) {
-            $this->session->set_flashdata('temp_info', 'That is not your Staff Order!');
-            redirect(site_url("/staff_account/view_my_staff_orders"));
+    }
+
+    public function view_my_lot_travellers($lot_traveller_id = NULL)
+    {
+        $this->load->model(array("Lot_traveller_model", "Permission_model"));
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        $this->load->library("table");
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
+        if (isset($lot_traveller_id)) {
+            $ownership = $this->Lot_traveller_model->confirm_lot_traveller_ownership_by_staff_id($lot_traveller_id, $account_info['staff_id']);
+            if ($ownership == FALSE) {
+                $this->session->set_flashdata('temp_info', 'You do not own this Work Order.');
+                redirect(site_url('staff_account/view_my_lot_travellers'));
+            }
+            $lot_traveller_info = $this->Lot_traveller_model->view_lot_traveller($lot_traveller_id);
+            $available_functions = $this->Permission_model->get_available_functions("{$uri}", $account_info['permission_id']);
+            $data['available_functions'] = $available_functions;
+            $data['temp_info'] = $_SESSION['temp_info'] ?? "";
+            $data['lot_traveller_info'] = $lot_traveller_info;
+            initialize_header();
+            $this->load->view('staff/view_my_lot_traveller', $data);
+        } else {
+            $lot_travellers = $this->Lot_traveller_model->get_lot_travellers_by_staff_id($account_info['staff_id']);
+            if ($lot_travellers == FALSE) {
+                $this->session->set_flashdata('temp_info', 'You have no Staff Orders.');
+                redirect(site_url('dashboard/home'));
+            }
+            $this->table->set_heading("Product Name", "Product Price", "Production Quantity", "Status", "View");
+            foreach ($lot_travellers as $lot_traveller) {
+                $view_href = site_url("staff_account/view_my_lot_travellers/{$lot_traveller->lot_traveller_id}");
+                $this->table->add_row($lot_traveller->product_price, "€$lot_traveller->product_price",
+                    $lot_traveller->production_quantity, $lot_traveller->status, "<a href='{$view_href}'><div class='button'>View</div></a>");
+            }
+            $lot_traveller_table = $this->table->generate();
+            $data['lot_traveller_table'] = $lot_traveller_table;
+            initialize_header();
+            $this->load->view("staff/view_my_lot_travellers", $data);
+        }
+    }
+
+    public function assign_lot_traveller($lot_traveller_id = NULL)
+    {
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
+        if (isset($lot_traveller_id)) {
+            $this->load->model(array("Lot_traveller_model"));
+            $account_info = $this->session->userdata('account_info') ?? NULL;
+            $this->Lot_traveller_model->assign_lot_traveller($lot_traveller_id, $account_info['staff_id']);
+        }
+        $this->session->set_flashdata('temp_info', 'Work Order assigned successfully.');
+        redirect(site_url('staff_account/view_my_lot_travellers'));
+    }
+
+    public function edit_my_lot_traveller($lot_traveller_id = NULL)
+    {
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        $this->load->model(array("Lot_traveller_model", "Staff_model"));
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
+        if (!isset($lot_traveller_id)) {
+            $this->session->set_flashdata('temp_info', 'You did not select a Lot Traveller!');
+            redirect(site_url("/staff_account/view_my_lot_travellers"));
+        }
+        if ($this->Lot_traveller_model->confirm_lot_traveller_ownership_by_staff_id($account_info['staff_id'], $lot_traveller_id) == FALSE) {
+            $this->session->set_flashdata('temp_info', 'That is not your Lot Traveller!');
+            redirect(site_url("/staff_account/view_my_lot_travellers"));
         }
         $this->load->helper('form');
         $this->load->library('form_validation');
         $config = array(
             array(
-                'field' => 'card_number',
-                'label' => 'Card Number',
+                'field' => 'status',
+                'label' => 'Status',
                 'rules' => 'required'
             ),
             array(
-                'field' => 'expiry',
-                'label' => 'Expiry',
-                'rules' => 'required',
-                'errors' => array(
-                    'required' => '{field} is required.',
-                ),
-            ),
-            array(
-                'field' => 'cvv',
-                'label' => 'CVV',
-                'rules' => 'required',
+                'field' => 'production_quantity',
+                'label' => 'Product Quantity',
+                'rules' => 'required|numeric',
                 'errors' => array(
                     'required' => '{field} is required.',
                 ),
             )
         );
         $this->form_validation->set_rules($config);
-        $staff_order_info = $this->Staff_order_model->get_staff_order_by_id($staff_order_id);
+        $lot_traveller_info = $this->Lot_traveller_model->get_lot_traveller_by_id($lot_traveller_id);
         if ($this->form_validation->run() == FALSE) {
-            $data['staff_order_info'] = $staff_order_info;
+            $data['lot_traveller_info'] = $lot_traveller_info;
             initialize_header();
-            $this->load->view("staff/pay_for_my_order", $data);
+            $this->load->view("staff/edit_my_lot_traveller", $data);
         } else {
-            $this->load->model("Staff_invoice_model");
-            $staff_invoice_data = array(
-                'staff_order_id' => $staff_order_id,
-                'total_price' => $staff_order_info->total_price
+            $lot_traveller_info = array(
+                'status' => $this->input->post('status'),
+                'production_quantity' => $this->input->post('production_quantity')
             );
-            $this->Staff_invoice_model->add_staff_invoice($staff_invoice_data);
-            $this->session->set_flashdata('temp_info', 'Payment Successful');
-            redirect(site_url("/staff_account/view_my_staff_order/$staff_order_id"));
+            $this->Lot_traveller_model->edit_lot_traveller($lot_traveller_id, $lot_traveller_info);
+            $this->session->set_flashdata('temp_info', 'Lot Traveller Edited Successful');
+            redirect(site_url("/staff_account/view_my_lot_travellers/$lot_traveller_id"));
         }
+    }
+
+    public function finish_my_lot_traveller($lot_traveller_id)
+    {
+        $account_info = $this->session->userdata('account_info') ?? NULL;
+        $this->load->model(array("Lot_traveller_model", "Staff_model"));
+        $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+        is_restricted($uri);
+        if (!isset($lot_traveller_id)) {
+            $this->session->set_flashdata('temp_info', 'You did not select a Lot Traveller!');
+            redirect(site_url("/staff_account/view_my_lot_travellers"));
+        }
+        if (!$this->Lot_traveller_model->confirm_lot_traveller_ownership_by_staff_id($account_info['staff_id'], $lot_traveller_id) == FALSE) {
+            $this->session->set_flashdata('temp_info', 'That is not your Lot Traveller!');
+            redirect(site_url("/staff_account/view_my_lot_travellers"));
+        }
+        $this->Lot_traveller_model->finish_lot_traveller($lot_traveller_id);
+        $this->session->set_flashdata('temp_info', 'Lot Traveller Edited Successful');
+        redirect(site_url('staff_account/view_my_lot_travellers'));
     }
 
     public function edit_my_account()
@@ -286,7 +356,7 @@ class Staff_Account extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $uri = $this->uri->segment(1) . "/" . $this->uri->segment(2);
-//        is_restricted($uri);
+        is_restricted($uri);
         $account_info = $this->session->userdata('account_info') ?? NULL;
         if (!isset($account_info['staff_id'])) {
             $this->session->set_flashdata('temp_info', 'Cannot find your Staff ID.');

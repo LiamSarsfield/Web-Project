@@ -10,21 +10,15 @@
     foreach ($sidebars as $sidebar) {
         //if no sub side bars, it is a big sidebar with a function
         if (count($sidebar->sub_sidebar_array) !== 0) { ?>
-            <div class="w3-quarter w3-section w3-light-grey">
+            <div class="sidebar-dash w3-quarter w3-section w3-light-grey">
                 <h2><strong><?php echo $sidebar->name ?></strong></h2>
                 <?php foreach ($sidebar->sub_sidebar_array as $sub_sidebar) { ?>
-                    <hr>
-                    <h4><a href="<?php echo site_url() . "/$sub_sidebar->anchor_tag/"?>"><?php echo $sub_sidebar->name; ?></a></h4>
-                    <hr>
+                    <h4 class="header-dash"><a href="<?php echo site_url() . "/$sub_sidebar->anchor_tag/"?>"><?php echo $sub_sidebar->name; ?></a></h4>
                 <?php } ?>
             </div>
         <?php }
     }
     ?>
-    <div class="w3-quarter w3-section w3-light-grey">
-
-    </div>
-
 
     <!-- End About Section -->
 </div>

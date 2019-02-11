@@ -188,6 +188,18 @@ class home extends CI_Controller
 
     }
 
+    public function about()
+    {
+        initialize_header();
+        $this->load->view("generic/about");
+    }
+
+    public function contact()
+    {
+        initialize_header();
+        $this->load->view("generic/contact");
+    }
+
     public function validate_login($email, $password)
     {
         $this->load->model("login_data_model");
