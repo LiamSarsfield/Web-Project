@@ -1,70 +1,28 @@
 ###################
-What is CodeIgniter
+Project details
 ###################
 
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
-
-*******************
-Release Information
-*******************
-
-This repo contains in-development code for future releases. To download the
-latest stable release please visit the `CodeIgniter Downloads
-<https://codeigniter.com/download>`_ page.
+This was a group project made my Alan, Keith, Liam and Sam in the CodeIgniter PHP framework.
+It takes advantage of CodeIgniter's MVC OOP approach as it includes an intricate CRUD setup of many different entities and different types of relationships.
 
 **************************
-Changelog and New Features
+Primary contributions I made
 **************************
 
-You can find a list of all changes for each release in the `user
-guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
+I am most proud of how I implemented the CRUD setup. I implemented a generic "Functions" controller (\application\controllers\Functions.php) that is used for the majority of the CRUD setup through the setup.
+It recursively finds the database relationships belonging to a specific entity and manipulates the data in inside the "Generic_model" model ("\application\models\Generic_model.php").
+For a complete list of what files I have created, please see the file "Functions made by people" in the docs folder.
 
 *******************
 Server Requirements
 *******************
 
-PHP version 5.6 or newer is recommended.
-
-It should work on 5.3.7 as well, but we strongly advise you NOT to run
-such old versions of PHP, because of potential security and performance
-issues, as well as missing features.
+PHP version 7.0 or newer is recommended.
+MySQL/Percona 5.6 is recommended
 
 ************
-Installation
+Installation & docs
 ************
 
-Please see the `installation section <https://codeigniter.com/user_guide/installation/index.html>`_
-of the CodeIgniter User Guide.
-
-*******
-License
-*******
-
-Please see the `license
-agreement <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/license.rst>`_.
-
-*********
-Resources
-*********
-
--  `User Guide <https://codeigniter.com/docs>`_
--  `Language File Translations <https://github.com/bcit-ci/codeigniter3-translations>`_
--  `Community Forums <http://forum.codeigniter.com/>`_
--  `Community Wiki <https://github.com/bcit-ci/CodeIgniter/wiki>`_
--  `Community Slack Channel <https://codeigniterchat.slack.com>`_
-
-Report security issues to our `Security Panel <mailto:security@codeigniter.com>`_
-or via our `page on HackerOne <https://hackerone.com/codeigniter>`_, thank you.
-
-***************
-Acknowledgement
-***************
-
-The CodeIgniter team would like to thank EllisLab, all the
-contributors to the CodeIgniter project and you, the CodeIgniter user.
+Please see the document Installation Instructions inside the "docs" folder.
+We have an ERD Diagram inside in our "db_init" folder as well.
