@@ -1,8 +1,11 @@
 ###################
 Project details
 ###################
+Midwest Electronics is a CRM web applicaiton built for our 3rd Year Group Project.
+Customers and staff members have seperate login portals.
+Customers can purchase products from a store and staff members can update customers on their order status.
 
-This was a group project made my Alan, Keith, Liam and Sam in the CodeIgniter PHP framework.
+This was a group project made in 3rd year
 It takes advantage of CodeIgniter's MVC OOP approach as it includes an intricate CRUD setup of many different entities and different types of relationships.
 
 **************************
